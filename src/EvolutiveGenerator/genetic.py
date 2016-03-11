@@ -8,11 +8,14 @@ class GeneticElement:
 	A genetic element brings one or several genetic informations or contains
 	other genetic elements.
 	It also brings the evolution logic of the element through the following
-	methods:
+	object's methods:
 		+mutate() -> GeneticElement
 		+combine(GeneticElement) -> GeneticElement
 		+generate(GeneticElement) -> GeneticElement
+	And the following class method:
+		+create() -> GeneticElement
 	Evolution logic may typically use recursive process over the children.
+	Evolution logic might be handled by an external EvolutionProccessor.
 	"""
 	
 	
@@ -80,4 +83,17 @@ class GeneticElement:
 		"""
 		
 		return self.combine(partner).mutate()
+	
+	
+	@classmethod
+	def create(cls):
+		"""Create a GeneticElement from void
+		
+		An essential element of the generation proccess.
+		This is a class method which has to be implemented.
+		
+		return GeneticElement
+		"""
+		
+		raise NotImplementedError
 
