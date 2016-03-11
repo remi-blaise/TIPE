@@ -2,10 +2,10 @@
 # -*-coding:Utf-8 -*
 
 class GeneticElement:
-	"""A genetic element
+	"""Carry the genetic information
 	
 	This is an abstract class to inherit.
-	A genetic element brings one or several genetic informations or contains
+	A genetic element carries one or several genetic informations or contains
 	other genetic elements.
 	It also brings the evolution logic of the element through the following
 	object's methods:
@@ -19,17 +19,32 @@ class GeneticElement:
 	"""
 	
 	
-	def __init__(self, children = [], parent = None):
-		"""Inits the element
+	def __init__(self, parent = None, children = []):
+		"""Init the element
 		
 		Expects:
-			children to be an array of GeneticElement
 			parent to be a GeneticElement
+			children to be an array of GeneticElement
 		Both are optional.
 		"""
 		
 		self.parent = parent
+		if parent:
+			parent.children.append(self)
 		self.children = children
+	
+	
+	@classmethod
+	def create(cls):
+		"""Create a GeneticElement from void
+		
+		An essential element of the generation proccess.
+		This is a class method which has to be implemented.
+		
+		return GeneticElement
+		"""
+		
+		raise NotImplementedError
 	
 	
 	def isRoot(self):
@@ -45,10 +60,12 @@ class GeneticElement:
 	
 	
 	def mutate(self):
-		"""Makes a mutated GeneticElement
+		"""Make a mutated GeneticElement
 		
 		Operates genetic mutation to build a new GeneticElement.
 		Has to be implemented.
+		
+		This is rather designed for internal use, see generate() instead.
 		
 		return GeneticElement
 		"""
@@ -57,10 +74,12 @@ class GeneticElement:
 	
 	
 	def combine(self, partner):
-		"""Forms a new GeneticElement, combination of two ones
+		"""Form a new GeneticElement, combination of two ones
 		
 		Combine itself with an other GeneticElement to form an offspring.
 		Has to be implemented.
+		
+		This is rather designed for internal use, see generate() instead.
 		
 		Expects:
 			partner to be a GeneticElement
@@ -74,7 +93,7 @@ class GeneticElement:
 	def generate(self, partner):
 		"""Generate a new GeneticElement, final offspring of two ones
 		
-		Call combine() then mutate()
+		Call combine() then mutate().
 		
 		Expects:
 			partner to be a GeneticElement
@@ -83,17 +102,9 @@ class GeneticElement:
 		"""
 		
 		return self.combine(partner).mutate()
-	
-	
-	@classmethod
-	def create(cls):
-		"""Create a GeneticElement from void
-		
-		An essential element of the generation proccess.
-		This is a class method which has to be implemented.
-		
-		return GeneticElement
-		"""
-		
-		raise NotImplementedError
 
+
+if __name__ == '__main__':
+	root = GeneticElement()
+	child = GeneticElement(root)
+	assert root.children[0] is child
