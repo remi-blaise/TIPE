@@ -5,7 +5,7 @@ from . import setup
 from . import constants as c
 
 class Sound(object):
-    """Handles all sound for the game"""
+    """Handles all sound for the game"""    # Methods: set_music_mixer(), update(), stop_music()
     def __init__(self, overhead_info):
         """Initialize the class"""
         self.sfx_dict = setup.SFX
@@ -16,7 +16,7 @@ class Sound(object):
 
 
 
-    def set_music_mixer(self):
+    def set_music_mixer(self):  # S'occupe des musics
         """Sets music for level"""
         if self.overhead_info.state == c.LEVEL:
             pg.mixer.music.load(self.music_dict['main_theme'])
@@ -28,14 +28,14 @@ class Sound(object):
             self.state = c.GAME_OVER
 
 
-    def update(self, game_info, mario):
+    def update(self, game_info, mario): # Utilise les infos du jeu pour changer les sounds
         """Updates sound object with game info"""
         self.game_info = game_info
         self.mario = mario
         self.handle_state()
 
-    def  handle_state(self):
-        """Handles the state of the soundn object"""
+    def  handle_state(self):    # S'occupe des sounds
+        """Handles the state of the sounds object"""
         if self.state == c.NORMAL:
             if self.mario.dead:
                 self.play_music('death', c.MARIO_DEAD)

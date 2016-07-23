@@ -95,7 +95,7 @@ class Mushroom(Powerup):
         self.frames.append(self.get_image(0, 0, 16, 16))
 
 
-    def handle_state(self):
+    def handle_state(self): # Based on internal state
         """Handles behavior based on state"""
         if self.state == c.REVEAL:
             self.revealing()

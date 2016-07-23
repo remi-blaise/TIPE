@@ -9,7 +9,7 @@ class Collider(pg.sprite.Sprite):
     def __init__(self, x, y, width, height, name='collider'):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((width, height)).convert()
-        #self.image.fill(c.RED)
+        # self.image.fill(c.RED) # (sic)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

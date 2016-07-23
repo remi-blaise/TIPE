@@ -9,7 +9,7 @@ ORIGINAL_CAPTION = "Super Mario Bros 1-1"
 
 ## COLORS ##
 
-#            R    G    B
+#            	R    G    B
 GRAY         = (100, 100, 100)
 NAVYBLUE     = ( 60,  60, 100)
 WHITE        = (255, 255, 255)
@@ -23,7 +23,7 @@ ORANGE       = (255, 128,   0)
 PURPLE       = (255,   0, 255)
 CYAN         = (  0, 255, 255)
 BLACK        = (  0,   0,   0)
-NEAR_BLACK    = ( 19,  15,  48)
+NEAR_BLACK   = ( 19,  15,  48)
 COMBLUE      = (233, 232, 255)
 GOLD         = (255, 215,   0)
 
@@ -162,7 +162,7 @@ TIME_OUT = 'time out'
 GAME_OVER = 'game over'
 LEVEL1 = 'level1'
 
-#SOUND STATEZ
+#SOUND STATES
 NORMAL = 'normal'
 STAGE_CLEAR = 'stage clear'
 WORLD_CLEAR = 'world clear'

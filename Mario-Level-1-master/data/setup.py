@@ -12,12 +12,12 @@ from .import constants as c
 ORIGINAL_CAPTION = c.ORIGINAL_CAPTION
 
 
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-pg.init()
-pg.event.set_allowed([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
-pg.display.set_caption(c.ORIGINAL_CAPTION)
-SCREEN = pg.display.set_mode(c.SCREEN_SIZE)
-SCREEN_RECT = SCREEN.get_rect()
+os.environ['SDL_VIDEO_CENTERED'] = '1'                  # Centre la fenetre sur l'écran (param de SDL)
+pg.init()                                               # Obligatoire
+pg.event.set_allowed([pg.KEYDOWN, pg.KEYUP, pg.QUIT])   # Autorise les events qu'on veut récupérer
+pg.display.set_caption(c.ORIGINAL_CAPTION)              # Affiche le titre
+SCREEN = pg.display.set_mode(c.SCREEN_SIZE)             # Crée une fenetre de taille (800, 600) -> Surface
+SCREEN_RECT = SCREEN.get_rect()                         # Récupère le rectangle correspondant à la fenetre entière
 
 
 FONTS = tools.load_all_fonts(os.path.join("resources","fonts"))

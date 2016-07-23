@@ -7,9 +7,6 @@ from ..components import info
 
 
 class LoadScreen(tools._State):
-    def __init__(self):
-        tools._State.__init__(self)
-
     def startup(self, current_time, persist):
         self.start_time = current_time
         self.persist = persist
@@ -52,9 +49,6 @@ class LoadScreen(tools._State):
 
 class GameOver(LoadScreen):
     """A loading screen with Game Over"""
-    def __init__(self):
-        super(GameOver, self).__init__()
-
 
     def set_next_state(self):
         """Sets next state"""
@@ -82,8 +76,6 @@ class GameOver(LoadScreen):
 
 class TimeOut(LoadScreen):
     """Loading Screen with Time Out"""
-    def __init__(self):
-        super(TimeOut, self).__init__()
 
     def set_next_state(self):
         """Sets next state"""

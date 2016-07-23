@@ -6,17 +6,17 @@ from .. import constants as c
 from . import flashing_coin
 
 
-class Character(pg.sprite.Sprite):
+class Character(pg.sprite.Sprite): # Classe des caractères à afficher
     """Parent class for all characters used for the overhead level info"""
     def __init__(self, image):
-        super(Character, self).__init__()
+        super(Character, self).__init__()   # Appel __init__() de la classe parente
         self.image = image
         self.rect = self.image.get_rect()
 
 
-class OverheadInfo(object):
+class OverheadInfo(object): # Affiche toutes les infos selon le State et les infos du jeu
     """Class for level information like score, coin total,
-        and time remaining"""
+        and time remaining""" # Mtéthodes : update(), draw()
     def __init__(self, game_info, state):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
@@ -41,7 +41,7 @@ class OverheadInfo(object):
         self.create_main_menu_labels()
 
 
-    def create_image_dict(self):
+    def create_image_dict(self): # Crée un dict {caractère: image} des caractères utiles pour l'affichage du score
         """Creates the initial images for the score"""
         self.image_dict = {}
         image_list = []
@@ -181,7 +181,7 @@ class OverheadInfo(object):
 
 
     def create_mario_image(self):
-        """Get the mario image"""
+        """Get the mario image""" # Pour l'affichage des vies, intro
         self.life_times_image = self.get_image(75, 247, 6, 6)
         self.life_times_rect = self.life_times_image.get_rect(center=(378, 295))
         self.life_total_label = []

@@ -7,19 +7,6 @@ from .. components import info, mario
 
 
 class Menu(tools._State):
-    def __init__(self):
-        """Initializes the state"""
-        tools._State.__init__(self)
-        persist = {c.COIN_TOTAL: 0,
-                   c.SCORE: 0,
-                   c.LIVES: 3,
-                   c.TOP_SCORE: 0,
-                   c.CURRENT_TIME: 0.0,
-                   c.LEVEL_STATE: None,
-                   c.CAMERA_START_X: 0,
-                   c.MARIO_DEAD: False}
-        self.startup(0.0, persist)
-
     def startup(self, current_time, persist):
         """Called every time the game's state becomes this one.  Initializes
         certain values"""

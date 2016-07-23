@@ -17,10 +17,10 @@ from .. components import score
 from .. components import castle_flag
 
 
-class Level1(tools._State):
-    def __init__(self):
-        tools._State.__init__(self)
+from bridge.events.game_events import Frame
 
+
+class Level1(tools._State):
     def startup(self, current_time, persist):
         """Called when the State object is created"""
         self.game_info = persist
@@ -78,7 +78,7 @@ class Level1(tools._State):
         ground_rect3 = collider.Collider(3819, c.GROUND_HEIGHT, 2735, 60)
         ground_rect4 = collider.Collider(6647, c.GROUND_HEIGHT, 2300, 60)
 
-        self.ground_group = pg.sprite.Group(ground_rect1,
+        self.ground_group = pg.sprite.Group(ground_rect1,                       # Ground
                                            ground_rect2,
                                            ground_rect3,
                                            ground_rect4)
@@ -94,7 +94,7 @@ class Level1(tools._State):
         pipe5 = collider.Collider(6989, 452, 83, 82)
         pipe6 = collider.Collider(7675, 452, 83, 82)
 
-        self.pipe_group = pg.sprite.Group(pipe1, pipe2,
+        self.pipe_group = pg.sprite.Group(pipe1, pipe2,                         # Pipes
                                           pipe3, pipe4,
                                           pipe5, pipe6)
 
@@ -135,7 +135,7 @@ class Level1(tools._State):
 
         step27 = collider.Collider(8488, 495, 40, 40)
 
-        self.step_group = pg.sprite.Group(step1,  step2,
+        self.step_group = pg.sprite.Group(step1,  step2,                        # Steps
                                           step3,  step4,
                                           step5,  step6,
                                           step7,  step8,
@@ -358,6 +358,21 @@ class Level1(tools._State):
         self.check_if_time_out()
         self.blit_everything(surface)
         self.sound_manager.update(self.game_info, self.mario)
+        
+        # Dispatch the Frame event
+        if self.config.event_dispatcher:
+            self.config.event_dispatcher.dispatch('game.frame', Frame(
+                self.viewport, # Rect
+                {
+                    'brick_group': self.brick_group,
+                    'coin_box_group': self.coin_box_group,
+                    'ground_group': self.ground_group,
+                    'pipe_group': self.pipe_group,
+                    'step_group': self.step_group
+                    # ...
+                }, # Group
+                self.mario # Sprite
+            ))
 
 
 
@@ -403,26 +418,26 @@ class Level1(tools._State):
 
     def update_all_sprites(self, keys):
         """Updates the location of all sprites on the screen."""
-        self.mario.update(keys, self.game_info, self.powerup_group)
+        self.mario.update(keys, self.game_info, self.powerup_group)             # Mario
         for score in self.moving_score_list:
             score.update(self.moving_score_list, self.game_info)
         if self.flag_score:
             self.flag_score.update(None, self.game_info)
             self.check_to_add_flag_score()
-        self.flag_pole_group.update()
-        self.check_points_check()
-        self.enemy_group.update(self.game_info)
-        self.sprites_about_to_die_group.update(self.game_info, self.viewport)
+        self.flag_pole_group.update()                                           # Flag pole
+        self.check_points_check()                                               # Checkpoints (for enemies)
+        self.enemy_group.update(self.game_info)                                 # Enemies
+        self.sprites_about_to_die_group.update(self.game_info, self.viewport)   #
         self.shell_group.update(self.game_info)
-        self.brick_group.update()
-        self.coin_box_group.update(self.game_info)
-        self.powerup_group.update(self.game_info, self.viewport)
-        self.coin_group.update(self.game_info, self.viewport)
-        self.brick_pieces_group.update()
+        self.brick_group.update()                                               # Bricks
+        self.coin_box_group.update(self.game_info)                  # Coin boxes (quand un bloc a été tapé)
+        self.powerup_group.update(self.game_info, self.viewport)                # Powerups
+        self.coin_group.update(self.game_info, self.viewport)                   # Coins
+        self.brick_pieces_group.update()                            # Bricks pieces (fragments quand un bloc est détruit)
         self.adjust_sprite_positions()
         self.check_if_mario_in_transition_state()
         self.check_for_mario_death()
-        self.update_viewport()
+        self.update_viewport()                                                  # Viewport
         self.overhead_info_display.update(self.game_info, self.mario)
 
 
@@ -1340,20 +1355,22 @@ class Level1(tools._State):
             self.persist[c.TOP_SCORE] = self.game_info[c.SCORE]
         if self.mario.dead:
             self.persist[c.LIVES] -= 1
-
-        if self.persist[c.LIVES] == 0:
-            self.next = c.GAME_OVER
-            self.game_info[c.CAMERA_START_X] = 0
-        elif self.mario.dead == False:
-            self.next = c.MAIN_MENU
-            self.game_info[c.CAMERA_START_X] = 0
-        elif self.overhead_info_display.time == 0:
-            self.next = c.TIME_OUT
-        else:
-            if self.mario.rect.x > 3670 \
-                    and self.game_info[c.CAMERA_START_X] == 0:
-                self.game_info[c.CAMERA_START_X] = 3440
-            self.next = c.LOAD_SCREEN
+            if not self.config.show_game_frame:
+                self.quit = True
+        
+        if self.config.show_game_frame:
+            if self.persist[c.LIVES] == 0:
+                self.next = c.GAME_OVER
+                self.game_info[c.CAMERA_START_X] = 0
+            elif self.mario.dead == False:
+                self.next = c.MAIN_MENU
+                self.game_info[c.CAMERA_START_X] = 0
+            elif self.overhead_info_display.time == 0:
+                self.next = c.TIME_OUT
+            else: # Si Mario a encore des vies, qu'il n'est pas mort et que le temps n'est pas écoulé
+                if self.mario.rect.x > 3670 and self.game_info[c.CAMERA_START_X] == 0:
+                    self.game_info[c.CAMERA_START_X] = 3440     # Gestion du checkpoint
+                self.next = c.LOAD_SCREEN
 
 
     def check_if_time_out(self):
@@ -1408,6 +1425,8 @@ class Level1(tools._State):
             self.next = c.GAME_OVER
             self.sound_manager.stop_music()
             self.done = True
+            if not self.config.show_game_frame:
+                self.quit = True
 
 
     def blit_everything(self, surface):

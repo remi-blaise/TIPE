@@ -20,7 +20,7 @@ class Coin_box(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.mask = pg.mask.from_surface(self.image)
+        self.mask = pg.mask.from_surface(self.image) # Inutilisé ?
         self.animation_timer = 0
         self.first_half = True   # First half of animation cycle
         self.state = c.RESTING
