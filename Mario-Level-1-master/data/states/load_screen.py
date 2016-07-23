@@ -7,16 +7,16 @@ from ..components import info
 
 
 class LoadScreen(tools._State):
-    def startup(self, current_time, persist):
-        self.start_time = current_time
+    def startup(self, current_frame, persist):
+        self.start_frame = current_frame
         self.persist = persist
         self.game_info = self.persist
         self.next = self.set_next_state()
 
         info_state = self.set_overhead_info_state()
 
-        self.overhead_info = info.OverheadInfo(self.game_info, info_state)
-        self.sound_manager = game_sound.Sound(self.overhead_info)
+        self.overhead_info = info.OverheadInfo(self.game_info, info_state, self.config)
+        self.sound_manager = game_sound.Sound(self.overhead_info, self.config)
 
 
     def set_next_state(self):
@@ -28,17 +28,17 @@ class LoadScreen(tools._State):
         return c.LOAD_SCREEN
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_frame):
         """Updates the loading screen"""
-        if (current_time - self.start_time) < 2400:
+        if (current_frame - self.start_frame) < 2.400*self.config.fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)
 
-        elif (current_time - self.start_time) < 2600:
+        elif (current_frame - self.start_frame) < 2.600*self.config.fps:
             surface.fill(c.BLACK)
 
-        elif (current_time - self.start_time) < 2635:
+        elif (current_frame - self.start_frame) < 2.635*self.config.fps:
             surface.fill((106, 150, 252))
 
         else:
@@ -58,17 +58,17 @@ class GameOver(LoadScreen):
         """sets the state to send to the overhead info object"""
         return c.GAME_OVER
 
-    def update(self, surface, keys, current_time):
-        self.current_time = current_time
+    def update(self, surface, keys, current_frame):
+        self.current_frame = current_frame
         self.sound_manager.update(self.persist, None)
 
-        if (self.current_time - self.start_time) < 7000:
+        if (self.current_frame - self.start_frame) < 7.000*self.config.fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)
-        elif (self.current_time - self.start_time) < 7200:
+        elif (self.current_frame - self.start_frame) < 7.200*self.config.fps:
             surface.fill(c.BLACK)
-        elif (self.current_time - self.start_time) < 7235:
+        elif (self.current_frame - self.start_frame) < 7.235*self.config.fps:
             surface.fill((106, 150, 252))
         else:
             self.done = True
@@ -88,10 +88,10 @@ class TimeOut(LoadScreen):
         """Sets the state to send to the overhead info object"""
         return c.TIME_OUT
 
-    def update(self, surface, keys, current_time):
-        self.current_time = current_time
+    def update(self, surface, keys, current_frame):
+        self.current_frame = current_frame
 
-        if (self.current_time - self.start_time) < 2400:
+        if (self.current_frame - self.start_frame) < 2.400*self.config.fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)

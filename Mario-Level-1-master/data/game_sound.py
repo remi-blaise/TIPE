@@ -1,20 +1,22 @@
 __author__ = 'justinarmstrong'
 
+from lib.inject_arguments import injectArguments
+
 import pygame as pg
 from . import setup
 from . import constants as c
 
+
 class Sound(object):
     """Handles all sound for the game"""    # Methods: set_music_mixer(), update(), stop_music()
-    def __init__(self, overhead_info):
+    
+    @injectArguments
+    def __init__(self, overhead_info, config):
         """Initialize the class"""
         self.sfx_dict = setup.SFX
         self.music_dict = setup.MUSIC
-        self.overhead_info = overhead_info
         self.game_info = overhead_info.game_info
         self.set_music_mixer()
-
-
 
     def set_music_mixer(self):  # S'occupe des musics
         """Sets music for level"""
@@ -26,7 +28,6 @@ class Sound(object):
             pg.mixer.music.load(self.music_dict['game_over'])
             pg.mixer.music.play()
             self.state = c.GAME_OVER
-
 
     def update(self, game_info, mario): # Utilise les infos du jeu pour changer les sounds
         """Updates sound object with game info"""
@@ -46,7 +47,6 @@ class Sound(object):
                 self.play_music('flagpole', c.FLAGPOLE)
             elif self.overhead_info.time == 100:
                 self.play_music('out_of_time', c.TIME_WARNING)
-
 
         elif self.state == c.FLAGPOLE:
             if self.mario.state == c.WALKING_TO_CASTLE:
@@ -75,11 +75,10 @@ class Sound(object):
                 self.play_music('flagpole', c.FLAGPOLE)
 
         elif self.state == c.MARIO_INVINCIBLE:
-            if (self.mario.current_time - self.mario.invincible_start_timer) > 11000:
+            if (self.mario.current_frame - self.mario.invincible_start_framer) > 11000*self.config.fps/1000:
                 self.play_music('main_theme', c.NORMAL)
             elif self.mario.dead:
                 self.play_music('death', c.MARIO_DEAD)
-
 
         elif self.state == c.WORLD_CLEAR:
             pass
@@ -97,6 +96,3 @@ class Sound(object):
     def stop_music(self):
         """Stops playback"""
         pg.mixer.music.stop()
-
-
-

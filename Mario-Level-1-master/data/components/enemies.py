@@ -8,9 +8,10 @@ from .. import constants as c
 
 class Enemy(pg.sprite.Sprite):
     """Base class for all enemies (Goombas, Koopas, etc.)"""
-    def __init__(self):
+    def __init__(self, config):
         pg.sprite.Sprite.__init__(self)
-
+        self.config = config
+        
 
     def setup_enemy(self, x, y, direction, name, setup_frames):
         """Sets up various values for enemy"""
@@ -74,13 +75,13 @@ class Enemy(pg.sprite.Sprite):
 
     def walking(self):
         """Default state of moving sideways"""
-        if (self.current_time - self.animate_timer) > 125:
+        if (self.current_frame - self.animate_timer) > 125*self.config.fps/1000:
             if self.frame_index == 0:
                 self.frame_index += 1
             elif self.frame_index == 1:
                 self.frame_index = 0
 
-            self.animate_timer = self.current_time
+            self.animate_timer = self.current_frame
 
 
     def falling(self):
@@ -124,7 +125,7 @@ class Enemy(pg.sprite.Sprite):
 
     def update(self, game_info, *args):
         """Updates enemy behavior"""
-        self.current_time = game_info[c.CURRENT_TIME]
+        self.current_frame = game_info[c.CURRENT_FRAME]
         self.handle_state()
         self.animation()
 
@@ -133,8 +134,8 @@ class Enemy(pg.sprite.Sprite):
 
 class Goomba(Enemy):
 
-    def __init__(self, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='goomba'):
-        Enemy.__init__(self)
+    def __init__(self, config, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='goomba'):
+        Enemy.__init__(self, config)
         self.setup_enemy(x, y, direction, name, self.setup_frames)
 
 
@@ -154,15 +155,15 @@ class Goomba(Enemy):
         """When Mario squishes him"""
         self.frame_index = 2
 
-        if (self.current_time - self.death_timer) > 500:
+        if (self.current_frame - self.death_timer) > 500*self.config.fps/1000:
             self.kill()
 
 
 
 class Koopa(Enemy):
 
-    def __init__(self, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='koopa'):
-        Enemy.__init__(self)
+    def __init__(self, config, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='koopa'):
+        Enemy.__init__(self, config)
         self.setup_enemy(x, y, direction, name, self.setup_frames)
 
 

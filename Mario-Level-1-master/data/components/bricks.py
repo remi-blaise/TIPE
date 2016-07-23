@@ -9,7 +9,7 @@ from . import coin
 
 class Brick(pg.sprite.Sprite):
     """Bricks that can be destroyed"""
-    def __init__(self, x, y, contents=None, powerup_group=None, name='brick'):
+    def __init__(self, config, x, y, contents=None, powerup_group=None, name='brick'):
         """Initialize the object"""
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['tile_set']
@@ -32,6 +32,7 @@ class Brick(pg.sprite.Sprite):
         self.setup_contents()
         self.group = powerup_group
         self.powerup_in_box = True
+        self.config = config
 
 
     def get_image(self, x, y, width, height):
@@ -109,7 +110,7 @@ class Brick(pg.sprite.Sprite):
             setup.SFX['coin'].play()
 
             if self.coin_total > 0:
-                self.group.add(coin.Coin(self.rect.centerx, self.rect.y, score_group))
+                self.group.add(coin.Coin(self.config, self.rect.centerx, self.rect.y, score_group))
                 self.coin_total -= 1
                 if self.coin_total == 0:
                     self.frame_index = 1
@@ -128,7 +129,7 @@ class Brick(pg.sprite.Sprite):
         self.image = self.frames[self.frame_index]
 
         if self.contents == 'star' and self.powerup_in_box:
-            self.group.add(powerups.Star(self.rect.centerx, self.rest_height))
+            self.group.add(powerups.Star(self.config, self.rect.centerx, self.rest_height))
             self.powerup_in_box = False
 
 

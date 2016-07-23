@@ -1,9 +1,9 @@
 __author__ = 'justinarmstrong'
 
+from lib.inject_arguments import injectArguments
 import os
 import pygame as pg
 from . import constants as c
-from lib.inject_arguments import injectArguments
 
 
 class Control(object):
@@ -18,7 +18,7 @@ class Control(object):
         self.clock = pg.time.Clock()        # La clock fournie par pg
         self.fps = config.fps
         self.show_fps = config.show_fps
-        self.current_time = 0.0
+        self.current_frame = 0.0
         self.keys = Keys(self.config)
         self.state_dict = {}                # Dict des States
         self.state_name = None              # Nom du State actuel
@@ -31,19 +31,21 @@ class Control(object):
         self.state.start_game()
     
     def update(self):   # Update les infos de cet objet, met fin au jeu si besoin, passe les infos au State
-        self.current_time = pg.time.get_ticks() # Return the number of millisconds since pygame.init() was called.
+        # self.current_time = pg.time.get_ticks() # Return the number of millisconds since pygame.init() was called.
+        self.current_frame += 1
+        
         if self.state.quit:
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.keys, self.current_time)
+        self.state.update(self.screen, self.keys, self.current_frame)
         # 2e Interaction avec le State : update propagé à tous les components
     
     def flip_state(self):   # Passe d'un State à un autre, basé sur state.next
         previous, self.state_name = self.state_name, self.state.next
         persist = self.state.cleanup()
         self.state = self.state_dict[self.state_name]
-        self.state.startup(self.current_time, persist)
+        self.state.startup(self.current_frame, persist)
         self.state.previous = previous
     
     def event_loop(self):   # Écoute les events de pg
@@ -82,7 +84,10 @@ class Keys:
             setattr(self, key, False)
         
         self.event_dispatcher = self.config.event_dispatcher
-        self.event_dispatcher.listen('action', self.handle_dispatched_event)
+        if self.event_dispatcher:
+            self.event_dispatcher.listen('action', self.handle_dispatched_event)
+        
+        self.pressed_keys = None
         self.dispatched_events = []
         
         self.pg_keybinding = {
@@ -102,16 +107,16 @@ class Keys:
             self.get_keys_from_dispatcher()
     
     def get_keys_from_pg(self):
-        pressed_keys = None
+        self.pressed_keys = None
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit = True
             elif event.type == pg.KEYDOWN or event.type == pg.KEYUP:
-                pressed_keys = pg.key.get_pressed()
+                self.pressed_keys = pg.key.get_pressed()
         
-        if pressed_keys is not None:
+        if self.pressed_keys is not None:
             for key in ('action', 'jump', 'left', 'right', 'down'):
-                setattr(self, key, bool(pressed_keys[ self.pg_keybinding[key] ]))
+                setattr(self, key, bool(self.pressed_keys[ self.pg_keybinding[key] ]))
     
     def get_keys_from_dispatcher(self):
         for key in self.dispatched_events:
@@ -128,8 +133,8 @@ class _State(object):   # Classe abstraite pour les States
     
     @injectArguments
     def __init__(self, config):
-        self.start_time = 0.0
-        self.current_time = 0.0
+        self.start_frame = 0.0
+        self.current_frame = 0.0
         self.done = False
         self.quit = False
         self.next = None
@@ -142,7 +147,7 @@ class _State(object):   # Classe abstraite pour les States
                    c.SCORE: 0,
                    c.LIVES: 3,
                    c.TOP_SCORE: 0,
-                   c.CURRENT_TIME: 0.0,
+                   c.CURRENT_FRAME: 0.0,
                    c.LEVEL_STATE: None,
                    c.CAMERA_START_X: 0,
                    c.MARIO_DEAD: False}
@@ -153,15 +158,15 @@ class _State(object):   # Classe abstraite pour les States
     # def get_event(self, event):
     #     pass
 
-    def startup(self, current_time, persistant):
+    def startup(self, current_frame, persistant):
         self.persist = persistant
-        self.start_time = current_time
+        self.start_frame = current_frame
 
     def cleanup(self):
         self.done = False
         return self.persist
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_frame):
         pass
 
 

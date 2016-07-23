@@ -7,13 +7,13 @@ from .. components import info, mario
 
 
 class Menu(tools._State):
-    def startup(self, current_time, persist):
+    def startup(self, current_frame, persist):
         """Called every time the game's state becomes this one.  Initializes
         certain values"""
         self.next = c.LOAD_SCREEN
         self.persist = persist
         self.game_info = persist
-        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU)
+        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU, self.config)
 
         self.sprite_sheet = setup.GFX['title_screen']
         self.setup_background()
@@ -32,7 +32,7 @@ class Menu(tools._State):
 
     def setup_mario(self):
         """Places Mario at the beginning of the level"""
-        self.mario = mario.Mario()
+        self.mario = mario.Mario(self.config)
         self.mario.rect.x = 110
         self.mario.rect.bottom = c.GROUND_HEIGHT
 
@@ -75,10 +75,10 @@ class Menu(tools._State):
         return (image, rect)
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_frame):
         """Updates the state every refresh"""
-        self.current_time = current_time
-        self.game_info[c.CURRENT_TIME] = self.current_time
+        self.current_frame = current_frame
+        self.game_info[c.CURRENT_FRAME] = self.current_frame
         self.update_cursor(keys)
         self.overhead_info.update(self.game_info)
 
@@ -92,19 +92,18 @@ class Menu(tools._State):
 
     def update_cursor(self, keys):
         """Update the position of the cursor"""
-        input_list = [pg.K_RETURN, pg.K_a, pg.K_s]
-
+        
         if self.cursor.state == c.PLAYER1:
             self.cursor.rect.y = 358
-            if keys[pg.K_DOWN]:
-                self.cursor.state = c.PLAYER2
-            for input in input_list:
-                if keys[input]:
+            if keys.pressed_keys:
+                if keys.pressed_keys[pg.K_DOWN]:
+                    self.cursor.state = c.PLAYER2
+                if keys.pressed_keys[pg.K_RETURN] or keys.action:
                     self.reset_game_info()
                     self.done = True
         elif self.cursor.state == c.PLAYER2:
             self.cursor.rect.y = 403
-            if keys[pg.K_UP]:
+            if keys.pressed_keys and keys.pressed_keys[pg.K_UP]:
                 self.cursor.state = c.PLAYER1
 
 
@@ -113,7 +112,7 @@ class Menu(tools._State):
         self.game_info[c.COIN_TOTAL] = 0
         self.game_info[c.SCORE] = 0
         self.game_info[c.LIVES] = 3
-        self.game_info[c.CURRENT_TIME] = 0.0
+        self.game_info[c.CURRENT_FRAME] = 0.0
         self.game_info[c.LEVEL_STATE] = None
 
         self.persist = self.game_info

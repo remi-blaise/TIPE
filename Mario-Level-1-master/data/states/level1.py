@@ -21,11 +21,11 @@ from bridge.events.game_events import Frame
 
 
 class Level1(tools._State):
-    def startup(self, current_time, persist):
+    def startup(self, current_frame, persist):
         """Called when the State object is created"""
         self.game_info = persist
         self.persist = self.game_info
-        self.game_info[c.CURRENT_TIME] = current_time
+        self.game_info[c.CURRENT_FRAME] = current_frame
         self.game_info[c.LEVEL_STATE] = c.NOT_FROZEN
         self.game_info[c.MARIO_DEAD] = False
 
@@ -36,8 +36,8 @@ class Level1(tools._State):
         self.flag_score_total = 0
 
         self.moving_score_list = []
-        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL)
-        self.sound_manager = game_sound.Sound(self.overhead_info_display)
+        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL, self.config)
+        self.sound_manager = game_sound.Sound(self.overhead_info_display, self.config)
 
         self.setup_background()
         self.setup_ground()
@@ -158,37 +158,37 @@ class Level1(tools._State):
         self.powerup_group = pg.sprite.Group()
         self.brick_pieces_group = pg.sprite.Group()
 
-        brick1  = bricks.Brick(858,  365)
-        brick2  = bricks.Brick(944,  365)
-        brick3  = bricks.Brick(1030, 365)
-        brick4  = bricks.Brick(3299, 365)
-        brick5  = bricks.Brick(3385, 365)
-        brick6  = bricks.Brick(3430, 193)
-        brick7  = bricks.Brick(3473, 193)
-        brick8  = bricks.Brick(3516, 193)
-        brick9  = bricks.Brick(3559, 193)
-        brick10 = bricks.Brick(3602, 193)
-        brick11 = bricks.Brick(3645, 193)
-        brick12 = bricks.Brick(3688, 193)
-        brick13 = bricks.Brick(3731, 193)
-        brick14 = bricks.Brick(3901, 193)
-        brick15 = bricks.Brick(3944, 193)
-        brick16 = bricks.Brick(3987, 193)
-        brick17 = bricks.Brick(4030, 365, c.SIXCOINS, self.coin_group)
-        brick18 = bricks.Brick(4287, 365)
-        brick19 = bricks.Brick(4330, 365, c.STAR, self.powerup_group)
-        brick20 = bricks.Brick(5058, 365)
-        brick21 = bricks.Brick(5187, 193)
-        brick22 = bricks.Brick(5230, 193)
-        brick23 = bricks.Brick(5273, 193)
-        brick24 = bricks.Brick(5488, 193)
-        brick25 = bricks.Brick(5574, 193)
-        brick26 = bricks.Brick(5617, 193)
-        brick27 = bricks.Brick(5531, 365)
-        brick28 = bricks.Brick(5574, 365)
-        brick29 = bricks.Brick(7202, 365)
-        brick30 = bricks.Brick(7245, 365)
-        brick31 = bricks.Brick(7331, 365)
+        brick1  = bricks.Brick(self.config, 858,  365)
+        brick2  = bricks.Brick(self.config, 944,  365)
+        brick3  = bricks.Brick(self.config, 1030, 365)
+        brick4  = bricks.Brick(self.config, 3299, 365)
+        brick5  = bricks.Brick(self.config, 3385, 365)
+        brick6  = bricks.Brick(self.config, 3430, 193)
+        brick7  = bricks.Brick(self.config, 3473, 193)
+        brick8  = bricks.Brick(self.config, 3516, 193)
+        brick9  = bricks.Brick(self.config, 3559, 193)
+        brick10 = bricks.Brick(self.config, 3602, 193)
+        brick11 = bricks.Brick(self.config, 3645, 193)
+        brick12 = bricks.Brick(self.config, 3688, 193)
+        brick13 = bricks.Brick(self.config, 3731, 193)
+        brick14 = bricks.Brick(self.config, 3901, 193)
+        brick15 = bricks.Brick(self.config, 3944, 193)
+        brick16 = bricks.Brick(self.config, 3987, 193)
+        brick17 = bricks.Brick(self.config, 4030, 365, c.SIXCOINS, self.coin_group)
+        brick18 = bricks.Brick(self.config, 4287, 365)
+        brick19 = bricks.Brick(self.config, 4330, 365, c.STAR, self.powerup_group)
+        brick20 = bricks.Brick(self.config, 5058, 365)
+        brick21 = bricks.Brick(self.config, 5187, 193)
+        brick22 = bricks.Brick(self.config, 5230, 193)
+        brick23 = bricks.Brick(self.config, 5273, 193)
+        brick24 = bricks.Brick(self.config, 5488, 193)
+        brick25 = bricks.Brick(self.config, 5574, 193)
+        brick26 = bricks.Brick(self.config, 5617, 193)
+        brick27 = bricks.Brick(self.config, 5531, 365)
+        brick28 = bricks.Brick(self.config, 5574, 365)
+        brick29 = bricks.Brick(self.config, 7202, 365)
+        brick30 = bricks.Brick(self.config, 7245, 365)
+        brick31 = bricks.Brick(self.config, 7331, 365)
 
         self.brick_group = pg.sprite.Group(brick1,  brick2,
                                            brick3,  brick4,
@@ -210,18 +210,18 @@ class Level1(tools._State):
 
     def setup_coin_boxes(self):
         """Creates all the coin boxes and puts them in a sprite group"""
-        coin_box1  = coin_box.Coin_box(685, 365, c.COIN, self.coin_group)
-        coin_box2  = coin_box.Coin_box(901, 365, c.MUSHROOM, self.powerup_group)
-        coin_box3  = coin_box.Coin_box(987, 365, c.COIN, self.coin_group)
-        coin_box4  = coin_box.Coin_box(943, 193, c.COIN, self.coin_group)
-        coin_box5  = coin_box.Coin_box(3342, 365, c.MUSHROOM, self.powerup_group)
-        coin_box6  = coin_box.Coin_box(4030, 193, c.COIN, self.coin_group)
-        coin_box7  = coin_box.Coin_box(4544, 365, c.COIN, self.coin_group)
-        coin_box8  = coin_box.Coin_box(4672, 365, c.COIN, self.coin_group)
-        coin_box9  = coin_box.Coin_box(4672, 193, c.MUSHROOM, self.powerup_group)
-        coin_box10 = coin_box.Coin_box(4800, 365, c.COIN, self.coin_group)
-        coin_box11 = coin_box.Coin_box(5531, 193, c.COIN, self.coin_group)
-        coin_box12 = coin_box.Coin_box(7288, 365, c.COIN, self.coin_group)
+        coin_box1  = coin_box.Coin_box(self.config, 685, 365, c.COIN, self.coin_group)
+        coin_box2  = coin_box.Coin_box(self.config, 901, 365, c.MUSHROOM, self.powerup_group)
+        coin_box3  = coin_box.Coin_box(self.config, 987, 365, c.COIN, self.coin_group)
+        coin_box4  = coin_box.Coin_box(self.config, 943, 193, c.COIN, self.coin_group)
+        coin_box5  = coin_box.Coin_box(self.config, 3342, 365, c.MUSHROOM, self.powerup_group)
+        coin_box6  = coin_box.Coin_box(self.config, 4030, 193, c.COIN, self.coin_group)
+        coin_box7  = coin_box.Coin_box(self.config, 4544, 365, c.COIN, self.coin_group)
+        coin_box8  = coin_box.Coin_box(self.config, 4672, 365, c.COIN, self.coin_group)
+        coin_box9  = coin_box.Coin_box(self.config, 4672, 193, c.MUSHROOM, self.powerup_group)
+        coin_box10 = coin_box.Coin_box(self.config, 4800, 365, c.COIN, self.coin_group)
+        coin_box11 = coin_box.Coin_box(self.config, 5531, 193, c.COIN, self.coin_group)
+        coin_box12 = coin_box.Coin_box(self.config, 7288, 365, c.COIN, self.coin_group)
 
         self.coin_box_group = pg.sprite.Group(coin_box1,  coin_box2,
                                               coin_box3,  coin_box4,
@@ -264,24 +264,24 @@ class Level1(tools._State):
 
     def setup_enemies(self):
         """Creates all the enemies and stores them in a list of lists."""
-        goomba0 = enemies.Goomba()
-        goomba1 = enemies.Goomba()
-        goomba2 = enemies.Goomba()
-        goomba3 = enemies.Goomba()
-        goomba4 = enemies.Goomba(193)
-        goomba5 = enemies.Goomba(193)
-        goomba6 = enemies.Goomba()
-        goomba7 = enemies.Goomba()
-        goomba8 = enemies.Goomba()
-        goomba9 = enemies.Goomba()
-        goomba10 = enemies.Goomba()
-        goomba11 = enemies.Goomba()
-        goomba12 = enemies.Goomba()
-        goomba13 = enemies.Goomba()
-        goomba14 = enemies.Goomba()
-        goomba15 = enemies.Goomba()
+        goomba0 = enemies.Goomba(self.config)
+        goomba1 = enemies.Goomba(self.config)
+        goomba2 = enemies.Goomba(self.config)
+        goomba3 = enemies.Goomba(self.config)
+        goomba4 = enemies.Goomba(self.config, 193)
+        goomba5 = enemies.Goomba(self.config, 193)
+        goomba6 = enemies.Goomba(self.config)
+        goomba7 = enemies.Goomba(self.config)
+        goomba8 = enemies.Goomba(self.config)
+        goomba9 = enemies.Goomba(self.config)
+        goomba10 = enemies.Goomba(self.config)
+        goomba11 = enemies.Goomba(self.config)
+        goomba12 = enemies.Goomba(self.config)
+        goomba13 = enemies.Goomba(self.config)
+        goomba14 = enemies.Goomba(self.config)
+        goomba15 = enemies.Goomba(self.config)
 
-        koopa0 = enemies.Koopa()
+        koopa0 = enemies.Koopa(self.config)
 
         enemy_group1 = pg.sprite.Group(goomba0)
         enemy_group2 = pg.sprite.Group(goomba1)
@@ -308,7 +308,7 @@ class Level1(tools._State):
 
     def setup_mario(self):
         """Places Mario at the beginning of the level"""
-        self.mario = mario.Mario()
+        self.mario = mario.Mario(self.config)
         self.mario.rect.x = self.viewport.x + 110
         self.mario.rect.bottom = c.GROUND_HEIGHT
 
@@ -351,9 +351,9 @@ class Level1(tools._State):
                                                      self.enemy_group)
 
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys, current_frame):
         """Updates Entire level using states.  Called by the control object"""
-        self.game_info[c.CURRENT_TIME] = self.current_time = current_time
+        self.game_info[c.CURRENT_FRAME] = self.current_frame = current_frame
         self.handle_states(keys)
         self.check_if_time_out()
         self.blit_everything(surface)
@@ -473,7 +473,7 @@ class Level1(tools._State):
 
 
             elif checkpoint.name == 'secret_mushroom' and self.mario.y_vel < 0:
-                mushroom_box = coin_box.Coin_box(checkpoint.rect.x,
+                mushroom_box = coin_box.Coin_box(self.config, checkpoint.rect.x,
                                         checkpoint.rect.bottom - 40,
                                         '1up_mushroom',
                                         self.powerup_group)
@@ -585,7 +585,7 @@ class Level1(tools._State):
                     score.Score(self.mario.rect.centerx - self.viewport.x,
                                 self.mario.rect.y, 1000))
                 self.mario.invincible = True
-                self.mario.invincible_start_timer = self.current_time
+                self.mario.invincible_start_framer = self.current_frame
             elif powerup.name == c.MUSHROOM:
                 setup.SFX['powerup'].play()
                 self.game_info[c.SCORE] += 1000
@@ -732,7 +732,7 @@ class Level1(tools._State):
                 setup.SFX['powerup'].play()
                 powerup.kill()
                 self.mario.invincible = True
-                self.mario.invincible_start_timer = self.current_time
+                self.mario.invincible_start_framer = self.current_frame
 
         self.test_if_mario_is_falling()
 
@@ -895,7 +895,7 @@ class Level1(tools._State):
             enemy.state = c.JUMPED_ON
             enemy.kill()
             if enemy.name == c.GOOMBA:
-                enemy.death_timer = self.current_time
+                enemy.death_timer = self.current_frame
                 self.sprites_about_to_die_group.add(enemy)
             elif enemy.name == c.KOOPA:
                 self.shell_group.add(enemy)
@@ -1343,8 +1343,8 @@ class Level1(tools._State):
 
     def play_death_song(self):
         if self.death_timer == 0:
-            self.death_timer = self.current_time
-        elif (self.current_time - self.death_timer) > 3000:
+            self.death_timer = self.current_frame
+        elif (self.current_frame - self.death_timer) > 3000*self.config.fps/1000:
             self.set_game_info_values()
             self.done = True
 
@@ -1419,8 +1419,8 @@ class Level1(tools._State):
     def end_game(self):
         """End the game"""
         if self.flag_timer == 0:
-            self.flag_timer = self.current_time
-        elif (self.current_time - self.flag_timer) > 2000:
+            self.flag_timer = self.current_frame
+        elif (self.current_frame - self.flag_timer) > 2000*self.config.fps/1000:
             self.set_game_info_values()
             self.next = c.GAME_OVER
             self.sound_manager.stop_music()

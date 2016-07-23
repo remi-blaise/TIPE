@@ -7,8 +7,9 @@ from .. import setup
 
 class Powerup(pg.sprite.Sprite):
     """Base class for all powerup_group"""
-    def __init__(self, x, y):
+    def __init__(self, config, x, y):
         super(Powerup, self).__init__()
+        self.config = config
 
 
     def setup_powerup(self, x, y, name, setup_frames):
@@ -51,7 +52,7 @@ class Powerup(pg.sprite.Sprite):
 
     def update(self, game_info, *args):
         """Updates powerup behavior"""
-        self.current_time = game_info[c.CURRENT_TIME]
+        self.current_frame = game_info[c.CURRENT_FRAME]
         self.handle_state()
 
 
@@ -85,8 +86,8 @@ class Powerup(pg.sprite.Sprite):
 
 class Mushroom(Powerup):
     """Powerup that makes Mario become bigger"""
-    def __init__(self, x, y, name='mushroom'):
-        super(Mushroom, self).__init__(x, y)
+    def __init__(self, config, x, y, name='mushroom'):
+        super(Mushroom, self).__init__(config, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
 
@@ -107,8 +108,8 @@ class Mushroom(Powerup):
 
 class LifeMushroom(Mushroom):
     """1up mushroom"""
-    def __init__(self, x, y, name='1up_mushroom'):
-        super(LifeMushroom, self).__init__(x, y)
+    def __init__(self, config, x, y, name='1up_mushroom'):
+        super(LifeMushroom, self).__init__(config, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
     def setup_frames(self):
@@ -117,8 +118,8 @@ class LifeMushroom(Mushroom):
 
 class FireFlower(Powerup):
     """Powerup that allows Mario to throw fire balls"""
-    def __init__(self, x, y, name=c.FIREFLOWER):
-        super(FireFlower, self).__init__(x, y)
+    def __init__(self, config, x, y, name=c.FIREFLOWER):
+        super(FireFlower, self).__init__(config, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
 
@@ -160,20 +161,20 @@ class FireFlower(Powerup):
 
     def animation(self):
         """Method to make the Fire Flower blink"""
-        if (self.current_time - self.animate_timer) > 30:
+        if (self.current_frame - self.animate_timer) > 30*self.config.fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
                 self.frame_index = 0
 
             self.image = self.frames[self.frame_index]
-            self.animate_timer = self.current_time
+            self.animate_timer = self.current_frame
 
 
 class Star(Powerup):
     """A powerup that gives mario invincibility"""
-    def __init__(self, x, y, name='star'):
-        super(Star, self).__init__(x, y)
+    def __init__(self, config, x, y, name='star'):
+        super(Star, self).__init__(config, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
         self.animate_timer = 0
         self.rect.y += 1  #looks more centered offset one pixel
@@ -211,12 +212,12 @@ class Star(Powerup):
 
     def animation(self):
         """sets image for animation"""
-        if (self.current_time - self.animate_timer) > 30:
+        if (self.current_frame - self.animate_timer) > 30*self.config.fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
                 self.frame_index = 0
-            self.animate_timer = self.current_time
+            self.animate_timer = self.current_frame
             self.image = self.frames[self.frame_index]
 
 
@@ -238,7 +239,7 @@ class Star(Powerup):
 
 class FireBall(pg.sprite.Sprite):
     """Shot from Fire Mario"""
-    def __init__(self, x, y, facing_right, name=c.FIREBALL):
+    def __init__(self, config, x, y, facing_right, name=c.FIREBALL):
         super(FireBall, self).__init__()
         self.sprite_sheet = setup.GFX['item_objects']
         self.setup_frames()
@@ -258,6 +259,7 @@ class FireBall(pg.sprite.Sprite):
         self.rect.right = x
         self.rect.y = y
         self.name = name
+        self.config = config
 
 
     def setup_frames(self):
@@ -298,7 +300,7 @@ class FireBall(pg.sprite.Sprite):
 
     def update(self, game_info, viewport):
         """Updates fireball behavior"""
-        self.current_time = game_info[c.CURRENT_TIME]
+        self.current_frame = game_info[c.CURRENT_FRAME]
         self.handle_state()
         self.check_if_off_screen(viewport)
 
@@ -316,21 +318,21 @@ class FireBall(pg.sprite.Sprite):
     def animation(self):
         """adjusts frame for animation"""
         if self.state == c.FLYING or self.state == c.BOUNCING:
-            if (self.current_time - self.animation_timer) > 200:
+            if (self.current_frame - self.animation_timer) > 200*self.config.fps/1000:
                 if self.frame_index < 3:
                     self.frame_index += 1
                 else:
                     self.frame_index = 0
-                self.animation_timer = self.current_time
+                self.animation_timer = self.current_frame
                 self.image = self.frames[self.frame_index]
 
 
         elif self.state == c.EXPLODING:
-            if (self.current_time - self.animation_timer) > 50:
+            if (self.current_frame - self.animation_timer) > 50*self.config.fps/1000:
                 if self.frame_index < 6:
                     self.frame_index += 1
                     self.image = self.frames[self.frame_index]
-                    self.animation_timer = self.current_time
+                    self.animation_timer = self.current_frame
                 else:
                     self.kill()
 

@@ -9,7 +9,8 @@ class IA:
     
     @injectArguments
     def __init__(self, event_dispatcher, neuron_set=set()):
-        self.build()
+        # self.build()
+        pass
     
     def build(self):
         self.neuron_set.add(

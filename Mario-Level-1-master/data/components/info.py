@@ -1,5 +1,6 @@
 __author__ = 'justinarmstrong'
 
+from lib.inject_arguments import injectArguments
 import pygame as pg
 from .. import setup
 from .. import constants as c
@@ -16,17 +17,17 @@ class Character(pg.sprite.Sprite): # Classe des caractères à afficher
 
 class OverheadInfo(object): # Affiche toutes les infos selon le State et les infos du jeu
     """Class for level information like score, coin total,
-        and time remaining""" # Mtéthodes : update(), draw()
-    def __init__(self, game_info, state):
+        and time remaining""" # Méthodes : update(), draw()
+       
+    @injectArguments
+    def __init__(self, game_info, state, config):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
         self.time = 401
-        self.current_time = 0
+        self.current_frame = 0
         self.total_lives = game_info[c.LIVES]
         self.top_score = game_info[c.TOP_SCORE]
-        self.state = state
         self.special_state = None
-        self.game_info = game_info
 
         self.create_image_dict()
         self.create_score_group()
@@ -177,7 +178,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
 
     def create_flashing_coin(self):
         """Creates the flashing coin next to the coin total"""
-        self.flashing_coin = flashing_coin.Coin(280, 53)
+        self.flashing_coin = flashing_coin.Coin(self.config, 280, 53)
 
 
     def create_mario_image(self):
@@ -241,7 +242,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
             self.update_score_images(self.score_images, self.score)
             self.update_score_images(self.main_menu_labels[3], self.top_score)
             self.update_coin_total(level_info)
-            self.flashing_coin.update(level_info[c.CURRENT_TIME])
+            self.flashing_coin.update(level_info[c.CURRENT_FRAME])
 
         elif self.state == c.LOAD_SCREEN:
             self.score = level_info[c.SCORE]
@@ -257,7 +258,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
                     and not self.mario.dead:
                 self.update_count_down_clock(level_info)
             self.update_coin_total(level_info)
-            self.flashing_coin.update(level_info[c.CURRENT_TIME])
+            self.flashing_coin.update(level_info[c.CURRENT_FRAME])
 
         elif self.state == c.TIME_OUT:
             self.score = level_info[c.SCORE]
@@ -275,12 +276,12 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
             self.update_count_down_clock(level_info)
             self.update_score_images(self.score_images, self.score)
             self.update_coin_total(level_info)
-            self.flashing_coin.update(level_info[c.CURRENT_TIME])
+            self.flashing_coin.update(level_info[c.CURRENT_FRAME])
             if self.time == 0:
                 self.state = c.END_OF_LEVEL
 
         elif self.state == c.END_OF_LEVEL:
-            self.flashing_coin.update(level_info[c.CURRENT_TIME])
+            self.flashing_coin.update(level_info[c.CURRENT_FRAME])
 
 
     def update_score_images(self, images, score):
@@ -299,8 +300,8 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
         if self.state == c.FAST_COUNT_DOWN:
             self.time -= 1
 
-        elif (level_info[c.CURRENT_TIME] - self.current_time) > 400:
-            self.current_time = level_info[c.CURRENT_TIME]
+        elif (level_info[c.CURRENT_FRAME] - self.current_frame) > 1000*self.config.fps/1000: # Initialement .400
+            self.current_frame = level_info[c.CURRENT_FRAME] # Prend environ une seconde de retard par minute
             self.time -= 1
         self.count_down_images = []
         self.create_label(self.count_down_images, str(self.time), 645, 55)
