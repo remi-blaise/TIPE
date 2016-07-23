@@ -105,6 +105,8 @@ class GeneticElement:
 
 
 if __name__ == '__main__':
+	from copy import copy
+	
 	root = GeneticElement()
 	child = GeneticElement(root)
 	assert root.children[0] is child
