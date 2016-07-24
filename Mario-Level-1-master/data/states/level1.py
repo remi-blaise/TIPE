@@ -368,10 +368,13 @@ class Level1(tools._State):
                     'coin_box_group': self.coin_box_group,
                     'ground_group': self.ground_group,
                     'pipe_group': self.pipe_group,
-                    'step_group': self.step_group
+                    'step_group': self.step_group,
+                    
+                    'enemy_group': self.enemy_group
                     # ...
                 }, # Group
-                self.mario # Sprite
+                self.mario, # Sprite
+                self.current_frame
             ))
 
 
@@ -448,41 +451,41 @@ class Level1(tools._State):
                                                  self.check_point_group)
         if checkpoint:
             checkpoint.kill()
+            
+            if checkpoint.name == 'secret_mushroom':
+                if self.mario.y_vel < 0:
+                    mushroom_box = coin_box.Coin_box(self.config, checkpoint.rect.x,
+                                            checkpoint.rect.bottom - 40,
+                                            '1up_mushroom',
+                                            self.powerup_group)
+                    mushroom_box.start_bump(self.moving_score_list)
+                    self.coin_box_group.add(mushroom_box)
 
-            for i in range(1,11):
-                if checkpoint.name == str(i):
+                    self.mario.y_vel = 7
+                    self.mario.rect.y = mushroom_box.rect.bottom
+                    self.mario.state = c.FALL
+            else:
+                i = int(checkpoint.name)
+                if i < 11:
                     for index, enemy in enumerate(self.enemy_group_list[i -1]):
                         enemy.rect.x = self.viewport.right + (index * 60)
                     self.enemy_group.add(self.enemy_group_list[i-1])
 
-            if checkpoint.name == '11':
-                self.mario.state = c.FLAGPOLE
-                self.mario.invincible = False
-                self.mario.flag_pole_right = checkpoint.rect.right
-                if self.mario.rect.bottom < self.flag.rect.y:
-                    self.mario.rect.bottom = self.flag.rect.y
-                self.flag.state = c.SLIDE_DOWN
-                self.create_flag_points()
+                elif i == 11:
+                    self.mario.state = c.FLAGPOLE
+                    self.mario.invincible = False
+                    self.mario.flag_pole_right = checkpoint.rect.right
+                    if self.mario.rect.bottom < self.flag.rect.y:
+                        self.mario.rect.bottom = self.flag.rect.y
+                    self.flag.state = c.SLIDE_DOWN
+                    self.create_flag_points()
 
-            elif checkpoint.name == '12':
-                self.state = c.IN_CASTLE
-                self.mario.kill()
-                self.mario.state == c.STAND
-                self.mario.in_castle = True
-                self.overhead_info_display.state = c.FAST_COUNT_DOWN
-
-
-            elif checkpoint.name == 'secret_mushroom' and self.mario.y_vel < 0:
-                mushroom_box = coin_box.Coin_box(self.config, checkpoint.rect.x,
-                                        checkpoint.rect.bottom - 40,
-                                        '1up_mushroom',
-                                        self.powerup_group)
-                mushroom_box.start_bump(self.moving_score_list)
-                self.coin_box_group.add(mushroom_box)
-
-                self.mario.y_vel = 7
-                self.mario.rect.y = mushroom_box.rect.bottom
-                self.mario.state = c.FALL
+                elif i == 12:
+                    self.state = c.IN_CASTLE
+                    self.mario.kill()
+                    self.mario.state == c.STAND
+                    self.mario.in_castle = True
+                    self.overhead_info_display.state = c.FAST_COUNT_DOWN
 
             self.mario_and_enemy_group.add(self.enemy_group)
 

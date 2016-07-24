@@ -5,7 +5,7 @@ class ActionEvent:
 	"""Represents an input for the game"""
 	
 	@injectArguments
-	def __init__(self, duration):
+	def __init__(self, duration, start_frame):
 		self.key = self.__class__.key
 
 

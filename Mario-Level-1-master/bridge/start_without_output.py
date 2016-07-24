@@ -19,4 +19,3 @@ if __name__ == "__main__":
 	
 	print(persist)
 	print("done")
-	print(str(reader.frame_count) + " frames")

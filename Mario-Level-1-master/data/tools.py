@@ -49,7 +49,7 @@ class Control(object):
         self.state.previous = previous
     
     def event_loop(self):   # Écoute les events de pg
-        self.keys.get_keys()
+        self.keys.get_keys(self.current_frame)
         self.done = self.keys.quit
 
     def toggle_show_fps(self, key):
@@ -97,35 +97,33 @@ class Keys:
             'right':pg.K_RIGHT,
             'down':pg.K_DOWN
         }
-        
-        self.get_keys()
     
-    def get_keys(self):
+    @injectArguments
+    def get_keys(self, current_frame):
         if self.config.allow_control:
             self.get_keys_from_pg()
         if self.event_dispatcher:
             self.get_keys_from_dispatcher()
     
     def get_keys_from_pg(self):
-        self.pressed_keys = None
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit = True
             elif event.type == pg.KEYDOWN or event.type == pg.KEYUP:
                 self.pressed_keys = pg.key.get_pressed()
-        
-        if self.pressed_keys is not None:
-            for key in ('action', 'jump', 'left', 'right', 'down'):
-                setattr(self, key, bool(self.pressed_keys[ self.pg_keybinding[key] ]))
+                for key in ('action', 'jump', 'left', 'right', 'down'):
+                    setattr(self, key, bool(self.pressed_keys[ self.pg_keybinding[key] ]))
     
     def get_keys_from_dispatcher(self):
-        for key in self.dispatched_events:
-            setattr(self, key, True)
-        self.dispatched_events = []
+        for action in self.dispatched_events:
+            if self.current_frame < action.start_frame + action.duration:
+                setattr(self, action.key, True)
+            else:
+                self.dispatched_events.remove(action)
     
     def handle_dispatched_event(self, action):
         """Handle events dispatched by the event dispatcher"""
-        self.dispatched_events.append(action.key)
+        self.dispatched_events.append(action)
 
 
 class _State(object):   # Classe abstraite pour les States

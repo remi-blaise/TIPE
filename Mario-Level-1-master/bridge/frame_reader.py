@@ -10,29 +10,33 @@ class FrameReader:
 	@injectArguments
 	def __init__(self, event_dispatcher):
 		self.event_dispatcher.listen('game.frame', self.handle_frame)
-		self.frame_count = 0
 		self.frame = None
 	
 	@injectArguments
 	def handle_frame(self, frame):
-		self.frame_count += 1
+		"""Handle Frame event"""
 		
-		blocks = []
-		for block_group in ['brick_group', 'coin_box_group', 'ground_group', 'pipe_group', 'step_group']:
-			blocks.extend(frame.sprite_groups[block_group].sprites())
+		self.build_events('game.block', Block,
+			['brick_group', 'coin_box_group', 'ground_group', 'pipe_group', 'step_group'], frame)
+		self.build_events('game.enemy', Enemy, ['enemy_group'], frame)
+		
+	
+	def build_events(self, event_name, event_class, groups, frame):
+		"""Build DetectedComponent game event for each displayed sprite of the groups"""
+		
+		sprites = []
+		for group in groups:
+			sprites.extend(frame.sprite_groups[group].sprites())
 		viewport_sprite = ViewportSprite(frame.viewport)
-		displayed_blocks = pg.sprite.spritecollide(viewport_sprite, blocks, False)
-		
-		#debug
-		pg.display.set_caption("Displayed blocks = " + str(len(displayed_blocks)))
+		displayed_sprites = pg.sprite.spritecollide(viewport_sprite, sprites, False)
 		
 		# Make the events and dispatch
-		for block in displayed_blocks:
-			self.event_dispatcher.dispatch('game.block', Block(block.rect, frame.mario.rect))
-			if self.frame_count == 1:
-				print('game.block', Block(block.rect, frame.mario.rect))
+		for block in displayed_sprites:
+			self.event_dispatcher.dispatch(event_name, event_class(block.rect, frame.mario.rect, frame.current_frame))
+			# print('game.block', Block(block.rect, frame.mario.rect, frame.current_frame))
 		
-		print('frame')
+		#debug
+		pg.display.set_caption("Displayed blocks = " + str(len(displayed_sprites)))
 
 
 class ViewportSprite(pg.sprite.Sprite):

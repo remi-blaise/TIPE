@@ -9,20 +9,18 @@ class IA:
     
     @injectArguments
     def __init__(self, event_dispatcher, neuron_set=set()):
-        # self.build()
-        pass
+        self.build()
     
     def build(self):
-        self.neuron_set.add(
-            Neuron('game.block', { 'x':0, 'y':40 }, Right(30), self.event_dispatcher)
-        )
+        # self.neuron_set.add( Neuron('game.block', { 'x':0, 'y':40 }, Right(30), self.event_dispatcher) )
+        self.neuron_set.add( Neuron('game.block', { 'x':60, 'y': 0 }, Jump, 30, self.event_dispatcher) )
 
 
 class Neuron:
     """A link between an game event and an action event"""
     
     @injectArguments
-    def __init__(self, event_name, coor, action, event_dispatcher):
+    def __init__(self, event_name, coor, action_class, duration, event_dispatcher):
         self.event_dispatcher = event_dispatcher
     
     def event_dispatcher():
@@ -57,5 +55,4 @@ class Neuron:
     def onEvent(self, event):
         if self.coor['x'] >= event.left and self.coor['x'] <= event.right \
                 and self.coor['y'] >= event.top and self.coor['y'] <= event.bottom:
-            self.event_dispatcher.dispatch('action', self.action)
-            print('hey!')
+            self.event_dispatcher.dispatch('action', self.action_class(30, event.current_frame))
