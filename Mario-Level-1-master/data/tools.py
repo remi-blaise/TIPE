@@ -17,6 +17,7 @@ class Control(object):
         self.done = False
         self.clock = pg.time.Clock()        # La clock fournie par pg
         self.fps = config.fps
+        self.get_fps = 60
         self.show_fps = config.show_fps
         self.current_frame = 0.0
         self.keys = Keys(self.config)
@@ -33,6 +34,9 @@ class Control(object):
     def update(self):   # Update les infos de cet objet, met fin au jeu si besoin, passe les infos au State
         # self.current_time = pg.time.get_ticks() # Return the number of millisconds since pygame.init() was called.
         self.current_frame += 1
+        get_fps = self.clock.get_fps()
+        if get_fps:
+            self.get_fps = get_fps
         
         if self.state.quit:
             self.done = True
@@ -67,10 +71,11 @@ class Control(object):
             self.clock.tick(self.fps)   # Gère la fin de la frame :
                                             # calcule combien de temps s'est écoulé depuis le début de la frame
                                             # puis l'allonge de sorte à respecter le framerate (fps)
-            # if self.show_fps: # (anecdotique)
-            #     fps = self.clock.get_fps()
-            #     with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
-            #     pg.display.set_caption(with_fps)
+            if self.show_fps: # (anecdotique)
+                caption = pg.display.get_caption()[0]
+                if not 'FPS' in caption:
+                    with_fps = caption + " - {} FPS".format(int(self.get_fps))
+                    pg.display.set_caption(with_fps)
         
         return self.state.persist
 
@@ -89,13 +94,15 @@ class Keys:
         
         self.pressed_keys = None
         self.dispatched_events = []
+        self.dispatched_keys = set()
         
+        self.keys = ('action', 'jump', 'left', 'right', 'down')
         self.pg_keybinding = {
-            'action':pg.K_SPACE,
-            'jump':pg.K_UP,
-            'left':pg.K_LEFT,
-            'right':pg.K_RIGHT,
-            'down':pg.K_DOWN
+            'action': pg.K_SPACE,
+            'jump': pg.K_UP,
+            'left': pg.K_LEFT,
+            'right': pg.K_RIGHT,
+            'down': pg.K_DOWN
         }
     
     @injectArguments
@@ -104,6 +111,11 @@ class Keys:
             self.get_keys_from_pg()
         if self.event_dispatcher:
             self.get_keys_from_dispatcher()
+        # each key = pressed key or dispatched key
+        for key in self.keys:
+            setattr(self, key, self.pressed_keys and bool(self.pressed_keys[self.pg_keybinding[key]]))
+        for key in self.dispatched_keys:
+            setattr(self, key, True)
     
     def get_keys_from_pg(self):
         for event in pg.event.get():
@@ -111,18 +123,27 @@ class Keys:
                 self.quit = True
             elif event.type == pg.KEYDOWN or event.type == pg.KEYUP:
                 self.pressed_keys = pg.key.get_pressed()
-                for key in ('action', 'jump', 'left', 'right', 'down'):
-                    setattr(self, key, bool(self.pressed_keys[ self.pg_keybinding[key] ]))
     
     def get_keys_from_dispatcher(self):
+        self.dispatched_keys = set()
         for action in self.dispatched_events:
             if self.current_frame < action.start_frame + action.duration:
-                setattr(self, action.key, True)
+                self.dispatched_keys.add(action.key)
             else:
                 self.dispatched_events.remove(action)
     
     def handle_dispatched_event(self, action):
         """Handle events dispatched by the event dispatcher"""
+        
+        def jumpInDispatchedEvents():
+            for action in self.dispatched_events:
+                if action.key == 'jump':
+                    return True
+            return False
+        # Si on vient de sauter ou si un jump a déjà été émis (notamment ce tour-ci)
+        if action.key == 'jump' and (self.jump or jumpInDispatchedEvents()):
+            return False
+        
         self.dispatched_events.append(action)
 
 
@@ -130,7 +151,7 @@ class _State(object):   # Classe abstraite pour les States
     """Abstract class for States"""
     
     @injectArguments
-    def __init__(self, config):
+    def __init__(self, config, get_fps):
         self.start_frame = 0.0
         self.current_frame = 0.0
         self.done = False
@@ -141,14 +162,17 @@ class _State(object):   # Classe abstraite pour les States
     
     def start_game(self):
         """To be executed only once at the game launch"""
-        self.persist = {c.COIN_TOTAL: 0, # Default persist
-                   c.SCORE: 0,
-                   c.LIVES: 3,
-                   c.TOP_SCORE: 0,
-                   c.CURRENT_FRAME: 0.0,
-                   c.LEVEL_STATE: None,
-                   c.CAMERA_START_X: 0,
-                   c.MARIO_DEAD: False}
+        self.persist = {
+            c.COIN_TOTAL: 0, # Default persist
+            c.SCORE: 0,
+            c.LIVES: 3,
+            c.TOP_SCORE: 0,
+            c.CURRENT_FRAME: 0.0,
+            c.LEVEL_STATE: None,
+            c.CAMERA_START_X: 0,
+            c.MARIO_DEAD: False,
+            'time': 401
+        }
         if not self.config.show_game_frame:
             self.persist[c.LIVES] = 1
         self.startup(0.0, self.persist)

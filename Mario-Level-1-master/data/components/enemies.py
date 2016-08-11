@@ -8,9 +8,9 @@ from .. import constants as c
 
 class Enemy(pg.sprite.Sprite):
     """Base class for all enemies (Goombas, Koopas, etc.)"""
-    def __init__(self, config):
+    def __init__(self, get_fps):
         pg.sprite.Sprite.__init__(self)
-        self.config = config
+        self.get_fps = get_fps
         
 
     def setup_enemy(self, x, y, direction, name, setup_frames):
@@ -75,7 +75,7 @@ class Enemy(pg.sprite.Sprite):
 
     def walking(self):
         """Default state of moving sideways"""
-        if (self.current_frame - self.animate_timer) > 125*self.config.fps/1000:
+        if (self.current_frame - self.animate_timer) > 125*self.get_fps/1000:
             if self.frame_index == 0:
                 self.frame_index += 1
             elif self.frame_index == 1:
@@ -133,9 +133,8 @@ class Enemy(pg.sprite.Sprite):
 
 
 class Goomba(Enemy):
-
-    def __init__(self, config, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='goomba'):
-        Enemy.__init__(self, config)
+    def __init__(self, get_fps, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='goomba'):
+        Enemy.__init__(self, get_fps)
         self.setup_enemy(x, y, direction, name, self.setup_frames)
 
 
@@ -155,15 +154,14 @@ class Goomba(Enemy):
         """When Mario squishes him"""
         self.frame_index = 2
 
-        if (self.current_frame - self.death_timer) > 500*self.config.fps/1000:
+        if (self.current_frame - self.death_timer) > 500*self.get_fps/1000:
             self.kill()
 
 
 
 class Koopa(Enemy):
-
-    def __init__(self, config, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='koopa'):
-        Enemy.__init__(self, config)
+    def __init__(self, get_fps, y=c.GROUND_HEIGHT, x=0, direction=c.LEFT, name='koopa'):
+        Enemy.__init__(self, get_fps)
         self.setup_enemy(x, y, direction, name, self.setup_frames)
 
 

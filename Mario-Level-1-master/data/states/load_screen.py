@@ -15,8 +15,8 @@ class LoadScreen(tools._State):
 
         info_state = self.set_overhead_info_state()
 
-        self.overhead_info = info.OverheadInfo(self.game_info, info_state, self.config)
-        self.sound_manager = game_sound.Sound(self.overhead_info, self.config)
+        self.overhead_info = info.OverheadInfo(self.game_info, info_state, self.get_fps)
+        self.sound_manager = game_sound.Sound(self.overhead_info, self.get_fps)
 
 
     def set_next_state(self):
@@ -30,15 +30,15 @@ class LoadScreen(tools._State):
 
     def update(self, surface, keys, current_frame):
         """Updates the loading screen"""
-        if (current_frame - self.start_frame) < 2.400*self.config.fps:
+        if (current_frame - self.start_frame) < 2.400*self.get_fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)
 
-        elif (current_frame - self.start_frame) < 2.600*self.config.fps:
+        elif (current_frame - self.start_frame) < 2.600*self.get_fps:
             surface.fill(c.BLACK)
 
-        elif (current_frame - self.start_frame) < 2.635*self.config.fps:
+        elif (current_frame - self.start_frame) < 2.635*self.get_fps:
             surface.fill((106, 150, 252))
 
         else:
@@ -62,13 +62,13 @@ class GameOver(LoadScreen):
         self.current_frame = current_frame
         self.sound_manager.update(self.persist, None)
 
-        if (self.current_frame - self.start_frame) < 7.000*self.config.fps:
+        if (self.current_frame - self.start_frame) < 7.000*self.get_fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)
-        elif (self.current_frame - self.start_frame) < 7.200*self.config.fps:
+        elif (self.current_frame - self.start_frame) < 7.200*self.get_fps:
             surface.fill(c.BLACK)
-        elif (self.current_frame - self.start_frame) < 7.235*self.config.fps:
+        elif (self.current_frame - self.start_frame) < 7.235*self.get_fps:
             surface.fill((106, 150, 252))
         else:
             self.done = True
@@ -91,7 +91,7 @@ class TimeOut(LoadScreen):
     def update(self, surface, keys, current_frame):
         self.current_frame = current_frame
 
-        if (self.current_frame - self.start_frame) < 2.400*self.config.fps:
+        if (self.current_frame - self.start_frame) < 2.400*self.get_fps:
             surface.fill(c.BLACK)
             self.overhead_info.update(self.game_info)
             self.overhead_info.draw(surface)

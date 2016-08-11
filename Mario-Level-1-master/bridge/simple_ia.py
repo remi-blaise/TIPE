@@ -12,8 +12,9 @@ class IA:
         self.build()
     
     def build(self):
-        # self.neuron_set.add( Neuron('game.block', { 'x':0, 'y':40 }, Right(30), self.event_dispatcher) )
-        self.neuron_set.add( Neuron('game.block', { 'x':60, 'y': 0 }, Jump, 30, self.event_dispatcher) )
+        self.neuron_set.add( Neuron('game.block', { 'x':40, 'y':40 }, Right, 1, self.event_dispatcher) )
+        self.neuron_set.add( Neuron('game.block', { 'x':80, 'y': 0 }, Jump, 30, self.event_dispatcher) )
+        self.neuron_set.add( Neuron('game.enemy', { 'x':80, 'y': 0 }, Jump, 30, self.event_dispatcher) )
 
 
 class Neuron:

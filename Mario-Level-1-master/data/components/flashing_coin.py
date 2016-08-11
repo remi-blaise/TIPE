@@ -7,7 +7,7 @@ from .. import constants as c
 
 class Coin(pg.sprite.Sprite):
     """Flashing coin next to coin total info"""
-    def __init__(self, config, x, y):
+    def __init__(self, get_fps, x, y):
         super(Coin, self).__init__()
         self.sprite_sheet = setup.GFX['item_objects']
         self.create_frames()
@@ -18,7 +18,7 @@ class Coin(pg.sprite.Sprite):
         self.timer = 0
         self.first_half = True
         self.frame_index = 0
-        self.config = config
+        self.get_fps = get_fps
 
 
     def create_frames(self):
@@ -48,21 +48,21 @@ class Coin(pg.sprite.Sprite):
         """Animates flashing coin"""
         if self.first_half:
             if self.frame_index == 0:
-                if (current_frame - self.timer) > 375*self.config.fps/1000:
+                if (current_frame - self.timer) > 375*self.get_fps/1000:
                     self.frame_index += 1
                     self.timer = current_frame
             elif self.frame_index < 2:
-                if (current_frame - self.timer) > 125*self.config.fps/1000:
+                if (current_frame - self.timer) > 125*self.get_fps/1000:
                     self.frame_index += 1
                     self.timer = current_frame
             elif self.frame_index == 2:
-                if (current_frame - self.timer) > 125*self.config.fps/1000:
+                if (current_frame - self.timer) > 125*self.get_fps/1000:
                     self.frame_index -= 1
                     self.first_half = False
                     self.timer = current_frame
         else:
             if self.frame_index == 1:
-                if (current_frame - self.timer) > 125*self.config.fps/1000:
+                if (current_frame - self.timer) > 125*self.get_fps/1000:
                     self.frame_index -= 1
                     self.first_half = True
                     self.timer = current_frame

@@ -9,7 +9,7 @@ from . import coin
 
 class Coin_box(pg.sprite.Sprite):
     """Coin box sprite"""
-    def __init__(self, config, x, y, contents, group): # There was default values: contents='coin', group=None, unused
+    def __init__(self, get_fps, x, y, contents, group): # There was default values: contents='coin', group=None, unused
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['tile_set']
         self.frames = []
@@ -28,7 +28,7 @@ class Coin_box(pg.sprite.Sprite):
         self.y_vel = 0
         self.contents = contents
         self.group = group
-        self.config = config
+        self.get_fps = get_fps
 
 
     def get_image(self, x, y, width, height):
@@ -78,21 +78,21 @@ class Coin_box(pg.sprite.Sprite):
         """Action when in the RESTING state"""
         if self.first_half:
             if self.frame_index == 0:
-                if (self.current_frame - self.animation_timer) > 375*self.config.fps/1000:
+                if (self.current_frame - self.animation_timer) > 375*self.get_fps/1000:
                     self.frame_index += 1
                     self.animation_timer = self.current_frame
             elif self.frame_index < 2:
-                if (self.current_frame - self.animation_timer) > 125*self.config.fps/1000:
+                if (self.current_frame - self.animation_timer) > 125*self.get_fps/1000:
                     self.frame_index += 1
                     self.animation_timer = self.current_frame
             elif self.frame_index == 2:
-                if (self.current_frame - self.animation_timer) > 125*self.config.fps/1000:
+                if (self.current_frame - self.animation_timer) > 125*self.get_fps/1000:
                     self.frame_index -= 1
                     self.first_half = False
                     self.animation_timer = self.current_frame
         else:
             if self.frame_index == 1:
-                if (self.current_frame - self.animation_timer) > 125*self.config.fps/1000:
+                if (self.current_frame - self.animation_timer) > 125*self.get_fps/1000:
                     self.frame_index -= 1
                     self.first_half = True
                     self.animation_timer = self.current_frame
@@ -109,11 +109,11 @@ class Coin_box(pg.sprite.Sprite):
             self.rect.y = self.rest_height
             self.state = c.OPENED
             if self.contents == 'mushroom':
-                self.group.add(powerups.Mushroom(self.config, self.rect.centerx, self.rect.y))
+                self.group.add(powerups.Mushroom(self.get_fps, self.rect.centerx, self.rect.y))
             elif self.contents == 'fireflower':
-                self.group.add(powerups.FireFlower(self.config, self.rect.centerx, self.rect.y))
+                self.group.add(powerups.FireFlower(self.get_fps, self.rect.centerx, self.rect.y))
             elif self.contents == '1up_mushroom':
-                self.group.add(powerups.LifeMushroom(self.config, self.rect.centerx, self.rect.y))
+                self.group.add(powerups.LifeMushroom(self.get_fps, self.rect.centerx, self.rect.y))
 
 
         self.frame_index = 3
@@ -126,7 +126,7 @@ class Coin_box(pg.sprite.Sprite):
         self.state = c.BUMPED
 
         if self.contents == 'coin':
-            self.group.add(coin.Coin(self.config, self.rect.centerx,
+            self.group.add(coin.Coin(self.get_fps, self.rect.centerx,
                                      self.rect.y,
                                      score_group))
             setup.SFX['coin'].play()

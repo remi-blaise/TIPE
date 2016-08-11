@@ -13,7 +13,7 @@ class Menu(tools._State):
         self.next = c.LOAD_SCREEN
         self.persist = persist
         self.game_info = persist
-        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU, self.config)
+        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU, self.get_fps)
 
         self.sprite_sheet = setup.GFX['title_screen']
         self.setup_background()
@@ -32,7 +32,7 @@ class Menu(tools._State):
 
     def setup_mario(self):
         """Places Mario at the beginning of the level"""
-        self.mario = mario.Mario(self.config)
+        self.mario = mario.Mario(self.get_fps)
         self.mario.rect.x = 110
         self.mario.rect.bottom = c.GROUND_HEIGHT
 

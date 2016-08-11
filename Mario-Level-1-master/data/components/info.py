@@ -20,7 +20,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
         and time remaining""" # Méthodes : update(), draw()
        
     @injectArguments
-    def __init__(self, game_info, state, config):
+    def __init__(self, game_info, state, get_fps):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
         self.time = 401
@@ -178,7 +178,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
 
     def create_flashing_coin(self):
         """Creates the flashing coin next to the coin total"""
-        self.flashing_coin = flashing_coin.Coin(self.config, 280, 53)
+        self.flashing_coin = flashing_coin.Coin(self.get_fps, 280, 53)
 
 
     def create_mario_image(self):
@@ -300,8 +300,8 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
         if self.state == c.FAST_COUNT_DOWN:
             self.time -= 1
 
-        elif (level_info[c.CURRENT_FRAME] - self.current_frame) > 1000*self.config.fps/1000: # Initialement .400
-            self.current_frame = level_info[c.CURRENT_FRAME] # Prend environ une seconde de retard par minute
+        elif (level_info[c.CURRENT_FRAME] - self.current_frame) > 1000*self.get_fps/1000: # Initialement .400
+            self.current_frame = level_info[c.CURRENT_FRAME]
             self.time -= 1
         self.count_down_images = []
         self.create_label(self.count_down_images, str(self.time), 645, 55)

@@ -7,9 +7,9 @@ from .. import setup
 
 class Powerup(pg.sprite.Sprite):
     """Base class for all powerup_group"""
-    def __init__(self, config, x, y):
+    def __init__(self, get_fps, x, y):
         super(Powerup, self).__init__()
-        self.config = config
+        self.get_fps = get_fps
 
 
     def setup_powerup(self, x, y, name, setup_frames):
@@ -86,8 +86,8 @@ class Powerup(pg.sprite.Sprite):
 
 class Mushroom(Powerup):
     """Powerup that makes Mario become bigger"""
-    def __init__(self, config, x, y, name='mushroom'):
-        super(Mushroom, self).__init__(config, x, y)
+    def __init__(self, get_fps, x, y, name='mushroom'):
+        super(Mushroom, self).__init__(get_fps, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
 
@@ -108,8 +108,8 @@ class Mushroom(Powerup):
 
 class LifeMushroom(Mushroom):
     """1up mushroom"""
-    def __init__(self, config, x, y, name='1up_mushroom'):
-        super(LifeMushroom, self).__init__(config, x, y)
+    def __init__(self, get_fps, x, y, name='1up_mushroom'):
+        super(LifeMushroom, self).__init__(get_fps, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
     def setup_frames(self):
@@ -118,8 +118,8 @@ class LifeMushroom(Mushroom):
 
 class FireFlower(Powerup):
     """Powerup that allows Mario to throw fire balls"""
-    def __init__(self, config, x, y, name=c.FIREFLOWER):
-        super(FireFlower, self).__init__(config, x, y)
+    def __init__(self, get_fps, x, y, name=c.FIREFLOWER):
+        super(FireFlower, self).__init__(get_fps, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
 
 
@@ -161,7 +161,7 @@ class FireFlower(Powerup):
 
     def animation(self):
         """Method to make the Fire Flower blink"""
-        if (self.current_frame - self.animate_timer) > 30*self.config.fps/1000:
+        if (self.current_frame - self.animate_timer) > 30*self.get_fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
@@ -173,8 +173,8 @@ class FireFlower(Powerup):
 
 class Star(Powerup):
     """A powerup that gives mario invincibility"""
-    def __init__(self, config, x, y, name='star'):
-        super(Star, self).__init__(config, x, y)
+    def __init__(self, get_fps, x, y, name='star'):
+        super(Star, self).__init__(get_fps, x, y)
         self.setup_powerup(x, y, name, self.setup_frames)
         self.animate_timer = 0
         self.rect.y += 1  #looks more centered offset one pixel
@@ -212,7 +212,7 @@ class Star(Powerup):
 
     def animation(self):
         """sets image for animation"""
-        if (self.current_frame - self.animate_timer) > 30*self.config.fps/1000:
+        if (self.current_frame - self.animate_timer) > 30*self.get_fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
@@ -239,7 +239,7 @@ class Star(Powerup):
 
 class FireBall(pg.sprite.Sprite):
     """Shot from Fire Mario"""
-    def __init__(self, config, x, y, facing_right, name=c.FIREBALL):
+    def __init__(self, get_fps, x, y, facing_right, name=c.FIREBALL):
         super(FireBall, self).__init__()
         self.sprite_sheet = setup.GFX['item_objects']
         self.setup_frames()
@@ -259,7 +259,7 @@ class FireBall(pg.sprite.Sprite):
         self.rect.right = x
         self.rect.y = y
         self.name = name
-        self.config = config
+        self.get_fps = get_fps
 
 
     def setup_frames(self):
@@ -318,7 +318,7 @@ class FireBall(pg.sprite.Sprite):
     def animation(self):
         """adjusts frame for animation"""
         if self.state == c.FLYING or self.state == c.BOUNCING:
-            if (self.current_frame - self.animation_timer) > 200*self.config.fps/1000:
+            if (self.current_frame - self.animation_timer) > 200*self.get_fps/1000:
                 if self.frame_index < 3:
                     self.frame_index += 1
                 else:
@@ -328,7 +328,7 @@ class FireBall(pg.sprite.Sprite):
 
 
         elif self.state == c.EXPLODING:
-            if (self.current_frame - self.animation_timer) > 50*self.config.fps/1000:
+            if (self.current_frame - self.animation_timer) > 50*self.get_fps/1000:
                 if self.frame_index < 6:
                     self.frame_index += 1
                     self.image = self.frames[self.frame_index]

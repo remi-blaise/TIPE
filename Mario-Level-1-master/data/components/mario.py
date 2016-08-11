@@ -7,7 +7,7 @@ from . import powerups
 
 
 class Mario(pg.sprite.Sprite):
-    def __init__(self, config):
+    def __init__(self, get_fps):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['mario_bros']
 
@@ -22,7 +22,7 @@ class Mario(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pg.mask.from_surface(self.image)
         
-        self.config = config
+        self.get_fps = get_fps
 
 
     def setup_timers(self):
@@ -502,11 +502,11 @@ class Mario(pg.sprite.Sprite):
         setup.SFX['fireball'].play()
         self.fireball_count = self.count_number_of_fireballs(powerup_group)
 
-        if (self.current_frame - self.last_fireball_time) > 200*self.config.fps/1000:
+        if (self.current_frame - self.last_fireball_time) > 200*self.get_fps/1000:
             if self.fireball_count < 2:
                 self.allow_fireball = False
                 powerup_group.add(
-                    powerups.FireBall(self.config, self.rect.right, self.rect.y, self.facing_right))
+                    powerups.FireBall(self.get_fps, self.rect.right, self.rect.y, self.facing_right))
                 self.last_fireball_time = self.current_frame
 
                 self.frame_index = 6
@@ -540,7 +540,7 @@ class Mario(pg.sprite.Sprite):
             self.walking_timer = self.current_frame
         else:
             if (self.current_frame - self.walking_timer >
-                    self.calculate_animation_speed()*self.config.fps/1000):
+                    self.calculate_animation_speed()*self.get_fps/1000):
                 if self.frame_index < 3:
                     self.frame_index += 1
                 else:
@@ -679,7 +679,7 @@ class Mario(pg.sprite.Sprite):
         """Called when Mario is in a DEATH_JUMP state"""
         if self.death_timer == 0:
             self.death_timer = self.current_frame
-        elif (self.current_frame - self.death_timer) > 500*self.config.fps/1000:
+        elif (self.current_frame - self.death_timer) > 500*self.get_fps/1000:
             self.rect.y += self.y_vel
             self.y_vel += self.gravity
 
@@ -734,8 +734,8 @@ class Mario(pg.sprite.Sprite):
     def timer_between_these_two_times(self, start_time, end_time):
         """Checks if the timer is at the right time for the action. Reduces
         the ugly code."""
-        if (self.current_frame - self.transition_timer) >= start_time*self.config.fps/1000 \
-            and (self.current_frame - self.transition_timer) < end_time*self.config.fps/1000:
+        if (self.current_frame - self.transition_timer) >= start_time*self.get_fps/1000 \
+            and (self.current_frame - self.transition_timer) < end_time*self.get_fps/1000:
             return True
 
 
@@ -809,36 +809,36 @@ class Mario(pg.sprite.Sprite):
 
         if self.fire_transition_timer == 0:
             self.fire_transition_timer = self.current_frame
-        elif (self.current_frame - self.fire_transition_timer) > 65*self.config.fps/1000 \
-                and (self.current_frame - self.fire_transition_timer) < 130*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) > 65*self.get_fps/1000 \
+                and (self.current_frame - self.fire_transition_timer) < 130*self.get_fps/1000:
             self.image = frames[0]
-        elif (self.current_frame - self.fire_transition_timer) < 195*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 195*self.get_fps/1000:
             self.image = frames[1]
-        elif (self.current_frame - self.fire_transition_timer) < 260*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 260*self.get_fps/1000:
             self.image = frames[2]
-        elif (self.current_frame - self.fire_transition_timer) < 325*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 325*self.get_fps/1000:
             self.image = frames[3]
-        elif (self.current_frame - self.fire_transition_timer) < 390*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 390*self.get_fps/1000:
             self.image = frames[0]
-        elif (self.current_frame - self.fire_transition_timer) < 455*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 455*self.get_fps/1000:
             self.image = frames[1]
-        elif (self.current_frame - self.fire_transition_timer) < 520*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 520*self.get_fps/1000:
             self.image = frames[2]
-        elif (self.current_frame - self.fire_transition_timer) < 585*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 585*self.get_fps/1000:
             self.image = frames[3]
-        elif (self.current_frame - self.fire_transition_timer) < 650*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 650*self.get_fps/1000:
             self.image = frames[0]
-        elif (self.current_frame - self.fire_transition_timer) < 715*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 715*self.get_fps/1000:
             self.image = frames[1]
-        elif (self.current_frame - self.fire_transition_timer) < 780*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 780*self.get_fps/1000:
             self.image = frames[2]
-        elif (self.current_frame - self.fire_transition_timer) < 845*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 845*self.get_fps/1000:
             self.image = frames[3]
-        elif (self.current_frame - self.fire_transition_timer) < 910*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 910*self.get_fps/1000:
             self.image = frames[0]
-        elif (self.current_frame - self.fire_transition_timer) < 975*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 975*self.get_fps/1000:
             self.image = frames[1]
-        elif (self.current_frame - self.fire_transition_timer) < 1040*self.config.fps/1000:
+        elif (self.current_frame - self.fire_transition_timer) < 1040*self.get_fps/1000:
             self.image = frames[2]
             self.fire = True
             self.in_transition_state = False
@@ -866,47 +866,47 @@ class Mario(pg.sprite.Sprite):
 
         if self.transition_timer == 0:
             self.transition_timer = self.current_frame
-        elif (self.current_frame - self.transition_timer) < 265*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 265*self.get_fps/1000:
             self.image = frames[0]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 330*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 330*self.get_fps/1000:
             self.image = frames[1]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 395*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 395*self.get_fps/1000:
             self.image = frames[2]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 460*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 460*self.get_fps/1000:
             self.image = frames[1]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 525*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 525*self.get_fps/1000:
             self.image = frames[2]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 590*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 590*self.get_fps/1000:
             self.image = frames[1]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 655*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 655*self.get_fps/1000:
             self.image = frames[2]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 720*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 720*self.get_fps/1000:
             self.image = frames[1]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 785*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 785*self.get_fps/1000:
             self.image = frames[2]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 850*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 850*self.get_fps/1000:
             self.image = frames[1]
             self.hurt_invincible_check()
             self.adjust_rect()
-        elif (self.current_frame - self.transition_timer) < 915*self.config.fps/1000:
+        elif (self.current_frame - self.transition_timer) < 915*self.get_fps/1000:
             self.image = frames[2]
             self.adjust_rect()
             self.in_transition_state = False
@@ -949,11 +949,11 @@ class Mario(pg.sprite.Sprite):
         if self.flag_pole_timer == 0:
             self.flag_pole_timer = self.current_frame
         elif self.rect.bottom < 493:
-            if (self.current_frame - self.flag_pole_timer) < 65*self.config.fps/1000:
+            if (self.current_frame - self.flag_pole_timer) < 65*self.get_fps/1000:
                 self.image = self.right_frames[9]
-            elif (self.current_frame - self.flag_pole_timer) < 130*self.config.fps/1000:
+            elif (self.current_frame - self.flag_pole_timer) < 130*self.get_fps/1000:
                 self.image = self.right_frames[10]
-            elif (self.current_frame - self.flag_pole_timer) >= 130*self.config.fps/1000:
+            elif (self.current_frame - self.flag_pole_timer) >= 130*self.get_fps/1000:
                 self.flag_pole_timer = self.current_frame
 
             self.rect.right = self.flag_pole_right
@@ -972,7 +972,7 @@ class Mario(pg.sprite.Sprite):
         if self.flag_pole_timer == 0:
             self.flag_pole_timer = self.current_frame
             self.image = self.left_frames[10]
-        elif (self.current_frame - self.flag_pole_timer) < 210*self.config.fps/1000:
+        elif (self.current_frame - self.flag_pole_timer) < 210*self.get_fps/1000:
             self.image = self.left_frames[10]
         else:
             self.in_transition_state = False
@@ -1002,11 +1002,11 @@ class Mario(pg.sprite.Sprite):
         if self.x_vel < self.max_x_vel:
             self.x_vel += self.x_accel
 
-        if (self.walking_timer == 0 or (self.current_frame - self.walking_timer) > 200*self.config.fps/1000):
+        if (self.walking_timer == 0 or (self.current_frame - self.walking_timer) > 200*self.get_fps/1000):
             self.walking_timer = self.current_frame
 
         elif (self.current_frame - self.walking_timer) > \
-                self.calculate_animation_speed()*self.config.fps/1000:
+                self.calculate_animation_speed()*self.get_fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
@@ -1030,10 +1030,10 @@ class Mario(pg.sprite.Sprite):
 
     def check_if_invincible(self):
         if self.invincible:
-            if ((self.current_frame - self.invincible_start_timer) < 10000*self.config.fps/1000):
+            if ((self.current_frame - self.invincible_start_timer) < 10000*self.get_fps/1000):
                 self.losing_invincibility = False
                 self.change_frame_list(30)
-            elif ((self.current_frame - self.invincible_start_timer) < 12000*self.config.fps/1000):
+            elif ((self.current_frame - self.invincible_start_timer) < 12000*self.get_fps/1000):
                 self.losing_invincibility = True
                 self.change_frame_list(100)
             else:
@@ -1049,7 +1049,7 @@ class Mario(pg.sprite.Sprite):
 
 
     def change_frame_list(self, frame_switch_speed):
-        if (self.current_frame - self.invincible_animation_timer) > frame_switch_speed*self.config.fps/1000:
+        if (self.current_frame - self.invincible_animation_timer) > frame_switch_speed*self.get_fps/1000:
             if self.invincible_index < (len(self.invincible_small_frames_list) - 1):
                 self.invincible_index += 1
             else:
@@ -1077,7 +1077,7 @@ class Mario(pg.sprite.Sprite):
         if self.hurt_invincible and self.state != c.BIG_TO_SMALL:
             if self.hurt_invisible_timer2 == 0:
                 self.hurt_invisible_timer2 = self.current_frame
-            elif (self.current_frame - self.hurt_invisible_timer2) < 2000*self.config.fps/1000:
+            elif (self.current_frame - self.hurt_invisible_timer2) < 2000*self.get_fps/1000:
                 self.hurt_invincible_check()
             else:
                 self.hurt_invincible = False
@@ -1092,9 +1092,9 @@ class Mario(pg.sprite.Sprite):
         """Makes Mario invincible on a fixed interval"""
         if self.hurt_invisible_timer == 0:
             self.hurt_invisible_timer = self.current_frame
-        elif (self.current_frame - self.hurt_invisible_timer) < 35*self.config.fps/1000:
+        elif (self.current_frame - self.hurt_invisible_timer) < 35*self.get_fps/1000:
             self.image.set_alpha(0)
-        elif (self.current_frame - self.hurt_invisible_timer) < 70*self.config.fps/1000:
+        elif (self.current_frame - self.hurt_invisible_timer) < 70*self.get_fps/1000:
             self.image.set_alpha(255)
             self.hurt_invisible_timer = self.current_frame
 

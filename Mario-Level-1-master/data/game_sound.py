@@ -11,7 +11,7 @@ class Sound(object):
     """Handles all sound for the game"""    # Methods: set_music_mixer(), update(), stop_music()
     
     @injectArguments
-    def __init__(self, overhead_info, config):
+    def __init__(self, overhead_info, get_fps):
         """Initialize the class"""
         self.sfx_dict = setup.SFX
         self.music_dict = setup.MUSIC
@@ -75,7 +75,7 @@ class Sound(object):
                 self.play_music('flagpole', c.FLAGPOLE)
 
         elif self.state == c.MARIO_INVINCIBLE:
-            if (self.mario.current_frame - self.mario.invincible_start_framer) > 11000*self.config.fps/1000:
+            if (self.mario.current_frame - self.mario.invincible_start_timer) > 11000*self.get_fps/1000:
                 self.play_music('main_theme', c.NORMAL)
             elif self.mario.dead:
                 self.play_music('death', c.MARIO_DEAD)

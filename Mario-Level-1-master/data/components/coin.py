@@ -8,7 +8,7 @@ from . import score
 
 class Coin(pg.sprite.Sprite):
     """Coins found in boxes and bricks"""
-    def __init__(self, config, x, y, score_group):
+    def __init__(self, get_fps, x, y, score_group):
         pg.sprite.Sprite.__init__(self)
         self.sprite_sheet = setup.GFX['item_objects']
         self.frames = []
@@ -24,7 +24,7 @@ class Coin(pg.sprite.Sprite):
         self.y_vel = -15
         self.initial_height = self.rect.bottom - 5
         self.score_group = score_group
-        self.config = config
+        self.get_fps = get_fps
 
 
     def get_image(self, x, y, width, height):
@@ -64,7 +64,7 @@ class Coin(pg.sprite.Sprite):
         self.rect.y += self.y_vel
         self.y_vel += self.gravity
 
-        if (self.current_frame - self.animation_timer) > 80*self.config.fps/1000:
+        if (self.current_frame - self.animation_timer) > 80*self.get_fps/1000:
             if self.frame_index < 3:
                 self.frame_index += 1
             else:
