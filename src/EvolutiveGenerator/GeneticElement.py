@@ -15,21 +15,25 @@ class GeneticElement:
 	And the following class method:
 		+create() -> GeneticElement
 	Evolution logic may typically use recursive process over the children.
-	Evolution logic might be handled by an external EvolutionProccessor.
+	Evolution logic might be handled by an external EvolutionProcessor.
 	"""
 	
 	
-	def __init__(self, parent = None, children = []):
+	def __init__(self, parent = None, children = [], cascade = True):
 		"""Init the element
 		
 		Expects:
 			parent to be a GeneticElement
 			children to be an array of GeneticElement
-		Both are optional.
+			cascade to be a bool
+		All are optional.
+		Words "parent" and "children" refers to data trees concepts, not genetic's.
+		
+		If cascade is True (by default), append the element to parent's children list.
 		"""
 		
 		self.parent = parent
-		if parent:
+		if cascade and parent:
 			parent.children.append(self)
 		self.children = children
 	

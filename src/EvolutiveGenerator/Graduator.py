@@ -30,7 +30,7 @@ class Graduator:
 		raise NotImplementedError
 	
 	
-	def grade_all(self, characters):
+	def gradeAll(self, characters):
 		"""Return an OrderedDict of GeneticElement characters
 		
 		Characters are sorted by score as key in natural order.
@@ -45,4 +45,4 @@ class Graduator:
 		for char in characters:
 			unorderedChar[self.grade(char)] = char
 		
-		return OrderedDict(sorted(unorderedChar.items(), key=lambda t: t[0]))
+		return OrderedDict(sorted(unorderedChar.items(), key=itemgetter(0), reverse=True))
