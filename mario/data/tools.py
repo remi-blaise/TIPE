@@ -34,9 +34,9 @@ class Control(object):
     def update(self):   # Update les infos de cet objet, met fin au jeu si besoin, passe les infos au State
         # self.current_time = pg.time.get_ticks() # Return the number of millisconds since pygame.init() was called.
         self.current_frame += 1
-        get_fps = self.clock.get_fps()
-        if get_fps:
-            self.get_fps = get_fps
+        # get_fps = self.clock.get_fps()
+        # if get_fps:
+        #     self.get_fps = get_fps
         
         if self.state.quit:
             self.done = True

@@ -107,3 +107,5 @@ class Generator:
 		
 		for i in range(number):
 			self.run(length, proportion, chance)
+		
+		return self.population

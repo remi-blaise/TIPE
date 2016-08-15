@@ -17,7 +17,7 @@ from .. components import score
 from .. components import castle_flag
 
 
-from bridge.events.game_events import Frame
+from mario.bridge.events.game_events import Frame
 
 
 class Level1(tools._State):

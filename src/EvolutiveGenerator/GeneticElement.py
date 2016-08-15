@@ -1,6 +1,7 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
+
 class GeneticElement:
 	"""Carry the genetic information
 	

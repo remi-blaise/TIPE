@@ -1,7 +1,7 @@
 from lib.inject_arguments import injectArguments
 
-from bridge.events.game_events import *
-from bridge.events.action_events import *
+from mario.bridge.events.game_events import *
+from mario.bridge.events.action_events import *
 
 
 class IA:

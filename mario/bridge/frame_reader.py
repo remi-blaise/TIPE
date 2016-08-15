@@ -1,7 +1,7 @@
 import pygame as pg
 from lib.inject_arguments import injectArguments
 
-from bridge.events.game_events import *
+from mario.bridge.events.game_events import *
 
 
 class FrameReader:
