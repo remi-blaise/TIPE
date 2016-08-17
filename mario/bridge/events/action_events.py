@@ -1,10 +1,10 @@
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 
 
 class ActionEvent:
 	"""Represents an input for the game"""
 	
-	@injectArguments
+	@inject_arguments
 	def __init__(self, duration, start_frame):
 		self.key = self.__class__.key
 

@@ -1,6 +1,6 @@
 __author__ = 'justinarmstrong'
 
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 import os
 import pygame as pg
 from . import constants as c
@@ -11,7 +11,7 @@ class Control(object):
     the event_loop which passes events to States as needed. Logic for flipping
     States is also found here."""
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, caption, config):
         self.screen = pg.display.get_surface() # Represents the image
         self.done = False
@@ -83,7 +83,7 @@ class Control(object):
 class Keys:
     """Manage keys"""
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, config):
         for key in ('action', 'jump', 'left', 'right', 'down', 'quit'):
             setattr(self, key, False)
@@ -105,7 +105,7 @@ class Keys:
             'down': pg.K_DOWN
         }
     
-    @injectArguments
+    @inject_arguments
     def get_keys(self, current_frame):
         if self.config.allow_control:
             self.get_keys_from_pg()
@@ -150,7 +150,7 @@ class Keys:
 class _State(object):   # Classe abstraite pour les States
     """Abstract class for States"""
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, config, get_fps):
         self.start_frame = 0.0
         self.current_frame = 0.0

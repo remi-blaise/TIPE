@@ -1,6 +1,6 @@
 __author__ = 'justinarmstrong'
 
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 import pygame as pg
 from .. import setup
 from .. import constants as c
@@ -19,7 +19,7 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
     """Class for level information like score, coin total,
         and time remaining""" # Méthodes : update(), draw()
        
-    @injectArguments
+    @inject_arguments
     def __init__(self, game_info, state, get_fps):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]

@@ -12,20 +12,20 @@ class Generator:
 		- operate the selection, based on individuals' performances
 		- generate a new population, based on the selection
 	Individuals are represented by root GeneticElement instances.
-	Use Graduator to grade performances.
+	Use a Graduator to grade performances.
 	Extending it is strongly adviced.
 	"""
 	
 	
-	def __init__(self, individual_class, graduator):
+	def __init__(self, factory, graduator):
 		"""Init
 		
 		Expects:
-			individual_class to be a class inheriting of GeneticElement
+			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
 		"""
 		
-		self.individual_class = individual_class
+		self.factory = factory
 		self.graduator = graduator
 		self.population = None
 		self.selection = None
@@ -34,7 +34,7 @@ class Generator:
 	def create(self, length):
 		"""Generate a whole initial population"""
 		
-		self.population = set([individual_class.create() for i in range(length)])
+		self.population = set([factory.create() for i in range(length)])
 	
 	
 	def select(self, proportion, chance):

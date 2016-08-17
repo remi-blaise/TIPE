@@ -1,6 +1,6 @@
 __author__ = 'justinarmstrong'
 
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 
 import pygame as pg
 from . import setup
@@ -10,7 +10,7 @@ from . import constants as c
 class Sound(object):
     """Handles all sound for the game"""    # Methods: set_music_mixer(), update(), stop_music()
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, overhead_info, get_fps):
         """Initialize the class"""
         self.sfx_dict = setup.SFX

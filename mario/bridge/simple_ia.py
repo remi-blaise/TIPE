@@ -1,4 +1,4 @@
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 
 from mario.bridge.events.game_events import *
 from mario.bridge.events.action_events import *
@@ -7,12 +7,12 @@ from mario.bridge.events.action_events import *
 class IA:
     """An temp IA for early stage of dev"""
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, event_dispatcher, neuron_set=set()):
         self.build()
     
     def build(self):
-        self.neuron_set.add( Neuron('game.block', { 'x':40, 'y':40 }, Right, 1, self.event_dispatcher) )
+        self.neuron_set.add( Neuron('game.block', { 'x':40, 'y':40 }, Right, 30, self.event_dispatcher) )
         self.neuron_set.add( Neuron('game.block', { 'x':80, 'y': 0 }, Jump, 30, self.event_dispatcher) )
         self.neuron_set.add( Neuron('game.enemy', { 'x':80, 'y': 0 }, Jump, 30, self.event_dispatcher) )
 
@@ -20,7 +20,7 @@ class IA:
 class Neuron:
     """A link between an game event and an action event"""
     
-    @injectArguments
+    @inject_arguments
     def __init__(self, event_name, coor, action_class, duration, event_dispatcher):
         self.event_dispatcher = event_dispatcher
     
@@ -56,4 +56,4 @@ class Neuron:
     def onEvent(self, event):
         if self.coor['x'] >= event.left and self.coor['x'] <= event.right \
                 and self.coor['y'] >= event.top and self.coor['y'] <= event.bottom:
-            self.event_dispatcher.dispatch('action', self.action_class(30, event.current_frame))
+            self.event_dispatcher.dispatch('action', self.action_class(self.duration, event.current_frame))

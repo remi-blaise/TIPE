@@ -2,7 +2,7 @@
 # -*-coding:Utf-8 -*
 
 
-def injectArguments(inFunction):
+def inject_arguments(inFunction):
     """
     Decorator injecting arguments of a method as attributes
     
@@ -36,7 +36,7 @@ def injectArguments(inFunction):
 
 if __name__=='__main__':
     class Test:
-        @injectArguments
+        @inject_arguments
         def __init__(self, name, surname, default='lol'):
             pass
     

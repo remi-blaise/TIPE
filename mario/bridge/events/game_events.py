@@ -1,10 +1,10 @@
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 
 
 class GameEvent:
 	"""Represents an output from the game"""
 	
-	@injectArguments
+	@inject_arguments
 	def __init__(self, current_frame):
 		pass
 
@@ -12,7 +12,7 @@ class GameEvent:
 class Frame(GameEvent):
 	"""Emitted every frame"""
 	
-	@injectArguments
+	@inject_arguments
 	def __init__(self, viewport, sprite_groups, mario, current_frame):
 		pass
 
@@ -20,7 +20,7 @@ class Frame(GameEvent):
 class DetectedComponent(GameEvent):
 	"""Mario can see a component"""
 	
-	@injectArguments
+	@inject_arguments
 	def __init__(self, rect, mario, current_frame):
 		"""
 		Attributes:

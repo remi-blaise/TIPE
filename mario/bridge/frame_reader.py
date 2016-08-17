@@ -1,5 +1,5 @@
 import pygame as pg
-from lib.inject_arguments import injectArguments
+from lib.inject_arguments import inject_arguments
 
 from mario.bridge.events.game_events import *
 
@@ -7,12 +7,12 @@ from mario.bridge.events.game_events import *
 class FrameReader:
 	"""Read the Frame event and make other game events"""
 	
-	@injectArguments
+	@inject_arguments
 	def __init__(self, event_dispatcher):
 		self.event_dispatcher.listen('game.frame', self.handle_frame)
 		self.frame = None
 	
-	@injectArguments
+	@inject_arguments
 	def handle_frame(self, frame):
 		"""Handle Frame event"""
 		
