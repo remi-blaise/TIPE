@@ -12,7 +12,7 @@ class GeneticElementFactory(metaclass=ABCMeta):
 	It brings the evolution logic of the GeneticElement through the following
 	class methods:
 		+create() -> GeneticElement
-		+mutate(GeneticElement) -> GeneticElement
+		+mutate(GeneticElement)
 		+combine(GeneticElement, GeneticElement) -> GeneticElement
 		+generate(GeneticElement, GeneticElement) -> GeneticElement
 	Evolution logic may typically use recursive process over children of elements.
@@ -43,14 +43,11 @@ class GeneticElementFactory(metaclass=ABCMeta):
 	@staticmethod
 	@abstractmethod
 	def mutate(element):
-		"""Make a mutated GeneticElement
+		"""Operates a genetic mutation
 		
-		Operates genetic mutation to build a new GeneticElement.
-		Has to be implemented.
+		This is a static method which has to be implemented.
 		
 		This is rather designed for internal use, see generate() instead.
-		
-		return GeneticElement
 		"""
 		
 		raise NotImplementedError
@@ -61,7 +58,7 @@ class GeneticElementFactory(metaclass=ABCMeta):
 		"""Form a new GeneticElement, combination of two ones
 		
 		Combine two GeneticElement to form an offspring.
-		Has to be implemented.
+		This is a static method which has to be implemented.
 		
 		This is rather designed for internal use, see generate() instead.
 		
@@ -79,6 +76,7 @@ class GeneticElementFactory(metaclass=ABCMeta):
 		"""Generate a new GeneticElement, final offspring of two ones
 		
 		Call combine() then mutate().
+		This is a class method.
 		
 		Expects:
 			element1, element2 to be a GeneticElement's

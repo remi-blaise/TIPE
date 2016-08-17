@@ -14,6 +14,6 @@ class GameEventData(GeneticElement):
 		pass
 	
 	
-    def checkCoor(self, event):
-    	return self.coor['x'] >= event.left and self.coor['x'] <= event.right \
-            and self.coor['y'] >= event.top and self.coor['y'] <= event.bottom
+	def checkCoor(self, event):
+		return self.coor['x'] >= event.left and self.coor['x'] <= event.right \
+			and self.coor['y'] >= event.top and self.coor['y'] <= event.bottom

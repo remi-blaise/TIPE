@@ -1,16 +1,23 @@
 Avant juin 2016 :
-	réflexions, premiers jets, début du Generator
+	Réflexions et brouillons
+	Premiers jets d'un outil générique permettant d'utiliser la technique
+	de la génération évolutive, l'EvolutiveGenerator.
 ------------------------------------------------------------------------------
 
-6-7 juin 2016 :
+6-22 juin 2016 :
 	Réalisation d'une présentation pour passage devant M Réal et Mme Chevalier
 	(cf tipe.odp)
+	Recherche de documentation sur le sujet, trouvé :
+		NeuroEvolution of Augmenting Topologies by MIT
 ------------------------------------------------------------------------------
 
-Juillet 2016 :
+1-23 Juillet 2016 :
 	...
 	Objectif 1.0 :
-		Adapter le jeu
+		Adapter le jeu :
+			- modification du jeu.
+			- création d'un bridge permettant de faire le lien entre le
+			logiciel de génération évolutive et le jeu.
 ------------------------------------------------------------------------------
 
 23 Juillet 2016 :
@@ -37,16 +44,19 @@ Juillet 2016 :
 		[Édit] Fait.
 		
 	Objectif 2 :
-		Coder le processus de génération
+		Coder le processus de génération.
+	
+	Objectif 2.0 :
+		Coder l'EvolutiveGenerator.
 	
 	Objectif 2.1 :
-		Représenter l'IA
+		Représenter l'IA.
 	
 	Objectif 2.2 :
-		Coder les algorithmes de création, mutations et combinaisons
+		Coder les algorithmes de création, mutations et combinaisons.
 ------------------------------------------------------------------------------
 
-16 Août 2016 :
+16 Août 2016 : Spécifications 2.1 et 2.2
 	Réprésentation des données :
 		IA :
 			{ Neurones }
@@ -61,36 +71,37 @@ Juillet 2016 :
 	Algorithmes :
 		IA :
 			create():
-				On crée 5 neurones
+				On crée 3 à 6 neurones de manière équiprobable.
 			mutate():
 				20% de chance de créer un nouveau neurone
 				10% de chance de détruire un neurone
 				pour chaque neurone: 20% de chance de muter
 			combine():
-				On prend 50% des neurones de chaque parent
+				On prend 50% des neurones de chaque parent (arrondi par excès).
 		Neurone :
 			create():
-				On crée un évènement
-				On crée une action
+				On crée un évènement.
+				On crée une action.
 			mutate():
 				On mute un de ces éléments:
 					- l'évènement
 					- l'action
 		Évènement :
 			create():
-				On tire un évènement et une coor au pif
+				On tire un évènement et une coor au pif.
 			mutate():
-				On change soit le nom soit les coordonnées à 50%/50%.
+				On change soit le nom soit les coordonnées de manière
+				équiprobable.
 				Changement des coordonnées :
-					On tire un flottant entre [-100;+100] qu'on ajoute à x.
+					On tire un entier entre [-100;+100] qu'on ajoute à x.
 					Idem avec y.
 		Action :
 			create():
-				On tire une action et une durée dans [2;30]
+				On tire une action et une durée dans [2;30].
 			mutate():
-				On change soit la classe soit la durée à 50%/50%.
+				On change soit la classe soit la durée de manière équiprobable.
 				Changement de la durée :
-					On tire un flottant entre [2;30] (frames).
+					On tire un entier entre [2;30] (frames).
 		
 	Je décide finalement de séparer les modèles :
 		- représentation en tant que données via 4 entités
@@ -98,3 +109,9 @@ Juillet 2016 :
 		- lecture des données et interaction avec l'event dispatcher dans la
 		classe Neuron
 ------------------------------------------------------------------------------
+
+17 Août 2016 :
+	Objectifs 2.0, 2.1 et 2.2 atteints
+	
+	Objectif 2.3 :
+		Coder le Graduator, utilisant le bridge pour évaluer les IA.

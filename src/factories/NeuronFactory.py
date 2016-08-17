@@ -2,9 +2,12 @@
 # -*-coding:Utf-8 -*
 
 from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from random import randint
 
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.Neuron import Neuron
+from GameEventDataFactory import GameEventDataFactory
+from ActionEventDataFactory import ActionEventDataFactory
 
 
 class NeuronFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
@@ -19,10 +22,13 @@ class NeuronFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
 	@staticmethod
 	@inherit_docstring
 	def create():
-		raise NotImplementedError
+		return Neuron(GameEventDataFactory.create(), ActionEventDataFactory.create())
 	
 	
 	@staticmethod
 	@inherit_docstring
 	def mutate(element):
-		raise NotImplementedError
+		if randint(0, 1):
+			GameEventDataFactory.mutate(element.game_event_data)
+		else:
+			ActionEventDataFactory.mutate(element.action_event_data)

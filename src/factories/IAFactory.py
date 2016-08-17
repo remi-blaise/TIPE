@@ -2,9 +2,12 @@
 # -*-coding:Utf-8 -*
 
 from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from random import randint, random, choice, sample
+from math import ceil
 
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.IA import IA
+from NeuronFactory import NeuronFactory
 
 
 class IAFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
@@ -19,16 +22,30 @@ class IAFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
 	@staticmethod
 	@inherit_docstring
 	def create():
-		raise NotImplementedError
+		neurons = set()
+		for i in range(3 + randint(0, 3)):
+			neurons.add(NeuronFactory.create())
+		return IA(neurons)
 	
 	
 	@staticmethod
 	@inherit_docstring
 	def mutate(element):
-		raise NotImplementedError
+		if random() < .2:
+			element.neurons.add(NeuronFactory.create())
+		if random() < .1:
+			element.neurons.remove(choice(element.neurons))
+		for neuron in element.neurons:
+			if random() < .2:
+				NeuronFactory.mutate(neuron)
 	
 	
 	@staticmethod
 	@inherit_docstring
 	def combine(element1, element2):
-		raise NotImplementedError
+		neurons = set()
+		for half in (element1.neurons, element2.neurons)
+			neurons.update(
+				sample(element1.neurons, ceil(len(element1.neurons) / 2))
+			)
+		return IA(neurons)
