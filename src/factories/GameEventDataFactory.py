@@ -1,15 +1,16 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from lib.inherit_docstring import inherit_docstring
 from random import choice, randint
 
-from mario.data.constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
+from mario.data.constants import SCREEN_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.GameEventData import GameEventData
 
 
-class GameEventDataFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
+class GameEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	"""GameEventData factory"""
 	
 	@property
@@ -36,7 +37,7 @@ class GameEventDataFactory(GeneticElementFactory, metaclass=InheritableDocstring
 		if randint(0, 1):
 			element.event_name = cls.createEventName()
 		else:
-			element.coor = mutateCoor(element.coor)
+			element.coor = cls.mutateCoor(element.coor)
 	
 	
 	@classmethod
@@ -52,11 +53,15 @@ class GameEventDataFactory(GeneticElementFactory, metaclass=InheritableDocstring
 	
 	@classmethod
 	def mutateCoor(cls, coor):
-		coor.x += randint(-100, 100)
-		coor.y += randint(-100, 100)
+		coor['x'] += randint(-100, 100)
+		coor['y'] += randint(-100, 100)
 		
-		coor.x = cls.MIN_X if coor.x < cls.MIN_X
-		coor.x = cls.MAX_X if coor.x > cls.MAX_X
-		coor.y = cls.MIN_Y if coor.y < cls.MIN_Y
-		coor.y = cls.MAX_Y if coor.y > cls.MAX_Y
+		if coor['x'] < cls.MIN_X:
+			coor['x'] = cls.MIN_X
+		if coor['x'] > cls.MAX_X:
+			coor['x'] = cls.MAX_X
+		if coor['y'] < cls.MIN_Y:
+			coor['y'] = cls.MIN_Y
+		if coor['y'] > cls.MAX_Y:
+			coor['y'] = cls.MAX_Y
 		return coor

@@ -84,4 +84,6 @@ class GeneticElementFactory(metaclass=ABCMeta):
 		return GeneticElement
 		"""
 		
-		return cls.mutate(cls.combine(element1, element2))
+		new_element = cls.combine(element1, element2)
+		cls.mutate(new_element)
+		return new_element

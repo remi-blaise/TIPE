@@ -2,13 +2,14 @@
 # -*-coding:Utf-8 -*
 
 from lib.inject_arguments import inject_arguments
+from lib.XMLRepr import XMLRepr
 
 from src.EvolutiveGenerator.GeneticElement import GeneticElement
-from GameEventData import GameEventData
-from ActionEventData import ActionEventData
+from src.entities.GameEventData import GameEventData
+from src.entities.ActionEventData import ActionEventData
 
 
-class Neuron(GeneticElement):
+class Neuron(GeneticElement, XMLRepr):
 	"""A link between an game event and an action event"""
 	
 	@inject_arguments
@@ -58,3 +59,7 @@ class Neuron(GeneticElement):
 	def onEvent(self, event):
 		if self.game_event_data.checkCoor(event):
 			self.event_dispatcher.dispatch('action', self.action_event_data.buildAction(event))
+	
+	
+	def __repr__(self):
+		return super().__repr__(['game_event_data', 'action_event_data'])

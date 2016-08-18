@@ -1,15 +1,16 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from lib.inherit_docstring import inherit_docstring
 from random import choice, randint
 
+from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from mario.bridge.events.action_events import Jump, Left, Right, Down, Fire
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.ActionEventData import ActionEventData
 
 
-class ActionEventDataFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
+class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	"""ActionEventData factory"""
 	
 	@property
@@ -25,10 +26,13 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=InheritableDocstri
 	def create(cls):
 		return ActionEventData(cls.createActionClass(), cls.createDuration())
 	
-	@staticmethod
+	@classmethod
 	@inherit_docstring
-	def mutate(element):
-		raise NotImplementedError
+	def mutate(cls, element):
+		if randint(0, 1):
+			element.action_class = cls.createActionClass()
+		else:
+			element.duration = cls.createDuration()
 	
 	
 	@classmethod

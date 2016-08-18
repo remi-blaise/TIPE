@@ -115,3 +115,4 @@ Avant juin 2016 :
 	
 	Objectif 2.3 :
 		Coder le Graduator, utilisant le bridge pour évaluer les IA.
+		Lancer une première génération.

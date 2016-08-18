@@ -27,7 +27,10 @@ def inject_arguments(inFunction):
         # Add default value for non-specified arguments
         if inFunction.__defaults__:
             nb_defaults = len(_names) - len(_values)
-            _self.__dict__.update(zip(_names[-nb_defaults:], inFunction.__defaults__[-nb_defaults:]))
+            if nb_defaults:
+                _self.__dict__.update(zip(
+                    _names[-nb_defaults:], inFunction.__defaults__[-nb_defaults:]
+                ))
         
         return inFunction(*args,**kwargs)
 
@@ -42,3 +45,11 @@ if __name__=='__main__':
     
     t = Test('mickey', surname='mouse')
     assert(t.name == 'mickey' and t.surname == 'mouse' and t.default == 'lol')
+    
+    class Test:
+        @inject_arguments
+        def __init__(self, default='lol'):
+            pass
+    
+    t = Test(2)
+    assert(t.default == 2)

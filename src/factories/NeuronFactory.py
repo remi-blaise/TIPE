@@ -1,16 +1,17 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from lib.inherit_docstring import inherit_docstring
 from random import randint
 
+from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.Neuron import Neuron
-from GameEventDataFactory import GameEventDataFactory
-from ActionEventDataFactory import ActionEventDataFactory
+from src.factories.GameEventDataFactory import GameEventDataFactory
+from src.factories.ActionEventDataFactory import ActionEventDataFactory
 
 
-class NeuronFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
+class NeuronFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	"""Neuron factory"""
 	
 	@property

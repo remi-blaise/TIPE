@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import set_dir
+
 import sys
 
 from launch import launch

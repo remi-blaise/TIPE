@@ -2,6 +2,7 @@
 # -*-coding:Utf-8 -*
 
 from random import choice, sample
+from math import ceil
 
 
 class Generator:
@@ -34,7 +35,11 @@ class Generator:
 	def create(self, length):
 		"""Generate a whole initial population"""
 		
-		self.population = set([factory.create() for i in range(length)])
+		self.population = set([self.factory.create() for i in range(length)])
+		
+		print('------------------------------------------------------------')
+		print(self.population)
+		print('------------------------------------------------------------')
 	
 	
 	def select(self, proportion, chance):
@@ -48,22 +53,22 @@ class Generator:
 			chance to be a float between 0 and 1
 		"""
 		
-		# Get an OrderedDict of char sorted by score
-		ordered_char = self.graduator.gradeAll(self.population)
+		# Get an OrderedDict of individuals sorted by score
+		ordered_individuals = self.graduator.gradeAll(self.population)
 		
-		# The number of char to select
-		number = int(len(self.population) * proportion)
+		# The number of individuals to select
+		number = ceil(len(self.population) * proportion)
 		# Among the [number] best individuals select number*(1-chance) ones
 		selection = set(sample(
-			list(ordered_char.values())[:number],
+			list(ordered_individuals.values())[:number],
 			int(number*(1-chance))
 		))
-		# Complete selection with random char
-		unused_char = self.population.difference(selection)
+		# Complete selection with random individuals
+		unused_individuals = self.population.difference(selection)
 		while len(selection) < number:
-			choiced = choice(unused_char)
+			choiced = choice(unused_individuals)
 			selection.add(choiced)
-			unused_char.remove(choiced)
+			unused_individuals.remove(choiced)
 		
 		self.selection = selection
 	
@@ -77,9 +82,8 @@ class Generator:
 		new_pop = set()
 		
 		while len(new_pop) < length:
-			parents = tuple([choice(self.selection) for i in range(2)])
-			new_pop.add(parents[0].generate(parents[1]))
-		
+			parents = tuple([choice(list(self.selection)) for i in range(2)])
+			new_pop.add(self.factory.generate(*parents))
 		self.population = new_pop
 	
 	

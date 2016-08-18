@@ -3,6 +3,7 @@
 
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+from operator import itemgetter
 
 
 class Graduator(metaclass=ABCMeta):
@@ -32,7 +33,6 @@ class Graduator(metaclass=ABCMeta):
 		raise NotImplementedError
 	
 	
-	@abstractmethod
 	def gradeAll(self, individuals):
 		"""Return an OrderedDict of GeneticElement individuals
 		

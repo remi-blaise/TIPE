@@ -2,11 +2,12 @@
 # -*-coding:Utf-8 -*
 
 from lib.inject_arguments import inject_arguments
+from lib.XMLRepr import XMLRepr
 
 from src.EvolutiveGenerator.GeneticElement import GeneticElement
 
 
-class IA(GeneticElement):
+class IA(GeneticElement, XMLRepr):
 	"""An IA"""
 	
 	@inject_arguments
@@ -18,3 +19,7 @@ class IA(GeneticElement):
 		"""
 		
 		pass
+	
+	
+	def __repr__(self):
+		return super().__repr__(displaySequencesNames=False)

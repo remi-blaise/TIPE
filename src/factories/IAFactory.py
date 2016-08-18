@@ -1,16 +1,17 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from lib.inherit_docstring import InheritableDocstrings, inherit_docstring
+from lib.inherit_docstring import inherit_docstring
 from random import randint, random, choice, sample
 from math import ceil
 
+from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.IA import IA
-from NeuronFactory import NeuronFactory
+from src.factories.NeuronFactory import NeuronFactory
 
 
-class IAFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
+class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	"""IA factory"""
 	
 	@property
@@ -34,7 +35,7 @@ class IAFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
 		if random() < .2:
 			element.neurons.add(NeuronFactory.create())
 		if random() < .1:
-			element.neurons.remove(choice(element.neurons))
+			element.neurons.remove(choice(list(element.neurons)))
 		for neuron in element.neurons:
 			if random() < .2:
 				NeuronFactory.mutate(neuron)
@@ -44,7 +45,7 @@ class IAFactory(GeneticElementFactory, metaclass=InheritableDocstrings):
 	@inherit_docstring
 	def combine(element1, element2):
 		neurons = set()
-		for half in (element1.neurons, element2.neurons)
+		for half in (element1.neurons, element2.neurons):
 			neurons.update(
 				sample(element1.neurons, ceil(len(element1.neurons) / 2))
 			)
