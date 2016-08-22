@@ -2,7 +2,7 @@ from __future__ import division
 
 
 import pygame as pg
-from .. import setup, tools
+from .. import setup, State
 from .. import constants as c
 from .. import game_sound
 from .. components import mario
@@ -20,7 +20,7 @@ from .. components import castle_flag
 from mario.bridge.events.game_events import Frame
 
 
-class Level1(tools._State):
+class Level1(State._State):
     def startup(self, current_frame, persist):
         """Called when the State object is created"""
         self.game_info = persist
@@ -36,8 +36,9 @@ class Level1(tools._State):
         self.flag_score_total = 0
 
         self.moving_score_list = []
-        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL, self.get_fps)
-        self.sound_manager = game_sound.Sound(self.overhead_info_display, self.get_fps)
+        self.overhead_info_display = info.OverheadInfo(self.game_info, c.LEVEL, self.config, self.get_fps)
+        if self.config.play_sound:
+            self.sound_manager = game_sound.Sound(self.overhead_info_display, self.get_fps)
 
         self.setup_background()
         self.setup_ground()
@@ -357,7 +358,8 @@ class Level1(tools._State):
         self.handle_states(keys)
         self.check_if_time_out()
         self.blit_everything(surface)
-        self.sound_manager.update(self.game_info, self.mario)
+        if self.config.play_sound:
+            self.sound_manager.update(self.game_info, self.mario)
         
         # Dispatch the Frame event
         if self.config.event_dispatcher:
@@ -1427,7 +1429,8 @@ class Level1(tools._State):
         elif (self.current_frame - self.flag_timer) > 2000*self.get_fps/1000:
             self.set_game_info_values()
             self.next = c.GAME_OVER
-            self.sound_manager.stop_music()
+            if self.config.play_sound:
+                self.sound_manager.stop_music()
             self.done = True
             if not self.config.show_game_frame:
                 self.quit = True

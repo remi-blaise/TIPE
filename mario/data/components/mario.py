@@ -1,7 +1,7 @@
 __author__ = 'justinarmstrong'
 
 import pygame as pg
-from .. import setup, tools
+from .. import setup
 from .. import constants as c
 from . import powerups
 

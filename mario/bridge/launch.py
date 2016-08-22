@@ -6,8 +6,8 @@ def launch(config):
 
 
 	persist = main(config)
-	print('debug')
-	# pg.quit() # Can freeze pygame: to delete and use the same pygame each time
-	print('debug2')
+	print('program done')
+	pg.quit() # Can freeze pygame: to delete and use the same pygame each time
+	print('pygame done')
 	
 	return persist

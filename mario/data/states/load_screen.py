@@ -1,12 +1,12 @@
 __author__ = 'justinarmstrong'
 
-from .. import setup, tools
+from .. import setup, State
 from .. import constants as c
 from .. import game_sound
 from ..components import info
 
 
-class LoadScreen(tools._State):
+class LoadScreen(State._State):
     def startup(self, current_frame, persist):
         self.start_frame = current_frame
         self.persist = persist
@@ -15,7 +15,7 @@ class LoadScreen(tools._State):
 
         info_state = self.set_overhead_info_state()
 
-        self.overhead_info = info.OverheadInfo(self.game_info, info_state, self.get_fps)
+        self.overhead_info = info.OverheadInfo(self.game_info, info_state, self.config, self.get_fps)
         self.sound_manager = game_sound.Sound(self.overhead_info, self.get_fps)
 
 

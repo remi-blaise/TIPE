@@ -24,7 +24,7 @@ Avant juin 2016 :
 	Objectif 1.0 atteint
 
 	Problème 1 :
-		Le programme plante souvent à l'extinction.
+		Le programme plante (très) souvent à l'extinction.
 
 	Problème 2 :
 		Pour pouvoir accélérer le jeu, il a fallut convertir les délais en
@@ -101,7 +101,7 @@ Avant juin 2016 :
 			mutate():
 				On change soit la classe soit la durée de manière équiprobable.
 				Changement de la durée :
-					On tire un entier entre [2;30] (frames).
+					On tire un entier entre [2;30] frames.
 		
 	Je décide finalement de séparer les modèles :
 		- représentation en tant que données via 4 entités
@@ -116,3 +116,21 @@ Avant juin 2016 :
 	Objectif 2.3 :
 		Coder le Graduator, utilisant le bridge pour évaluer les IA.
 		Lancer une première génération.
+------------------------------------------------------------------------------
+
+
+18 Août 2016 :
+	Objectif 2.3 atteint. Il reste quelques bugs à trouver/résoudre.
+	Le problème 1 se révèle comme prévu très problématique. Sa résolution via
+	l'objectif 1.1 devient une priorité.
+	
+	Objectif 2.4 :
+		Debug du programme d'évolution, écriture des tests unitaires.
+	
+	Objectif 2.5 :
+		Mettre en place une architecture permettant de sauvegarder les
+		résultats des calculs et l'historique des évènements.
+------------------------------------------------------------------------------
+
+22 Août 2016 :
+	Objectif 1.1 atteint ! Bonne nouvelle : le problème 1 semble résolu. À confirmer cependant.

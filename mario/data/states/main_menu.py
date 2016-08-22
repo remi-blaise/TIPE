@@ -1,19 +1,19 @@
 __author__ = 'justinarmstrong'
 
 import pygame as pg
-from .. import setup, tools
+from .. import setup, State
 from .. import constants as c
 from .. components import info, mario
 
 
-class Menu(tools._State):
+class Menu(State._State):
     def startup(self, current_frame, persist):
         """Called every time the game's state becomes this one.  Initializes
         certain values"""
         self.next = c.LOAD_SCREEN
         self.persist = persist
         self.game_info = persist
-        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU, self.get_fps)
+        self.overhead_info = info.OverheadInfo(self.game_info, c.MAIN_MENU, self.config, self.get_fps)
 
         self.sprite_sheet = setup.GFX['title_screen']
         self.setup_background()

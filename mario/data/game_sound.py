@@ -8,7 +8,7 @@ from . import constants as c
 
 
 class Sound(object):
-    """Handles all sound for the game"""    # Methods: set_music_mixer(), update(), stop_music()
+    """Handles all sounds for the game"""    # Methods: set_music_mixer(), update(), stop_music()
     
     @inject_arguments
     def __init__(self, overhead_info, get_fps):

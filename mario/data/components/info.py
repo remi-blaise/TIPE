@@ -20,10 +20,10 @@ class OverheadInfo(object): # Affiche toutes les infos selon le State et les inf
         and time remaining""" # Méthodes : update(), draw()
        
     @inject_arguments
-    def __init__(self, game_info, state, get_fps):
+    def __init__(self, game_info, state, config, get_fps):
         self.sprite_sheet = setup.GFX['text_images']
         self.coin_total = game_info[c.COIN_TOTAL]
-        self.time = 401
+        self.time = self.config.time
         self.current_frame = 0
         self.total_lives = game_info[c.LIVES]
         self.top_score = game_info[c.TOP_SCORE]
