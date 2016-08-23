@@ -3,7 +3,6 @@
 
 from lib.inject_arguments import inject_arguments
 from lib.inherit_docstring import inherit_docstring
-from collections import OrderedDict
 
 from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from mario.bridge.config import Config
@@ -20,7 +19,7 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 	
 	
 	@inherit_docstring
-	def grade(self, ia):
+	def grade(self, ia, generation):
 		# Give the event_dispatcher to neurons
 		for neuron in ia.neurons:
 			neuron.event_dispatcher = self.event_dispatcher
@@ -28,7 +27,10 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 		self.event_dispatcher.listen('game.frame', self.onFrame)
 		
 		# Launch game
-		persist = launch(Config(False, self.event_dispatcher))
+		time = 1 + generation
+		if time > 401:
+			time = 401
+		persist = launch(Config(False, self.event_dispatcher, time))
 		
 		# Remove the event_dispatcher from neurons
 		for neuron in ia.neurons:

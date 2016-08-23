@@ -2,7 +2,6 @@
 # -*-coding:Utf-8 -*
 
 from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
 from operator import itemgetter
 
 
@@ -19,7 +18,7 @@ class Graduator(metaclass=ABCMeta):
 	
 	
 	@abstractmethod
-	def grade(self, individual):
+	def grade(self, individual, generation):
 		"""Assign a score to a individual
 		
 		Has to be implemented.
@@ -33,19 +32,21 @@ class Graduator(metaclass=ABCMeta):
 		raise NotImplementedError
 	
 	
-	def gradeAll(self, individuals):
-		"""Return an OrderedDict of GeneticElement individuals
+	def gradeAll(self, individuals, generation):
+		"""Assign a score to each individual
 		
 		Individuals are sorted by score as key in natural order.
 		
 		Expects:
 			individuals to be a list of GeneticElement
 		
-		return OrderedDict
+		Return a list of couple (score, GeneticElement) sorted by score by desc
 		"""
 		
-		unorderedChar = {}
-		for char in individuals:
-			unorderedChar[self.grade(char)] = char
+		graded_individuals = []
+		for individual in individuals:
+			graded_individuals.append((self.grade(individual, generation), individual))
 		
-		return OrderedDict(sorted(unorderedChar.items(), key=itemgetter(0), reverse=True))
+		graded_individuals.sort(key=itemgetter(0), reverse=True)
+		
+		return graded_individuals

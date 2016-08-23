@@ -2,14 +2,14 @@ Avant juin 2016 :
 	Réflexions et brouillons
 	Premiers jets d'un outil générique permettant d'utiliser la technique
 	de la génération évolutive, l'EvolutiveGenerator.
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 6-22 juin 2016 :
 	Réalisation d'une présentation pour passage devant M Réal et Mme Chevalier
 	(cf tipe.odp)
 	Recherche de documentation sur le sujet, trouvé :
 		NeuroEvolution of Augmenting Topologies by MIT
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 1-23 Juillet 2016 :
 	...
@@ -18,7 +18,7 @@ Avant juin 2016 :
 			- modification du jeu.
 			- création d'un bridge permettant de faire le lien entre le
 			logiciel de génération évolutive et le jeu.
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 23 Juillet 2016 :
 	Objectif 1.0 atteint
@@ -32,16 +32,16 @@ Avant juin 2016 :
 		Ne devrait-on pas calculer un nombre de frames absolu ?
 		Il me semble que c'est ce qu'il faudrait faire, mais les résultats
 		attendus semble déjà atteint avec la solution actuelle. Pourquoi ?
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 11 Août 2016 :
-	Il semblerait que le problème 1 soit dû au son.
+	Il semblerait que le problème 1 soit dû à la librairie PulseAudio gérant
+	le son.
 	Objectif 1.1 :
 		Enlever le son. Peut résoudre le problème 1.
 	
 	Objectif 1.2 :
 		Fixer get_fps constant à 60 fps. Devrait résoudre le problème 2.
-		[Édit] Fait.
 		
 	Objectif 2 :
 		Coder le processus de génération.
@@ -54,7 +54,7 @@ Avant juin 2016 :
 	
 	Objectif 2.2 :
 		Coder les algorithmes de création, mutations et combinaisons.
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 16 Août 2016 : Spécifications 2.1 et 2.2
 	Réprésentation des données :
@@ -108,15 +108,16 @@ Avant juin 2016 :
 		- manipulation en tant que GeneticElement via 4 factory
 		- lecture des données et interaction avec l'event dispatcher dans la
 		classe Neuron
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 17 Août 2016 :
 	Objectifs 2.0, 2.1 et 2.2 atteints
+	Objectif 1.2 Fait
 	
 	Objectif 2.3 :
 		Coder le Graduator, utilisant le bridge pour évaluer les IA.
 		Lancer une première génération.
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 18 Août 2016 :
@@ -130,7 +131,93 @@ Avant juin 2016 :
 	Objectif 2.5 :
 		Mettre en place une architecture permettant de sauvegarder les
 		résultats des calculs et l'historique des évènements.
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 22 Août 2016 :
-	Objectif 1.1 atteint ! Bonne nouvelle : le problème 1 semble résolu. À confirmer cependant.
+	Objectif 1.1 atteint ! Bonne nouvelle : le problème 1 semble résolu. À
+	confirmer cependant.
+	
+	Plan pour l'objectif 2.5 :
+		- Écrire un composant Writer permettant de sauvegarder toutes les
+		  données de la génération.
+		- Mettre un event dispatcher comme pivot entre le Generator et le
+		  Graduator avec émission d'évènements aux étapes clés de la
+		  génération, permettant de greffer le Writer et d'autres middlewares
+		  tels qu'un futur Logger, ouvrant la voie pour un Graduator,
+		  asynchrone permettant d'évaluer plusieurs intelligences
+		  simultanément ainsi que pour un pattern Strategy sur le choix d'un
+		  Graduator.
+		- Potentiel Reader pour lire les données et adaptation du Generator
+		  pouvoir stopper et reprendre une génération.
+	
+	Architecture système des sauvegardes :
+		results
+			processus-00000
+				generation-00 # Nb de zéros fc du nombre de générations prévues
+					initial_pop
+						- ia-000
+						- ia-001
+						...
+					- generation
+				generation-01
+					selection
+						- ia-000 # score
+						- ia-001
+						...
+					population
+						- ia-000
+						- ia-001
+						...
+					- generation # state, lignes type : 000 + 001 -> 000
+				...
+				- processus # generations_nb, pop_length, (prop, chance), state
+-------------------------------------------------------------------------------
+
+23 Août 2016 :
+	Rapport à l'objectif 2.4 : le programme d'évolution semble fonctionner,
+	les tests restent à faire (tests unitaires sur l'EvolutiveGenerator).
+	
+	Objectif 1.3 :
+		Émettre tous les évènements et les prendre en compte dans la
+		génération (pour l'instant seuls les blocs et les ennemis).
+	
+	Problème 3 : Temps de calcul
+		Pour l'instant, le temps d'évaluation permis est calculé ainsi :
+			time = min(1 + generation, 401)
+		avec generation le numéro de l'itération.
+		Cependant, un rapide calcul sur le nombre d'itération permet de se
+		rendre compte qu'à 120 fps, l'évaluation d'une population de 2
+		individus sur les 400 premières itérations prend 22 heures. Les
+		populations utilisées représenteront bien plus que 2 individus.
+		Des statistiques sur les premières générations que je vais faire vont
+		permettre d'ajuster le calcul du temps. Il s'agit de trouver pour
+		chaque itération un temps laissant les intelligences exprimer leur
+		potentiel tout en étant le plus petit possible pour optimiser le temps
+		de calcul. Une alternative pourrait également être ajuster
+		dynamiquement le temps à chaque itération en fonction des résultats de
+		l'itération précédante.
+		Il apparaît toute fois assez improbable que l'optimisation du temps
+		suffise à permettre d'effectuer la génération en un temps acceptable.
+		La solution sera alors de former une communauté de personnes acceptant
+		de me prêter de la puissance de calcul. L'idée serait de séparer le
+		programme Python en un processeur (la partie programme d'évolution) et
+		un client (la partie jeu) et de placer un serveur PHP entre les deux.
+		Le processeur pourrait alors faire tourner la génération et envoyer
+		les IA à évaluer au serveur, qui s'occuperait de redistribuer le
+		travail entre les différents clients que l'on aurait préalablement
+		distribués à la communauté. Un travail long et ambitieux mais qui
+		s'avèrerait très intéressant (j'en suis déjà tout excité).
+		Une autre alternative serait de mettre la main à la poche et de louer
+		de la puissance de calcul (type Amazon Cloud) pour y faire tourner le
+		programme. Un financement du lycée pourrait-il être envisagé ? Peut-
+		être le coût serait-il suffisemment bas pour le financer moi-même ?
+		Les deux cas me paraissent assez peu probables. L'avantage non
+		négligeable de cette solution serait néanmoins un coût de
+		développement supplémentaire quasi-nul.
+	
+	Objectif 2.6 :
+		Faire tourner le jeu dans un thread/processus parallèle afin d'isoler
+		chaque itération avec Pygame.
+	
+	Pour le moment je me concentre sur l'objectif 2.5.
+-------------------------------------------------------------------------------

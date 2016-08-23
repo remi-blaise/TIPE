@@ -30,6 +30,7 @@ class Generator:
 		self.graduator = graduator
 		self.population = None
 		self.selection = None
+		self.generation = 0
 	
 	
 	def create(self, length):
@@ -37,9 +38,9 @@ class Generator:
 		
 		self.population = set([self.factory.create() for i in range(length)])
 		
-		print('------------------------------------------------------------')
-		print(self.population)
-		print('------------------------------------------------------------')
+		# print('------------------------------------------------------------')
+		# print(self.population)
+		# print('------------------------------------------------------------')
 	
 	
 	def select(self, proportion, chance):
@@ -53,14 +54,16 @@ class Generator:
 			chance to be a float between 0 and 1
 		"""
 		
-		# Get an OrderedDict of individuals sorted by score
-		ordered_individuals = self.graduator.gradeAll(self.population)
+		# Get a list of couple (score, individual) sorted by score
+		graded_individuals = self.graduator.gradeAll(self.population, self.generation)
+		# Get a list of individuals
+		ordered_individuals = [c[1] for c in graded_individuals]
 		
 		# The number of individuals to select
 		number = ceil(len(self.population) * proportion)
 		# Among the [number] best individuals select number*(1-chance) ones
 		selection = set(sample(
-			list(ordered_individuals.values())[:number],
+			ordered_individuals[:number],
 			int(number*(1-chance))
 		))
 		# Complete selection with random individuals
@@ -92,6 +95,7 @@ class Generator:
 		
 		self.select(proportion, chance)
 		self.generate(length)
+		self.generation += 1
 	
 	
 	def process(self, number, length = 500, proportion = .5, chance = 0):
@@ -108,6 +112,7 @@ class Generator:
 		"""
 		
 		self.create(length)
+		self.generation = 1
 		
 		for i in range(number):
 			self.run(length, proportion, chance)
