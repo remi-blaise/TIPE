@@ -4,6 +4,7 @@
 from lib.inherit_docstring import inherit_docstring
 from random import randint, random, choice, sample
 from math import ceil
+from copy import deepcopy
 
 from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
@@ -45,8 +46,10 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	@inherit_docstring
 	def combine(element1, element2):
 		neurons = set()
-		for half in (element1.neurons, element2.neurons):
+		for parent_neurons in (element1.neurons, element2.neurons):
 			neurons.update(
-				sample(element1.neurons, ceil(len(element1.neurons) / 2))
+				sample(parent_neurons, ceil(len(parent_neurons) / 2))
 			)
+		# Duplicate neurons instead of reuse ones
+		neurons = deepcopy(neurons)
 		return IA(neurons)
