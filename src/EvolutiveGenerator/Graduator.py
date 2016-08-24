@@ -18,7 +18,7 @@ class Graduator(metaclass=ABCMeta):
 	
 	
 	@abstractmethod
-	def grade(self, individual, generation):
+	def grade(self, individual, generation_id):
 		"""Assign a score to a individual
 		
 		Has to be implemented.
@@ -32,7 +32,7 @@ class Graduator(metaclass=ABCMeta):
 		raise NotImplementedError
 	
 	
-	def gradeAll(self, individuals, generation):
+	def gradeAll(self, individuals, generation_id, dispatch):
 		"""Assign a score to each individual
 		
 		Individuals are sorted by score as key in natural order.
@@ -43,9 +43,15 @@ class Graduator(metaclass=ABCMeta):
 		Return a list of couple (score, GeneticElement) sorted by score by desc
 		"""
 		
+		dispatch('start')
+		
 		graded_individuals = []
 		for individual in individuals:
-			graded_individuals.append((self.grade(individual, generation), individual))
+			graduation = self.grade(individual, generation_id)
+			graded_individuals.append((graduation, individual))
+			dispatch('progress', graduation)
+		
+		dispatch('done')
 		
 		graded_individuals.sort(key=itemgetter(0), reverse=True)
 		

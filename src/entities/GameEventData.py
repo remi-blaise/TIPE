@@ -20,6 +20,9 @@ class GameEventData(GeneticElement, XMLRepr):
 			and self.coor['y'] >= event.top and self.coor['y'] <= event.bottom
 	
 	
+	def reprJSON(self):
+		return self.__dict__
+	
 	def __repr__(self):
 		return super().__repr__(
 			attributes=['event_name', 'coor'],

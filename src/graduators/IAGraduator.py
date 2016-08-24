@@ -19,7 +19,7 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 	
 	
 	@inherit_docstring
-	def grade(self, ia, generation):
+	def grade(self, ia, generation_id):
 		# Give the event_dispatcher to neurons
 		for neuron in ia.neurons:
 			neuron.event_dispatcher = self.event_dispatcher
@@ -27,7 +27,7 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 		self.event_dispatcher.listen('game.frame', self.onFrame)
 		
 		# Launch game
-		time = 1 + generation
+		time = 1 + generation_id
 		if time > 401:
 			time = 401
 		persist = launch(Config(False, self.event_dispatcher, time))

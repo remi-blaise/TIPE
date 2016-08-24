@@ -21,5 +21,8 @@ class IA(GeneticElement, XMLRepr):
 		pass
 	
 	
+	def reprJSON(self):
+		return self.__dict__
+	
 	def __repr__(self):
 		return super().__repr__(displaySequencesNames=False)

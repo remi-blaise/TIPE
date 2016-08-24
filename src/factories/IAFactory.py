@@ -44,7 +44,7 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	
 	@staticmethod
 	@inherit_docstring
-	def combine(element1, element2):
+	def breed(element1, element2):
 		neurons = set()
 		for parent_neurons in (element1.neurons, element2.neurons):
 			neurons.update(

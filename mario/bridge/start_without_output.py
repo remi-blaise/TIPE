@@ -6,7 +6,7 @@ import sys
 
 from launch import launch
 from config import Config
-from eventdispatcher import EventDispatcher
+from lib.eventdispatcher import EventDispatcher
 from frame_reader import FrameReader
 from simple_ia import IA
 

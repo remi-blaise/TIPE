@@ -161,9 +161,8 @@ Avant juin 2016 :
 					- generation
 				generation-01
 					selection
-						- ia-000 # score
-						- ia-001
-						...
+						- grading
+						- selection
 					population
 						- ia-000
 						- ia-001
@@ -220,4 +219,27 @@ Avant juin 2016 :
 		chaque itération avec Pygame.
 	
 	Pour le moment je me concentre sur l'objectif 2.5.
+	
+	Premier longue génération terminée avec succès (gen=15, pop_length=20).
+-------------------------------------------------------------------------------
+
+23 Août 2016 :
+	Clarification du vocabulaire utilisé (cf doc) :
+		- processus (processus) :
+			Désigne l'ensemble du traitement.
+			Est composé :
+			- d'une création d'une population initiale,
+			- de multiples générations pour obtenir une population finale.
+		- génération (generation) :
+			Désigne à la fois une itération au sein d'un processus et la
+			population qui en résulte.
+			Est composée :
+			- d'une sélection,
+			- d'une étape de reproduction.
+		- sélection (selection) :
+			Évalue (grade) l'ensemble de la population puis en sélectionne
+			(select) un sous-ensemble.
+		- étape de reproduction (breeding) :
+			Reproduction des individus de la sélection pour former une nouvelle
+			population.
 -------------------------------------------------------------------------------

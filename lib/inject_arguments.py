@@ -53,3 +53,11 @@ if __name__=='__main__':
     
     t = Test(2)
     assert(t.default == 2)
+    
+    class Child(Test):
+        @inject_arguments
+        def __init__(self, minus=None, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+    
+    c = Child(3)
+    assert(c.minus is None and c.default == 'lol')

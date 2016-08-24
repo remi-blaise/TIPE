@@ -3,7 +3,7 @@
 
 import sys
 
-from mario.bridge.eventdispatcher import EventDispatcher
+from lib.eventdispatcher import EventDispatcher
 from mario.bridge.frame_reader import FrameReader
 from src.EvolutiveGenerator.Generator import Generator
 from src.factories.IAFactory import IAFactory
@@ -14,6 +14,6 @@ event_dispatcher = EventDispatcher()
 reader = FrameReader(event_dispatcher)
 generator = Generator(IAFactory, IAGraduator(event_dispatcher))
 
-population = generator.process(5, 10)
+population = generator.process(2, 5)
 
 print(population)

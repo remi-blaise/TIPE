@@ -19,6 +19,9 @@ class ActionEventData(GeneticElement, XMLRepr):
 		return self.action_class(self.duration, event.current_frame)
 	
 	
+	def reprJSON(self):
+		return self.__dict__
+	
 	def __repr__(self):
 		return super().__repr__(__dict__={
 			'action_class': self.action_class.__name__,

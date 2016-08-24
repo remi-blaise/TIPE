@@ -61,5 +61,11 @@ class Neuron(GeneticElement, XMLRepr):
 			self.event_dispatcher.dispatch('action', self.action_event_data.buildAction(event))
 	
 	
+	def reprJSON(self):
+		return {
+			'game_event_data': self.game_event_data,
+			'action_event_data': self.action_event_data
+		}
+	
 	def __repr__(self):
 		return super().__repr__(['game_event_data', 'action_event_data'])

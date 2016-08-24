@@ -72,7 +72,7 @@ class GeneticElementFactory(metaclass=ABCMeta):
 	
 	
 	@classmethod
-	def generate(cls, element1, element2):
+	def breed(cls, element1, element2):
 		"""Generate a new GeneticElement, final offspring of two ones
 		
 		Call combine() then mutate().
