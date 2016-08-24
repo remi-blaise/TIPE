@@ -11,10 +11,11 @@ class IA(GeneticElement, XMLRepr):
 	"""An IA"""
 	
 	@inject_arguments
-	def __init__(self, neurons=set()):
+	def __init__(self, id, neurons=set()):
 		"""Init the IA
 		
 		Expects:
+			id to be a integer, unique among IA's of a processus
 			neurons to be a set of Neuron
 		"""
 		

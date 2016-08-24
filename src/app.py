@@ -14,6 +14,6 @@ event_dispatcher = EventDispatcher()
 reader = FrameReader(event_dispatcher)
 generator = Generator(IAFactory, IAGraduator(event_dispatcher))
 
-population = generator.process(2, 5)
+population = generator.process(0, 2, 5)
 
 print(population)

@@ -3,6 +3,8 @@
 
 from random import choice, sample
 from math import ceil
+from inspect import isfunction, ismethod
+from re import match
 
 from lib.eventdispatcher import EventDispatcher
 from .events import *
@@ -19,6 +21,25 @@ class Generator:
 	Individuals are represented by root GeneticElement instances.
 	Use a Graduator to grade performances.
 	Extending it is strongly adviced.
+	
+	The generator dispatches several events through its internal dispatcher:
+		processus.start,
+		processus.done,
+		creation.start,
+		creation.done,
+		generation.start,
+		generation.done,
+		generation.selection.start,
+		generation.selection.done,
+		generation.selection.grading.start,
+		generation.selection.grading.process,
+		generation.selection.grading.done,
+		generation.breeding.start,
+		generation.breeding.process,
+		generation.breeding.done
+	See events.py for informations carried by events.
+	In particular, the population is available through creation.done and
+	generation.start/done.
 	"""
 	
 	
@@ -29,6 +50,11 @@ class Generator:
 			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
 			listeners to be a list of couples (event_name, listener)
+		You can directly pass listeners instead of couples if the names of
+		listeners follow the format 'onEventName'. For example, listener
+		'onProcessusStart' will listen on 'processus.start'.
+		If exists, factory.onProcessusStart method is automatically added to
+		listeners.
 		"""
 		
 		self.factory = factory
@@ -39,8 +65,30 @@ class Generator:
 		self.generation_id = None
 		
 		self.dispatcher = EventDispatcher()
+		if hasattr(factory, 'onProcessusStart'):
+			listeners.append(factory.onProcessusStart)
+		
 		for listener in listeners:
-			self.dispatcher.listen(*listener)
+			if type(listener) is tuple:
+				self.dispatcher.listen(*listener)
+			elif isfunction(listener) or ismethod(listener):
+				m = match('on([A-Z]\w+)', listener.__name__)
+				if m:
+					event_name = ''
+					camel_event_name = m.group(1)
+					while True:
+						m = match('([A-Z][a-z0-9_]+)(\w*)', camel_event_name)
+						if not m:
+							break
+						if event_name:
+							event_name += '.'
+						event_name += m.group(1).lower()
+						camel_event_name = m.group(2)
+					self.dispatcher.listen(event_name, listener)
+				else:
+					raise ValueError('The given listener do not follow the format onEventName.')
+			else:
+				raise ValueError('Bad listener value: {}'.format(listener))
 	
 	
 	def dispatch(self, event_name):
@@ -76,12 +124,12 @@ class Generator:
 		))
 	
 	
-	def create(self, length):
+	def create(self, pop_length):
 		"""Generate a whole initial population"""
 		
 		self.dispatch('creation.start')
 		
-		self.population = set([self.factory.create() for i in range(length)])
+		self.population = set([self.factory.create() for i in range(pop_length)])
 		
 		self.dispatch('creation.done')
 	
@@ -120,12 +168,12 @@ class Generator:
 			selection.add(choiced)
 			unused_individuals.remove(choiced)
 		
-		self.dispatchSelection('done', None, selection)
+		self.dispatchSelection('done', graded_individuals, selection)
 		
 		self.selection = selection
 	
 	
-	def breed(self, length):
+	def breed(self, pop_length):
 		"""Generate a new population based on selection
 		
 		This is a basic system to be overcome.
@@ -135,7 +183,7 @@ class Generator:
 		
 		new_pop = set()
 		
-		while len(new_pop) < length:
+		while len(new_pop) < pop_length:
 			parents = tuple([choice(list(self.selection)) for i in range(2)])
 			offspring = self.factory.breed(*parents)
 			new_pop.add(offspring)
@@ -146,22 +194,22 @@ class Generator:
 		self.population = new_pop
 	
 	
-	def generate(self, length, proportion, chance):
+	def generate(self, pop_length, proportion, chance):
 		"""Operate a generation"""
 		
 		self.generation_id += 1
 		self.dispatch('generation.start')
 		self.select(proportion, chance)
-		self.breed(length)
+		self.breed(pop_length)
 		self.dispatch('generation.done')
 	
 	
-	def process(self, number, length = 500, proportion = .5, chance = 0):
-		"""Process multiple runs
+	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0):
+		"""Process multiple generations
 		
 		Expects:
-			number to be an int
-			length to be an int
+			generations to be an int
+			pop_length to be an int
 			
 			proportion to be a float between 0 and 1
 			chance to be a float between 0 and 1
@@ -169,15 +217,18 @@ class Generator:
 		Return the last generation
 		"""
 		
-		self.processus_id = PathManager.newProcessusId()
+		self.processus_id = processus_id
 		self.generation_id = 0
 		self.dispatch('processus.start')
 		
-		self.create(length)
+		self.create(pop_length)
 		
-		for i in range(number):
-			self.generate(length, proportion, chance)
+		for i in range(generations):
+			self.generate(pop_length, proportion, chance)
 		
 		self.dispatch('processus.done')
+		
+		self.processus_id = None
+		self.generation_id = None
 		
 		return self.population

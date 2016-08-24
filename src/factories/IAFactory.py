@@ -20,14 +20,25 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	def genetic_element_class(self):
 		return IA
 	
+	last_ia_id = None
 	
-	@staticmethod
+	@classmethod
+	def onProcessusStart(cls, event):
+		cls.last_ia_id = -1
+	
+	@classmethod
+	def newIaId(cls):
+		cls.last_ia_id += 1
+		return cls.last_ia_id
+	
+	
+	@classmethod
 	@inherit_docstring
-	def create():
+	def create(cls):
 		neurons = set()
 		for i in range(3 + randint(0, 3)):
 			neurons.add(NeuronFactory.create())
-		return IA(neurons)
+		return IA(cls.newIaId(), neurons)
 	
 	
 	@staticmethod
@@ -42,9 +53,9 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 				NeuronFactory.mutate(neuron)
 	
 	
-	@staticmethod
+	@classmethod
 	@inherit_docstring
-	def breed(element1, element2):
+	def combine(cls, element1, element2):
 		neurons = set()
 		for parent_neurons in (element1.neurons, element2.neurons):
 			neurons.update(
@@ -52,4 +63,4 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 			)
 		# Duplicate neurons instead of reuse ones
 		neurons = deepcopy(neurons)
-		return IA(neurons)
+		return IA(cls.newIaId(), neurons)
