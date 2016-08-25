@@ -49,7 +49,7 @@ class Graduator(metaclass=ABCMeta):
 		for individual in individuals:
 			graduation = self.grade(individual, generation_id)
 			graded_individuals.append((graduation, individual))
-			dispatch('progress', graduation)
+			dispatch('progress', individual, graduation)
 		
 		dispatch('done')
 		

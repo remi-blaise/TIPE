@@ -125,10 +125,10 @@ Avant juin 2016 :
 	Le problème 1 se révèle comme prévu très problématique. Sa résolution via
 	l'objectif 1.1 devient une priorité.
 	
-	Objectif 2.4 :
+	Objectif 2.4 : Tests
 		Debug du programme d'évolution, écriture des tests unitaires.
 	
-	Objectif 2.5 :
+	Objectif 2.5 : Writer
 		Mettre en place une architecture permettant de sauvegarder les
 		résultats des calculs et l'historique des évènements.
 -------------------------------------------------------------------------------
@@ -150,26 +150,28 @@ Avant juin 2016 :
 		- Potentiel Reader pour lire les données et adaptation du Generator
 		  pouvoir stopper et reprendre une génération.
 	
-	Architecture système des sauvegardes :
+	Spécification de l'architecture système des sauvegardes :
 		results
 			processus-00000
 				generation-00 # Nb de zéros fc du nombre de générations prévues
 					initial_pop
-						- ia-000
-						- ia-001
+						- ia-000.json
+						- ia-001.json
 						...
 					- generation
 				generation-01
 					selection
-						- grading
-						- selection
+						- grading # lignes type : ia_id: score
+						- final_grading.json
+						- selection.json # ids
 					population
-						- ia-000
-						- ia-001
+						- ia-000.json
+						- ia-001.json
 						...
-					- generation # state, lignes type : 000 + 001 -> 000
+					- breeding # lignes type : 000 + 001 -> 000
+					- generation.json # state
 				...
-				- processus # generations_nb, pop_length, (prop, chance), state
+				- processus.json # generations, pop_length, proportion, chance
 -------------------------------------------------------------------------------
 
 23 Août 2016 :
@@ -223,7 +225,7 @@ Avant juin 2016 :
 	Premier longue génération terminée avec succès (gen=15, pop_length=20).
 -------------------------------------------------------------------------------
 
-23 Août 2016 :
+24 Août 2016 :
 	Clarification du vocabulaire utilisé (cf doc) :
 		- processus (processus) :
 			Désigne l'ensemble du traitement.
@@ -242,4 +244,17 @@ Avant juin 2016 :
 		- étape de reproduction (breeding) :
 			Reproduction des individus de la sélection pour former une nouvelle
 			population.
+-------------------------------------------------------------------------------
+
+25 Août 2016 :
+	Objectif 2.5 atteint ! (Ouf ! C'était un gros morceau !) Et ça fonctionne !
+	Report du Reader (dernier point de l'objectif 2.5) à l'objectif 2.7.
+	
+	Objectif 2.7 : dans la continuation du 2.5
+		- Écrire deux Logger, un ConsoleLogger et un SystemLogger pour être
+		  capable de suivre un processus et d'en garder une trace (plus
+		  efficace que le Writer en ce qui concerne le suivi du programme).
+		- Écrire un Reader et adapter le Generator pour être capable de
+		  reprendre un processus coupé à n'importe quel moment.
+		  Ajouter un système de pause propre.
 -------------------------------------------------------------------------------

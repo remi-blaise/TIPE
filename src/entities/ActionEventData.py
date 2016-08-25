@@ -20,10 +20,10 @@ class ActionEventData(GeneticElement, XMLRepr):
 	
 	
 	def reprJSON(self):
-		return self.__dict__
-	
-	def __repr__(self):
-		return super().__repr__(__dict__={
+		return {
 			'action_class': self.action_class.__name__,
 			'duration': self.duration
-		})
+		}
+	
+	def __repr__(self):
+		return super().__repr__(__dict__=self.reprJSON())

@@ -18,12 +18,13 @@ class PathManager:
 	@classmethod
 	def newProcessusId(cls):
 		path = Path(cls.ROOT)
+		cls.makeDir(path)
 		ids = [-1]
 		
 		for folder in path.iterdir():
-			match = fullmatch('processus-(\d+)', folder)
+			match = fullmatch('processus-(\d+)', folder.name)
 			if match is not None:
-				ids.append(int(match[1]))
+				ids.append(int(match.group(1)))
 		
 		return max(ids) + 1
 	
@@ -31,7 +32,7 @@ class PathManager:
 	@classmethod
 	def getPath(cls,
 		processus_id, generations, pop_length,
-		generation_id = None, ia_id_or_selection_file = None
+		generation_id = None, ia_id_or_file = None
 	):
 		path = Path(cls.ROOT)
 		
@@ -41,27 +42,36 @@ class PathManager:
 		
 		# processus-00000/generation-00/...
 		if generation_id is not None:
-			path /= 'generation-' + '{0:0{1}d}'.format(generation_id, generations)
+			path /= 'generation-' + '{0:0{1}d}'.format(generation_id, len(str(generations)))
 			
 			# processus-00000/generation-00/selection/...
-			if ia_id_or_selection_file in ('grading', 'selection'):
-				path /= ia_id_or_selection_file
+			if ia_id_or_file in ('grading', 'final_grading', 'selection'):
+				path /= 'selection/' + ia_id_or_file
 			# processus-00000/generation-00/population/ia-000
-			elif type(ia_id_or_selection_file) is int:
+			elif type(ia_id_or_file) is int:
 				path /= 'initial_pop' if generation_id == 0 else 'population'
-				ia_id = ia_id_or_selection_file
+				ia_id = ia_id_or_file
 				if ia_id is not None:
-					path /= 'ia-' + '{0:0{1}d}'.format(ia_id, pop_length)
+					path /= 'ia-{0:0{1}d}.json'.format(ia_id, len(str(pop_length)))
 				else:
 					raise ValueError('ia_id not given')
+			# processus-00000/generation-00/breeding
+			elif ia_id_or_file == 'breeding':
+				path /= 'breeding'
 			# processus-00000/generation-00/generation
-			elif ia_id_or_selection_file is None:
+			elif ia_id_or_file is None:
 				path /= 'generation'
 			else:
-				raise ValueError('wrong ia_id_or_selection_file value')
+				raise ValueError('wrong ia_id_or_file value')
 		# processus-00000/processus
 		else:
 			path /= 'processus'
+		
+		if (
+			path.name in ('generation', 'processus', 'final_grading', 'selection')
+			or path.parent.name == 'population'
+		):
+			path = path.with_suffix('.json')
 		
 		cls.makeDir(path.parent)
 		

@@ -27,7 +27,7 @@ def inject_arguments(inFunction):
         # Add default value for non-specified arguments
         if inFunction.__defaults__:
             nb_defaults = len(_names) - len(_values)
-            if nb_defaults:
+            if nb_defaults > 0:
                 _self.__dict__.update(zip(
                     _names[-nb_defaults:], inFunction.__defaults__[-nb_defaults:]
                 ))
@@ -40,7 +40,7 @@ def inject_arguments(inFunction):
 if __name__=='__main__':
     class Test:
         @inject_arguments
-        def __init__(self, name, surname, default='lol'):
+        def __init__(self, name, surname, default = 'lol'):
             pass
     
     t = Test('mickey', surname='mouse')
@@ -56,8 +56,24 @@ if __name__=='__main__':
     
     class Child(Test):
         @inject_arguments
-        def __init__(self, minus=None, *args, **kwargs):
+        def __init__(self, minus = None, malus = None, *args, **kwargs):
             super().__init__(*args, **kwargs)
     
-    c = Child(3)
-    assert(c.minus is None and c.default == 'lol')
+    c = Child(3, 4)
+    assert(c.minus == 3 and c.malus == 4 and c.default == 'lol')
+    
+    c = Child(3, 4, 'hey')
+    assert(c.minus == 3 and c.malus == 4 and c.default == 'hey')
+    
+    class A():
+        @inject_arguments
+        def __init__(self, a1):
+            pass
+
+    class B(A):
+        @inject_arguments
+        def __init__(self, b1 = None, b2 = None, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+    
+    b = B(0, 1, 2)
+    assert(b.b1 == 0 and b.b2 == 1 and b.a1 == 2)

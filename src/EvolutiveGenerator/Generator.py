@@ -8,7 +8,6 @@ from re import match
 
 from lib.eventdispatcher import EventDispatcher
 from .events import *
-from src.Writer.PathManager import PathManager
 
 
 class Generator:
@@ -49,29 +48,42 @@ class Generator:
 		Expects:
 			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
-			listeners to be a list of couples (event_name, listener)
-		You can directly pass listeners instead of couples if the names of
-		listeners follow the format 'onEventName'. For example, listener
-		'onProcessusStart' will listen on 'processus.start'.
-		If exists, factory.onProcessusStart method is automatically added to
-		listeners.
+			listeners to be a list of listeners (see below)
+		Listeners can be:
+			- couples (event_name, listener)
+			- functions and methods if their names follow the format
+			  'onEventName'. For example, listener 'onProcessusStart' will
+			  listen on 'processus.start'.
+			- objects: every method following the format above is added to
+			listeners.
+		factory and graduator are automatically added to listeners.
 		"""
 		
 		self.factory = factory
 		self.graduator = graduator
 		self.population = None
 		self.selection = None
-		self.processus_id = None
 		self.generation_id = None
 		
 		self.dispatcher = EventDispatcher()
-		if hasattr(factory, 'onProcessusStart'):
-			listeners.append(factory.onProcessusStart)
+		listeners.append(factory)
+		listeners.append(graduator)
 		
+		# Get all objects' methods
+		listenersMethods = listeners.copy()
 		for listener in listeners:
+			if not (type(listener) is tuple or isfunction(listener) or ismethod(listener)):
+				listenersMethods.remove(listener)
+				for method in [method for method in dir(listener) if ismethod(getattr(listener, method))]:
+					if match('on([A-Z]\w+)', method):
+						listenersMethods.append(getattr(listener, method))
+		
+		# Inscribe all listeners
+		for listener in listenersMethods:
 			if type(listener) is tuple:
 				self.dispatcher.listen(*listener)
-			elif isfunction(listener) or ismethod(listener):
+			else:
+				# Parse method names to get event names
 				m = match('on([A-Z]\w+)', listener.__name__)
 				if m:
 					event_name = ''
@@ -87,51 +99,48 @@ class Generator:
 					self.dispatcher.listen(event_name, listener)
 				else:
 					raise ValueError('The given listener do not follow the format onEventName.')
-			else:
-				raise ValueError('Bad listener value: {}'.format(listener))
 	
 	
-	def dispatch(self, event_name):
+	def dispatchProcessus(self, event_name, processus_id,
+		generations = None, pop_length = None, proportion = None, chance = None):
+		self.dispatcher.dispatch('processus.' + event_name, ProcessusEvent(
+			processus_id, generations, pop_length, proportion, chance
+		))
+	
+	def dispatchGeneration(self, event_name):
 		"""Shorthand to dispatch common events"""
-		if event_name in ('processus.start', 'processus.done'):
-			self.dispatcher.dispatch(event_name, ProcessusEvent(self.processus_id))
-		elif event_name in (
-			'creation.start', 'creation.done',
-			'generation.start', 'generation.done'
-		):
-			self.dispatcher.dispatch(event_name, GenerationEvent(
-				self.processus_id, self.generation_id, self.population
-			))
-		else:
-			raise ValueError('Cannot dispatch {} events.'.format(event_name))
+		prefix = 'creation' if self.generation_id == 0 else 'generation'
+		self.dispatcher.dispatch(prefix + '.' + event_name, GenerationEvent(
+			self.generation_id, self.population
+		))
 	
 	def dispatchSelection(self, event_name, grading, selection):
 		"""Shorthand to dispatch selection events"""
 		self.dispatcher.dispatch('generation.selection.' + event_name, SelectionEvent(
-			grading, selection, self.processus_id, self.generation_id
+			grading, selection, self.generation_id
 		))
 	
-	def dispatchGrading(self, event_name, graduation = None):
+	def dispatchGrading(self, event_name, ia = None, graduation = None):
 		"""Shorthand to dispatch grading events"""
 		self.dispatcher.dispatch('generation.selection.grading.' + event_name, GradingEvent(
-			graduation, self.processus_id, self.generation_id
+			ia, graduation, self.generation_id
 		))
 	
-	def dispatchBreeding(self, event_name, offspring = None):
+	def dispatchBreeding(self, event_name, offspring = None, parents = None):
 		"""Shorthand to dispatch breeding events"""
 		self.dispatcher.dispatch('generation.breeding.' + event_name, BreedingEvent(
-			offspring, self.processus_id, self.generation_id
+			offspring, parents, self.generation_id
 		))
 	
 	
 	def create(self, pop_length):
 		"""Generate a whole initial population"""
 		
-		self.dispatch('creation.start')
+		self.dispatchGeneration('start')
 		
 		self.population = set([self.factory.create() for i in range(pop_length)])
 		
-		self.dispatch('creation.done')
+		self.dispatchGeneration('done')
 	
 	
 	def select(self, proportion, chance):
@@ -187,7 +196,7 @@ class Generator:
 			parents = tuple([choice(list(self.selection)) for i in range(2)])
 			offspring = self.factory.breed(*parents)
 			new_pop.add(offspring)
-			self.dispatchBreeding('progress', offspring)
+			self.dispatchBreeding('progress', offspring, parents)
 		
 		self.dispatchBreeding('done')
 		
@@ -198,10 +207,10 @@ class Generator:
 		"""Operate a generation"""
 		
 		self.generation_id += 1
-		self.dispatch('generation.start')
+		self.dispatchGeneration('start')
 		self.select(proportion, chance)
 		self.breed(pop_length)
-		self.dispatch('generation.done')
+		self.dispatchGeneration('done')
 	
 	
 	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0):
@@ -217,18 +226,16 @@ class Generator:
 		Return the last generation
 		"""
 		
-		self.processus_id = processus_id
 		self.generation_id = 0
-		self.dispatch('processus.start')
+		self.dispatchProcessus('start', processus_id, generations, pop_length, proportion, chance)
 		
 		self.create(pop_length)
 		
 		for i in range(generations):
 			self.generate(pop_length, proportion, chance)
 		
-		self.dispatch('processus.done')
+		self.dispatchProcessus('done', processus_id)
 		
-		self.processus_id = None
 		self.generation_id = None
 		
 		return self.population

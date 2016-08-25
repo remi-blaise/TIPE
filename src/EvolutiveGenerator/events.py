@@ -8,7 +8,7 @@ class ProcessusEvent:
 	"""A processus event"""
 	
 	@inject_arguments
-	def __init__(self, processus_id):
+	def __init__(self, processus_id, generations = None, pop_length = None, proportion = None, chance = None):
 		pass
 
 
@@ -16,7 +16,7 @@ class GenerationEvent(ProcessusEvent):
 	"""A generation event"""
 	
 	@inject_arguments
-	def __init__(self, processus_id, generation_id, population = None):
+	def __init__(self, generation_id, population = None):
 		pass
 
 
@@ -32,7 +32,7 @@ class GradingEvent(SelectionEvent):
 	"""A grading event"""
 	
 	@inject_arguments
-	def __init__(self, graduation = None, *args, **kwargs):
+	def __init__(self, ia = None, graduation = None, *args, **kwargs):
 		GenerationEvent.__init__(self, *args, **kwargs)
 
 
@@ -40,5 +40,5 @@ class BreedingEvent(GenerationEvent):
 	"""A breeding event"""
 	
 	@inject_arguments
-	def __init__(self, offspring = None, *args, **kwargs):
+	def __init__(self, offspring = None, parents = None, *args, **kwargs):
 		super().__init__(*args, **kwargs)
