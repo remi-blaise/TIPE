@@ -22,6 +22,9 @@ def setup(config):
 	pg.display.set_caption(c.ORIGINAL_CAPTION)			  	# Affiche le titre
 	SCREEN = pg.display.set_mode(c.SCREEN_SIZE)		# Crée une fenetre de taille (800, 600) -> Surface
 	SCREEN_RECT = SCREEN.get_rect()					# Récupère le rectangle correspondant à la fenetre entière
+	
+	if not config.graphic_output:
+		pg.display.iconify()
 
 
 	FONTS = load_all_fonts(os.path.join("mario", "resources", "fonts"))

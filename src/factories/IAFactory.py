@@ -1,11 +1,11 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from lib.inherit_docstring import inherit_docstring
 from random import randint, random, choice, sample
 from math import ceil
 from copy import deepcopy
 
+from lib.inherit_docstring import inherit_docstring
 from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.IA import IA

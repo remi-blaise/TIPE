@@ -164,15 +164,15 @@ class Generator:
 		ordered_individuals = [c[1] for c in graded_individuals]
 		
 		# The number of individuals to select
-		number = ceil(len(self.population) * proportion)
-		# Among the [number] best individuals select number*(1-chance) ones
+		selection_length = ceil(len(self.population) * proportion)
+		# Among the [selection_length] best individuals select selection_length*(1-chance) ones
 		selection = set(sample(
-			ordered_individuals[:number],
-			int(number*(1-chance))
+			ordered_individuals[:selection_length],
+			int(selection_length*(1-chance))
 		))
 		# Complete selection with random individuals
 		unused_individuals = self.population.difference(selection)
-		while len(selection) < number:
+		while len(selection) < selection_length:
 			choiced = choice(unused_individuals)
 			selection.add(choiced)
 			unused_individuals.remove(choiced)
