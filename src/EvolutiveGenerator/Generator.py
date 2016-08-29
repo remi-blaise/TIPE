@@ -8,6 +8,7 @@ from re import match
 
 from lib.eventdispatcher import EventDispatcher
 from .events import *
+from .GeneratorManager import GeneratorManager
 
 
 class Generator:
@@ -24,6 +25,7 @@ class Generator:
 	The generator dispatches several events through its internal dispatcher:
 		processus.start,
 		processus.done,
+		processus.stop,
 		creation.start,
 		creation.done,
 		generation.start,
@@ -39,16 +41,19 @@ class Generator:
 	See events.py for informations carried by events.
 	In particular, the population is available through creation.done and
 	generation.start/done.
+	
+	The generator can be manage via a GeneratorManager.
 	"""
 	
 	
-	def __init__(self, factory, graduator, listeners = []):
+	def __init__(self, factory, graduator, listeners = [], manager = GeneratorManager()):
 		"""Init
 		
 		Expects:
 			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
 			listeners to be a list of listeners (see below)
+			manager to be a instance of GeneratorManager
 		Listeners can be:
 			- couples (event_name, listener)
 			- functions and methods if their names follow the format
@@ -56,11 +61,14 @@ class Generator:
 			  listen on 'processus.start'.
 			- objects: every method following the format above is added to
 			listeners.
-		factory and graduator are automatically added to listeners.
+		factory, graduator and manager are automatically added to listeners.
 		"""
 		
 		self.factory = factory
 		self.graduator = graduator
+		self.manager = manager
+		self.manager.process = self.process
+		
 		self.population = None
 		self.selection = None
 		self.generation_id = None
@@ -68,6 +76,7 @@ class Generator:
 		self.dispatcher = EventDispatcher()
 		listeners.append(factory)
 		listeners.append(graduator)
+		listeners.append(manager)
 		
 		# Get all objects' methods
 		listenersMethods = listeners.copy()
@@ -213,7 +222,7 @@ class Generator:
 		self.dispatchGeneration('done')
 	
 	
-	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0):
+	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0, state = None):
 		"""Process multiple generations
 		
 		Expects:
@@ -222,10 +231,14 @@ class Generator:
 			
 			proportion to be a float between 0 and 1
 			chance to be a float between 0 and 1
+			
+			state to be a state of (start, grading, selection, breeding, done)
+			Use a GeneratorManager rather than setting this argument manually.
 		
 		Return the last generation
 		"""
 		
+		if state is not None:
 		self.generation_id = 0
 		self.dispatchProcessus('start', processus_id, generations, pop_length, proportion, chance)
 		

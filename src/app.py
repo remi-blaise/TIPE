@@ -8,7 +8,6 @@ from mario.bridge.frame_reader import FrameReader
 from .EvolutiveGenerator.Generator import Generator
 from .factories.IAFactory import IAFactory
 from .graduators.IAGraduator import IAGraduator
-from .Writer.PathManager import PathManager
 from .Writer.Writer import Writer
 from .Logger.FileLogger import FileLogger
 from .Logger.ConsoleLogger import ConsoleLogger
@@ -16,8 +15,9 @@ from .Logger.ConsoleLogger import ConsoleLogger
 
 event_dispatcher = EventDispatcher()
 reader = FrameReader(event_dispatcher)
-generator = Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()])
+manager = GeneratorManager()
+generator = Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()], manager)
 
-population = generator.process(PathManager.newProcessusId(), 1, 10)
+population = manager.startNew(1, 10)
 
 # print(population)

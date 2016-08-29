@@ -20,7 +20,7 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	def genetic_element_class(self):
 		return IA
 	
-	last_ia_id = None
+	last_ia_id = -1
 	
 	@classmethod
 	def onProcessusStart(cls, event):
@@ -30,6 +30,10 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	def newIaId(cls):
 		cls.last_ia_id += 1
 		return cls.last_ia_id
+	
+	@classmethod
+	def updateIaId(cls, ia_id):
+		cls.last_ia_id = max(cls.last_ia_id, ia_id)
 	
 	
 	@classmethod
@@ -64,3 +68,12 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 		# Duplicate neurons instead of reuse ones
 		neurons = deepcopy(neurons)
 		return IA(cls.newIaId(), neurons)
+	
+	
+	@classmethod
+	def hydrate(cls, data):
+		cls.updateIaId(data['id'])
+		neurons = set()
+		for neuron_data in data['neurons']:
+			neurons.add(NeuronFactory.hydrate(neuron_data))
+		return IA(data['id'], neurons)

@@ -32,13 +32,12 @@ class PathManager:
 	@classmethod
 	def getPath(cls,
 		processus_id, generations, pop_length,
-		generation_id = None, ia_id_or_file = None
+		generation_id = None, ia_id_or_file = None, read_only = False
 	):
 		path = Path(cls.ROOT)
 		
-		# processus-00000/...
-		if processus_id is not None:
-			path /= 'processus-' + '{0:05d}'.format(processus_id)
+		# processus-00000/
+		path /= 'processus-' + '{0:05d}'.format(processus_id)
 		
 		# processus-00000/generation-00/...
 		if generation_id is not None:
@@ -73,7 +72,8 @@ class PathManager:
 		):
 			path = path.with_suffix('.json')
 		
-		cls.makeDir(path.parent)
+		if not read_only:
+			cls.makeDir(path.parent)
 		
 		return path
 	

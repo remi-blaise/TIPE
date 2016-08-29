@@ -12,6 +12,14 @@ class ProcessusEvent:
 		pass
 
 
+class ProcessusStopEvent(ProcessusEvent):
+	"""A processus stop event"""
+	
+	@inject_arguments
+	def __init__(self, state, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+
+
 class GenerationEvent(ProcessusEvent):
 	"""A generation event"""
 	

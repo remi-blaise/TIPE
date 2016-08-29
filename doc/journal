@@ -258,3 +258,64 @@ Avant juin 2016 :
 		  reprendre un processus coupé à n'importe quel moment.
 		  Ajouter un système de pause propre.
 -------------------------------------------------------------------------------
+
+26 Août 2016 :
+	Écriture des Logger terminée. Je m'attaque au Reader.
+-------------------------------------------------------------------------------
+
+28 Août 2016 :
+	Le Reader est écrit mais il s'avère que j'ai largement sous-estimé
+	l'effort nécessaire à l'adaptation du Generator. J'ai pour le moment
+	construit un GeneratorManager chargé de lancer et stopper puis
+	théoriquement pouvoir faire reprendre un processus. Mais deux problèmes se
+	posent à présent:
+	- Comment organiser le Generator de sorte à pouvoir reprendre un processus
+	  arrêté en cours de génération ? C'est un problème délicat qui va encore
+	  nécessiter réflexion.
+	- Comment pouvoir réellement contrôler le Generator en cours de processus ?
+	  Il paraît évident qu'il faille pour cela l'isoler dans un thread afin
+	  qu'il puisse s'executer parallèlement à un script écoutant des entrées
+	  utilisateur. Il va encore une fois adapter le Generator et organiser
+	  l'échange avec celui-ci, peut-être en créant un miroir de son dispatcher.
+	Bref, beaucoup de boulot délicat en vue.
+-------------------------------------------------------------------------------
+
+28 Août 2016 :
+	J'ai trouvé LA solution pour adapter le Generator. L'idée est réorganiser
+	le workflow pour passer d'une programmation fonctionnelle à une
+	programmation plus "orientée évènement".
+	Plan pour l'adaptation du Generator:
+		- Réorganisation des méthodes:
+			- init() se charge désormais de l'initialisation du processus
+			actuellement faite dans process().
+			- select() se charge désormais de la sélection uniquement après
+			l'évaluation des individus. On a donc deux étapes distinctes
+			grading et selection (maj du voc).
+		- Réorganisation du workflow:
+			- Supression de la boucle principale. Les méthodes process() et
+			 generate() disparaissent donc. À la place, chaque méthode émet un
+			 évènement indiquant qu'elle a fini et permettant à la suivante
+			 d'écouter cet event. Le processus s'exécute donc entièrement par
+			 propagation de méthode à méthode.
+			- Les données internes du processus sont centralisée dans un objet
+			  ProcessusState qui est passé par chaque event.
+		- L'avantage de cette méthode:
+			TL;DR Permet d'arrêter et de relancer le processus à n'importe
+			      quelle étape.
+			- Propre, évite de passer toutes les infos du state de méthode en
+			méthode et d'enfermer toutes les instructions de chaque méthode
+			dans des structures conditionnelles.
+			- La méthode process() (à renommer du coup ?) n'a plus qu'à lancer
+			l'évènement initial ou n'importe quel autre évènement du processus
+			simplement en analysant le ProcessusState.
+			- Permet d'office une future évaluation asynchrone.
+			- Centraliser les données dans le ProcessusState amène une
+			convention d'écriture entre les différents composants externes au
+			Generator (Writer, Logger, Reader) et donc une plus grande
+			interopérabilité. Permet notamment d'alléger le Reader en écrivant
+			directement le state.
+	C'est parti !
+	
+	Objectif 2.8: Évaluation asynchrone
+		Dans la continuation du 2.6, évaluer chaque IA de manière asynchrone.
+-------------------------------------------------------------------------------

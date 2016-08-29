@@ -33,3 +33,11 @@ class NeuronFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMet
 			GameEventDataFactory.mutate(element.game_event_data)
 		else:
 			ActionEventDataFactory.mutate(element.action_event_data)
+	
+	
+	@staticmethod
+	def hydrate(data):
+		return Neuron(
+			GameEventDataFactory.hydrate(data['game_event_data']),
+			ActionEventDataFactory.hydrate(data['action_event_data'])
+		)

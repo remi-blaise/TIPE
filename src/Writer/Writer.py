@@ -32,17 +32,17 @@ class Writer:
 	def onGenerationDone(self, event):
 		self.writeState('done', event)
 	
-	def onGenerationSelectionStart(self, event):
-		self.writeState('selection', event)
-	
 	def onGenerationSelectionGradingStart(self, event):
 		self.writeState('grading', event)
 	
 	def onGenerationSelectionGradingProgress(self, event):
 		with self.getPath(event.generation_id, 'grading').open('a') as grading_file:
 			grading_file.write(
-				'{}: {}'.format(event.ia.id, event.graduation)
+				'{}: {}\n'.format(event.ia.id, event.graduation)
 			)
+	
+	def onGenerationSelectionGradingDone(self, event):
+		self.writeState('selection')
 	
 	def onGenerationSelectionDone(self, event):
 		self.writeJSON(

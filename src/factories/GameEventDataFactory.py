@@ -40,6 +40,11 @@ class GameEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocstr
 			element.coor = cls.mutateCoor(element.coor)
 	
 	
+	@staticmethod
+	def hydrate(data):
+		return GameEventData(**data)
+	
+	
 	@classmethod
 	def createEventName(cls):
 		return choice(cls.GAME_EVENT_NAMES)
