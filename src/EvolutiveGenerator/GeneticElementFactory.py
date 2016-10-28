@@ -14,7 +14,7 @@ class GeneticElementFactory(metaclass=ABCMeta):
 		+create() -> GeneticElement
 		+mutate(GeneticElement)
 		+combine(GeneticElement, GeneticElement) -> GeneticElement
-		+generate(GeneticElement, GeneticElement) -> GeneticElement
+		+breed(GeneticElement, GeneticElement) -> GeneticElement
 	Evolution logic may typically use recursive process over children of elements.
 	"""
 	

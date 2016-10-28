@@ -11,40 +11,33 @@ class Writer:
 	"""Write IA in files"""
 	
 	
+	def onAll(self, event):
+		self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
+	
 	def onProcessusStart(self, event):
 		self.__dict__.update(event.__dict__)
 		
-		infos = event.__dict__.copy()
-		infos.pop('processus_id')
-		self.writeJSON(infos, self.getPath())
-	
-	def onCreationStart(self, event):
-		self.onGenerationStart(event)
-	
-	def onGenerationStart(self, event):
-		self.writeState('start', event)
+		self.writeJSON(
+			{
+				'generations': event.generations,
+				'pop_length': event.pop_length,
+				'proportion': event.proportion,
+				'chance': event.chance
+			},
+			self.getPath()
+		)
 	
 	def onCreationDone(self, event):
-		self.onGenerationDone(event)
 		for ia in event.population:
 			self.writeJSON(ia, self.getPath(event.generation_id, ia.id))
 	
-	def onGenerationDone(self, event):
-		self.writeState('done', event)
-	
-	def onGenerationSelectionGradingStart(self, event):
-		self.writeState('grading', event)
-	
-	def onGenerationSelectionGradingProgress(self, event):
+	def onGradingProgress(self, event):
 		with self.getPath(event.generation_id, 'grading').open('a') as grading_file:
 			grading_file.write(
-				'{}: {}\n'.format(event.ia.id, event.graduation)
+				'{}: {}\n'.format(event.individual.id, event.graduation)
 			)
 	
-	def onGenerationSelectionGradingDone(self, event):
-		self.writeState('selection')
-	
-	def onGenerationSelectionDone(self, event):
+	def onSelectionDone(self, event):
 		self.writeJSON(
 			[(score, ia.id) for (score, ia) in event.grading],
 			self.getPath(event.generation_id, 'final_grading')
@@ -54,10 +47,7 @@ class Writer:
 			self.getPath(event.generation_id, 'selection')
 		)
 	
-	def onGenerationBreedingStart(self, event):
-		self.writeState('breeding', event)
-	
-	def onGenerationBreedingProgress(self, event):
+	def onBreedingProgress(self, event):
 		self.writeJSON(event.offspring, self.getPath(event.generation_id, event.offspring.id))
 		with self.getPath(event.generation_id, 'breeding').open('a') as breeding_file:
 			breeding_file.write(
@@ -73,6 +63,3 @@ class Writer:
 	
 	def writeJSON(self, data, path):
 		self.write(dumps(data, cls=JSONEncoder, sort_keys=True, indent=4), path)
-	
-	def writeState(self, state, event):
-		self.writeJSON({'state': state}, self.getPath(event.generation_id))

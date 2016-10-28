@@ -50,8 +50,6 @@ class AbstractLogger(metaclass=ABCMeta):
 			'Selection parameters: selects {}% of the population whose {}% are random.'
 			.format(self._percent(event.proportion), self._percent(event.chance))
 		)
-		
-		self.pop_length = event.pop_length
 	
 	def onProcessusDone(self, event):
 		self.write('Processus {} is done!'.format(event.processus_id))
@@ -83,7 +81,7 @@ class AbstractLogger(metaclass=ABCMeta):
 		self.count_ia += 1
 		
 		self.overwrite('    Grading: {} IA {} gets a score of {}.'.format(
-			self.drawProgressBar(self.count_ia / self.pop_length),
+			self.drawProgressBar(self.count_ia / event.pop_length),
 			event.ia.id, event.graduation
 		))
 	
@@ -99,7 +97,7 @@ class AbstractLogger(metaclass=ABCMeta):
 		self.count_ia += 1
 		
 		self.overwrite('    Breeding: {} {} + {} -> {}.'.format(
-			self.drawProgressBar(self.count_ia / self.pop_length),
+			self.drawProgressBar(self.count_ia / event.pop_length),
 			event.parents[0].id, event.parents[1].id, event.offspring.id
 		))
 	

@@ -43,15 +43,11 @@ class Graduator(metaclass=ABCMeta):
 		Return a list of couple (score, GeneticElement) sorted by score by desc
 		"""
 		
-		dispatch('start')
-		
 		graded_individuals = []
 		for individual in individuals:
 			graduation = self.grade(individual, generation_id)
 			graded_individuals.append((graduation, individual))
-			dispatch('progress', individual, graduation)
-		
-		dispatch('done')
+			dispatch(individual, graduation)
 		
 		graded_individuals.sort(key=itemgetter(0), reverse=True)
 		

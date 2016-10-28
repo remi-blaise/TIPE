@@ -55,6 +55,8 @@ class EventDispatcher:
 		'''
 		Add an event listener
 		
+		If name is 'all', the listener will listen all events.
+		
 		Parameters:
 		{str} 		name 			The name of the event
 		{function} 	listener 		The event listener
@@ -80,6 +82,14 @@ class EventDispatcher:
 		return (name, priority, listener)
 	
 	
+	def on(self, name):
+		'''Inscribe given listener, to use as decorator'''
+		def decorator(function):
+			self.listen(name, function)
+			return function
+		return decorator
+	
+	
 	def detach(self, id):
 		'''
 		Detach an event listener
@@ -98,6 +108,7 @@ class EventDispatcher:
 		Dispatch an event
 		
 		If propagation is set, dispatch all the parent events.
+		At end of dispatching, dispatch the 'all' event.
 		
 		Parameters:
 		{str} 		name 				The name of the event
@@ -122,6 +133,10 @@ class EventDispatcher:
 			parent_name = self.getParent(name)
 			if parent_name:
 				self.dispatch(parent_name, event)
+		
+		# Dispatch the 'all' event
+		if name != 'all':
+			self.dispatch('all', event)
 	
 	
 	def getParent(self, name):

@@ -7,8 +7,8 @@ from inspect import isfunction, ismethod
 from re import match
 
 from lib.eventdispatcher import EventDispatcher
-from .events import *
-from .GeneratorManager import GeneratorManager
+from .ProcessusState import ProcessusState
+from .event_names import *
 
 
 class Generator:
@@ -25,58 +25,60 @@ class Generator:
 	The generator dispatches several events through its internal dispatcher:
 		processus.start,
 		processus.done,
-		processus.stop,
 		creation.start,
 		creation.done,
 		generation.start,
 		generation.done,
-		generation.selection.start,
-		generation.selection.done,
-		generation.selection.grading.start,
-		generation.selection.grading.process,
-		generation.selection.grading.done,
-		generation.breeding.start,
-		generation.breeding.process,
-		generation.breeding.done
+		grading.start,
+		grading.process,
+		grading.done,
+		selection.start,
+		selection.done,
+		breeding.start,
+		breeding.process,
+		breeding.done
 	See events.py for informations carried by events.
 	In particular, the population is available through creation.done and
 	generation.start/done.
-	
-	The generator can be manage via a GeneratorManager.
 	"""
 	
 	
-	def __init__(self, factory, graduator, listeners = [], manager = GeneratorManager()):
+	def __init__(self, factory, graduator, listeners = []):
 		"""Init
 		
 		Expects:
 			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
 			listeners to be a list of listeners (see below)
-			manager to be a instance of GeneratorManager
 		Listeners can be:
 			- couples (event_name, listener)
+			- tuples (event_name, listener, priority)
 			- functions and methods if their names follow the format
 			  'onEventName'. For example, listener 'onProcessusStart' will
 			  listen on 'processus.start'.
 			- objects: every method following the format above is added to
 			listeners.
-		factory, graduator and manager are automatically added to listeners.
+		factory and graduator are automatically added to listeners.
+		Priorities has to be strictly smaller than 1000.
 		"""
 		
 		self.factory = factory
 		self.graduator = graduator
-		self.manager = manager
-		self.manager.process = self.process
 		
-		self.population = None
-		self.selection = None
-		self.generation_id = None
+		self.state = ProcessusState()
 		
 		self.dispatcher = EventDispatcher()
 		listeners.append(factory)
 		listeners.append(graduator)
-		listeners.append(manager)
+		
+		listeners.extend([
+			(PROCESSUS.START, self.create, 1000),
+			(CREATION.DONE, self.initGeneration, 1000),
+			(GENERATION.START, self.grade, 1000),
+			(GRADING.DONE, self.select, 1000),
+			(SELECTION.DONE, self.breed, 1000),
+			(BREEDING.DONE, self.endGeneration, 1000),
+		])
 		
 		# Get all objects' methods
 		listenersMethods = listeners.copy()
@@ -110,119 +112,113 @@ class Generator:
 					raise ValueError('The given listener do not follow the format onEventName.')
 	
 	
-	def dispatchProcessus(self, event_name, processus_id,
-		generations = None, pop_length = None, proportion = None, chance = None):
-		self.dispatcher.dispatch('processus.' + event_name, ProcessusEvent(
-			processus_id, generations, pop_length, proportion, chance
-		))
+	def dispatch(self, event_name):
+		self.state.event_name = event_name
+		self.dispatcher.dispatch(event_name, self.state)
 	
-	def dispatchGeneration(self, event_name):
-		"""Shorthand to dispatch common events"""
-		prefix = 'creation' if self.generation_id == 0 else 'generation'
-		self.dispatcher.dispatch(prefix + '.' + event_name, GenerationEvent(
-			self.generation_id, self.population
-		))
-	
-	def dispatchSelection(self, event_name, grading, selection):
-		"""Shorthand to dispatch selection events"""
-		self.dispatcher.dispatch('generation.selection.' + event_name, SelectionEvent(
-			grading, selection, self.generation_id
-		))
-	
-	def dispatchGrading(self, event_name, ia = None, graduation = None):
+	def dispatchGrading(self, individual, graduation):
 		"""Shorthand to dispatch grading events"""
-		self.dispatcher.dispatch('generation.selection.grading.' + event_name, GradingEvent(
-			ia, graduation, self.generation_id
-		))
-	
-	def dispatchBreeding(self, event_name, offspring = None, parents = None):
-		"""Shorthand to dispatch breeding events"""
-		self.dispatcher.dispatch('generation.breeding.' + event_name, BreedingEvent(
-			offspring, parents, self.generation_id
-		))
+		self.state.individual = individual
+		self.state.graduation = graduation
+		self.dispatch(GRADING.PROGRESS)
 	
 	
-	def create(self, pop_length):
+	def initProcessus(self):
+		self.dispatch(PROCESSUS.START)
+	
+	def endProcessus(self):
+		self.dispatch(PROCESSUS.DONE)
+	
+	def initGeneration(self, state):
+		state.generation_id += 1
+		self.dispatch(GENERATION.START)
+	
+	def endGeneration(self, state):
+		self.dispatch(GENERATION.DONE)
+		if state.generation_id < state.generations:
+			self.initGeneration(state)
+		else:
+			self.endProcessus()
+	
+	
+	def create(self, state):
 		"""Generate a whole initial population"""
 		
-		self.dispatchGeneration('start')
+		state.generation_id = 0
+		self.dispatch(CREATION.START)
 		
-		self.population = set([self.factory.create() for i in range(pop_length)])
+		state.population = set([self.factory.create() for i in range(state.pop_length)])
 		
-		self.dispatchGeneration('done')
+		self.dispatch(CREATION.DONE)
 	
 	
-	def select(self, proportion, chance):
+	def grade(self, state):
+		"""Grade all individuals"""
+		
+		self.dispatch(GRADING.START)
+		
+		# Get a list of couple (score, individual) sorted by score
+		state.grading = self.graduator.gradeAll(
+			state.population, state.generation_id, self.dispatchGrading
+		)
+		self.dispatch(GRADING.DONE)
+	
+	
+	def select(self, state):
 		"""Operate the selection
 		
 		This is a basic system to be overcome.
 		The selection is a subset of the population.
-		
-		Expects:
-			proportion to be a float between 0 and 1
-			chance to be a float between 0 and 1
 		"""
 		
-		self.dispatchSelection('start', None, None)
+		self.dispatch(SELECTION.START)
 		
-		# Get a list of couple (score, individual) sorted by score
-		graded_individuals = self.graduator.gradeAll(
-			self.population, self.generation_id, self.dispatchGrading
-		)
 		# Get a list of individuals
-		ordered_individuals = [c[1] for c in graded_individuals]
+		ordered_individuals = [c[1] for c in state.grading]
 		
 		# The number of individuals to select
-		selection_length = ceil(len(self.population) * proportion)
-		# Among the [selection_length] best individuals select selection_length*(1-chance) ones
+		selection_length = ceil(len(state.population) * state.proportion)
+		# Among the [selection_length] best individuals select selection_length*(1-state.chance) ones
 		selection = set(sample(
 			ordered_individuals[:selection_length],
-			int(selection_length*(1-chance))
+			int(selection_length * (1 - state.chance))
 		))
 		# Complete selection with random individuals
-		unused_individuals = self.population.difference(selection)
+		unused_individuals = state.population.difference(selection)
 		while len(selection) < selection_length:
 			choiced = choice(unused_individuals)
 			selection.add(choiced)
 			unused_individuals.remove(choiced)
 		
-		self.dispatchSelection('done', graded_individuals, selection)
-		
-		self.selection = selection
+		state.selection = selection
+		self.dispatch(SELECTION.DONE)
 	
 	
-	def breed(self, pop_length):
+	def breed(self, state):
 		"""Generate a new population based on selection
 		
 		This is a basic system to be overcome.
 		"""
 		
-		self.dispatchBreeding('start')
+		self.dispatch(BREEDING.START)
 		
 		new_pop = set()
 		
-		while len(new_pop) < pop_length:
-			parents = tuple([choice(list(self.selection)) for i in range(2)])
+		while len(new_pop) < state.pop_length:
+			parents = tuple([choice(list(state.selection)) for i in range(2)])
 			offspring = self.factory.breed(*parents)
 			new_pop.add(offspring)
-			self.dispatchBreeding('progress', offspring, parents)
+			
+			state.offspring = offspring
+			state.parents = parents
+			self.dispatch(BREEDING.PROGRESS)
 		
-		self.dispatchBreeding('done')
+		state.population = new_pop
 		
-		self.population = new_pop
+		self.dispatch(BREEDING.DONE)
 	
 	
-	def generate(self, pop_length, proportion, chance):
-		"""Operate a generation"""
-		
-		self.generation_id += 1
-		self.dispatchGeneration('start')
-		self.select(proportion, chance)
-		self.breed(pop_length)
-		self.dispatchGeneration('done')
-	
-	
-	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0, state = None):
+	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0):
 		"""Process multiple generations
 		
 		Expects:
@@ -231,24 +227,16 @@ class Generator:
 			
 			proportion to be a float between 0 and 1
 			chance to be a float between 0 and 1
-			
-			state to be a state of (start, grading, selection, breeding, done)
-			Use a GeneratorManager rather than setting this argument manually.
 		
 		Return the last generation
 		"""
 		
-		if state is not None:
-		self.generation_id = 0
-		self.dispatchProcessus('start', processus_id, generations, pop_length, proportion, chance)
+		self.state.processus_id = processus_id
+		self.state.generations = generations
+		self.state.pop_length = pop_length
+		self.state.proportion = proportion
+		self.state.chance = chance
 		
-		self.create(pop_length)
+		self.initProcessus()
 		
-		for i in range(generations):
-			self.generate(pop_length, proportion, chance)
-		
-		self.dispatchProcessus('done', processus_id)
-		
-		self.generation_id = None
-		
-		return self.population
+		return self.state.population

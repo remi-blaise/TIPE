@@ -296,7 +296,7 @@ Avant juin 2016 :
 			 generate() disparaissent donc. À la place, chaque méthode émet un
 			 évènement indiquant qu'elle a fini et permettant à la suivante
 			 d'écouter cet event. Le processus s'exécute donc entièrement par
-			 propagation de méthode à méthode.
+			 propagation d'évènements de méthode à méthode.
 			- Les données internes du processus sont centralisée dans un objet
 			  ProcessusState qui est passé par chaque event.
 		- L'avantage de cette méthode:
@@ -319,3 +319,38 @@ Avant juin 2016 :
 	Objectif 2.8: Évaluation asynchrone
 		Dans la continuation du 2.6, évaluer chaque IA de manière asynchrone.
 -------------------------------------------------------------------------------
+
+Septembre - 20 Octobre 2016 :
+	Pause dans le développement, réflexion sur les autres attentes du TIPE.
+	Ma prof de maths suit désormais l'avancement de mon TIPE.
+-------------------------------------------------------------------------------
+
+22 Octobre 2016 :
+	Rendez-vous avec Arthur Caron, ingénieur en informatique et amateur de
+	conception d'intelligences artificielles. Il m'a donné plusieurs pistes de
+	recherche pour la réalisation d'un état de l'art, notamment de me
+	renseigner sur AlphaGo, de lire "L'intelligence artificielle pour les
+	développeurs" et doit m'envoyer une autre référence intéressante par mail.
+	Son conseil : utiliser l'exemple récent des millions de dollars investis
+	par Google dans AlphaGo pour montrer l'intérêt du sujet.
+-------------------------------------------------------------------------------
+
+25 Octobre 2016 :
+	Reprise du développement, Objectif 2.7
+-------------------------------------------------------------------------------
+
+27 Octobre 2016 :
+	Je peux annoncer avec plaisir que... la restructuration du Generator en
+	obtant pour un workflow basé sur l'enchainement d'évènements, tel que
+	décrit le 28 Août, est achevée !
+	Je peux donc à présent d'avancer sur le 2.7. L'objectif est à terme de
+	pouvoir effectuer trois actions :
+	
+	Objectif 3.0 : Interface simple en console
+		Construire 3 commandes permettant de :
+		- Lancer un nouveau processus
+		- Reprendre un processus stoppé
+		- Regarder l'individu le plus performant d'un processus en action.
+	
+		+ Ajouter une méthode pour stopper l'éxécution d'un processus ? Ou
+		simplement faire CRL+C.
