@@ -31,7 +31,7 @@ class PathManager:
 	
 	@classmethod
 	def getPath(cls,
-		processus_id, generations, pop_length,
+		processus_id, generations = None, pop_length = None,
 		generation_id = None, ia_id_or_file = None, read_only = False
 	):
 		path = Path(cls.ROOT)

@@ -66,34 +66,34 @@ class AbstractLogger(metaclass=ABCMeta):
 	def onGenerationDone(self, event):
 		self.write('    Generation {} is done.'.format(event.generation_id))
 	
-	def onGenerationSelectionStart(self, event):
+	def onSelectionStart(self, event):
 		self.write('    Starts selection.')
 	
-	def onGenerationSelectionDone(self, event):
+	def onSelectionDone(self, event):
 		self.write('    Selection done.')
 	
-	def onGenerationSelectionGradingStart(self, event):
+	def onGradingStart(self, event):
 		self.overwrite('    Start grading...')
 		
 		self.count_ia = 0
 	
-	def onGenerationSelectionGradingProgress(self, event):
+	def onGradingProgress(self, event):
 		self.count_ia += 1
 		
 		self.overwrite('    Grading: {} IA {} gets a score of {}.'.format(
 			self.drawProgressBar(self.count_ia / event.pop_length),
-			event.ia.id, event.graduation
+			event.individual.id, event.graduation
 		))
 	
-	def onGenerationSelectionGradingDone(self, event):
+	def onGradingDone(self, event):
 		self.overwrite('    Grading done.')
 	
-	def onGenerationBreedingStart(self, event):
+	def onBreedingStart(self, event):
 		self.write('    Starts breeding.')
 		
 		self.count_ia = 0
 	
-	def onGenerationBreedingProgress(self, event):
+	def onBreedingProgress(self, event):
 		self.count_ia += 1
 		
 		self.overwrite('    Breeding: {} {} + {} -> {}.'.format(
@@ -101,7 +101,7 @@ class AbstractLogger(metaclass=ABCMeta):
 			event.parents[0].id, event.parents[1].id, event.offspring.id
 		))
 	
-	def onGenerationBreedingDone(self, event):
+	def onBreedingDone(self, event):
 		self.overwrite('    Breeding done.')
 	
 	

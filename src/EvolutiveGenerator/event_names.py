@@ -31,4 +31,6 @@ for parent_name in ['processus', 'creation', 'generation', 'selection']:
 for parent_name in ['grading', 'breeding']:
 	exec("{1} = EventNameFactory('{0}', True)".format(parent_name, parent_name.upper()))
 
+PROCESSUS.RESUME = 'processus.resume'
+
 assert SELECTION.DONE == 'selection.done'

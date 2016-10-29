@@ -354,3 +354,13 @@ Septembre - 20 Octobre 2016 :
 	
 		+ Ajouter une méthode pour stopper l'éxécution d'un processus ? Ou
 		simplement faire CRL+C.
+-------------------------------------------------------------------------------
+
+29 Octobre 2016 :
+	Et... Objectif 2.7 atteint ! Et en prime, le système de commandes est fait,
+	avec 2 commandes fonctionnelles : new & resume. La troisième commande play
+	reste à coder.
+	Précision : à défaut d'un "vrai" système de pause, le système de pause
+	mis en place est : lever un KeyboardInterrupt (CRL+C), les cas critiques
+	étant pris en charge (ie. pendant l'écriture d'un generation.json).
+-------------------------------------------------------------------------------

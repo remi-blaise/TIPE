@@ -15,8 +15,11 @@ class ConsoleLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 		self.first_line = False
 		self.last_line = False
 	
-	def onProcessusStart(self, event):
+	def onProcessusResume(self, event):
 		self.first_line = True
+	
+	def onProcessusStart(self, event):
+		self.onProcessusResume(event)
 		super().onProcessusStart(event)
 	
 	def onProcessusDone(self, event):

@@ -39,7 +39,7 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocs
 	def hydrate(cls, data):
 		for action_class in cls.ACTION_CLASSES:
 			if action_class.__name__ == data['action_class']:
-				return Neuron(action_class, data['duration'])
+				return ActionEventData(action_class, data['duration'])
 		return ValueError("Action class {} doesn't exist.".format(data['action_class']))
 	
 	

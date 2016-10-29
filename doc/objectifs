@@ -10,6 +10,6 @@ Récap des objectifs:
 	- [ ] 2.4 Tests
 	- [x] 2.5 Writer
 	- [ ] 2.6 Évaluation parallèle
-	- [ ] 2.7 Logger, Reader, adaptation du Generator
+	- [x] 2.7 Logger, Reader, adaptation du Generator
 	- [ ] 2.8 Évaluation asynchrone
 	- [ ] 3.0 Interface simple en console

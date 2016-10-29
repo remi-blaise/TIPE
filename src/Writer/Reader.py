@@ -5,8 +5,10 @@ from json import loads
 from re import fullmatch
 
 from .JSONEncoder import JSONEncoder
-from .Writer.PathManager import PathManager
+from .PathManager import PathManager
 from src.factories.IAFactory import IAFactory
+from src.EvolutiveGenerator.ProcessusState import ProcessusState
+from src.EvolutiveGenerator.event_names import *
 
 
 class Reader:
@@ -16,18 +18,18 @@ class Reader:
 	
 	Public API:
 		processusExists(processus_id)
-		getProcessusData(processus_id)
+		getProcessusState(processus_id)
 	"""
 	
 	
 	@staticmethod
 	def getPath(*args, **kwargs):
-		PathManager.getPath(*args, **kwargs, read_only=True)
+		return PathManager.getPath(*args, **kwargs, read_only=True)
 	
 	
 	@staticmethod
 	def readJSON(path):
-		loads(path.read_text())
+		return loads(path.read_text())
 	
 	
 	@staticmethod
@@ -36,7 +38,7 @@ class Reader:
 		with path.open('r') as grading_file:
 			for line in grading_file:
 				try:
-					graduation_tuple = fullmatch('([0-9]+): ([0-9]+)', line).group(1, 2)
+					graduation_tuple = fullmatch('([0-9]+): ([0-9]+)\n', line).group(1, 2)
 					grading.append(graduation_tuple)
 				except AttributeError:
 					raise ValueError("The given grading file doesn't match the right format.")
@@ -55,9 +57,12 @@ class Reader:
 	
 	
 	@classmethod
-	def getPopulation(self, processus_id, generation_id, generations):
+	def getPopulation(cls, processus_id, generation_id, generations):
 		population = set()
-		for ia_file in cls.getPath(processus_id, generations, None, generation_id).iterdir():
+		for ia_file in (
+			cls.getPath(processus_id, generations, None, generation_id).parent
+			/ ('population' if generation_id > 0 else 'initial_pop')
+		).iterdir():
 			population.add(IAFactory.hydrate(cls.readJSON(ia_file)))
 		return population
 	
@@ -71,11 +76,32 @@ class Reader:
 	
 	
 	@classmethod
-	def getProcessusData(cls, processus_id):
-		processus_params = cls.getProcessusParams(processus_id)
+	def getProcessusState(cls, processus_id):
+		'''
+		for state.event_name in (
+			PROCESSUS.START,
+			CREATION.START,
+			CREATION.DONE,
+			GENERATION.START,
+			GRADING.START,
+			GRADING.PROGRESS,
+			GRADING.DONE,
+			SELECTION.START,
+			SELECTION.DONE,
+			BREEDING.START,
+			BREEDING.PROGRESS,
+			BREEDING.DONE,
+			GENERATION.DONE,
+			PROCESSUS.DONE
+		)
+		'''
+		
+		state = ProcessusState()
+		state.processus_id = processus_id
+		state.__dict__.update(cls.getProcessusParams(processus_id))
 		
 		getPath = lambda generation_id, file_name = None: cls.getPath(
-			processus_id, processus_params['generations'], None, generation_id, file_name
+			processus_id, state.generations, None, generation_id, file_name
 		)
 		
 		# Get first inexistant generation
@@ -85,38 +111,30 @@ class Reader:
 		
 		# If none generation folder exist
 		if generation_id == 0:
-			return {'processus_id': processus_id, 'processus_params': processus_params}
+			state.event_name = PROCESSUS.START
+			return state
 		
-		# Determine current generation and get its state
-		# Generation state in (start, grading, selection, breeding, done)
-		state = 'start'
-		last_existing_state = cls.readJSON(getPath(generation_id - 1))['state']
-		if last_existing_state != 'done':
-			generation_id -= 1
-			state = last_existing_state
+		state.generation_id = generation_id - 1
+		del generation_id
 		
-		# Get relevant datas
-		population = None
-		grading = None
-		selection = None
+		# Get event_name
+		state.event_name = cls.readJSON(getPath(state.generation_id))['event_name']
 		
-		if state in ('start', 'grading'):
-			population = cls.getPopulation(
-				processus_id, generation_id - 1, processus_params['generations']
-			)
-		if state == 'grading':
-			grading = cls.readGrading(getPath(generation_id, 'grading'))
-		if state == 'selection':
-			grading = cls.readJSON(getPath(generation_id, 'final_grading'))
-		if state == 'breeding':
-			selection = cls.readJSON(getPath(generation_id, 'selection'))
-		if state in ('breeding', 'done'):
-			population = cls.getPopulation(
-				processus_id, generation_id, processus_params['generations']
-			)
+		if state.event_name in (CREATION.DONE, BREEDING.DONE, GENERATION.DONE, PROCESSUS.DONE):
+			state.population = cls.getPopulation(state.processus_id, state.generation_id, state.generations)
+		else:
+			state.population = cls.getPopulation(state.processus_id, state.generation_id - 1, state.generations)
 		
-		return {
-			'processus_id': processus_id, 'processus_params': processus_params,
-			'generation_id': generation_id, 'state': state,
-			'population': population, 'grading': grading, 'selection': selection
-		}
+		if state.event_name in (GRADING.PROGRESS):
+			state.grading = cls.readGrading(getPath(state.generation_id, 'grading'))
+		elif state.event_name in (GRADING.DONE, SELECTION.START):
+			grading = cls.readJSON(getPath(state.generation_id, 'final_grading'))
+		else:
+			pass
+		
+		if state.event_name in (SELECTION.DONE, BREEDING.START, BREEDING.PROGRESS):
+			state.selection = cls.readJSON(getPath(state.generation_id, 'selection'))
+		else:
+			pass
+		
+		return state

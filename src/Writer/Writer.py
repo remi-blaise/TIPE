@@ -12,10 +12,18 @@ class Writer:
 	
 	
 	def onAll(self, event):
-		self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
+		if event.event_name != 'processus.start':
+			try:
+				self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
+			except (SystemExit, KeyboardInterrupt):
+				self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
+	onAll.priority = 1
+	
+	def onProcessusResume(self, event):
+		self.__dict__.update(event.__dict__)
 	
 	def onProcessusStart(self, event):
-		self.__dict__.update(event.__dict__)
+		self.onProcessusResume(event)
 		
 		self.writeJSON(
 			{

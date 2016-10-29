@@ -11,8 +11,11 @@ class FileLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 	"""Log Generator events into a file"""
 	
 	
-	def onProcessusStart(self, event):
+	def onProcessusResume(self, event):
 		self.processus_id = event.processus_id
+	
+	def onProcessusStart(self, event):
+		self.onProcessusResume(event)
 		super().onProcessusStart(event)
 	
 	

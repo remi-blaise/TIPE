@@ -36,8 +36,9 @@ class Generator:
 		selection.done,
 		breeding.start,
 		breeding.process,
-		breeding.done
-	See events.py for informations carried by events.
+		breeding.done,
+	and processus.resume
+	See ProcessusState.py for informations carried by events.
 	In particular, the population is available through creation.done and
 	generation.start/done.
 	"""
@@ -56,6 +57,7 @@ class Generator:
 			- functions and methods if their names follow the format
 			  'onEventName'. For example, listener 'onProcessusStart' will
 			  listen on 'processus.start'.
+			  If they have a priority attribute, it will be used as priority.
 			- objects: every method following the format above is added to
 			listeners.
 		factory and graduator are automatically added to listeners.
@@ -107,7 +109,8 @@ class Generator:
 							event_name += '.'
 						event_name += m.group(1).lower()
 						camel_event_name = m.group(2)
-					self.dispatcher.listen(event_name, listener)
+					self.dispatcher.listen(event_name, listener,
+						0 if not hasattr(listener, 'priority') else listener.priority)
 				else:
 					raise ValueError('The given listener do not follow the format onEventName.')
 	
@@ -238,5 +241,35 @@ class Generator:
 		self.state.chance = chance
 		
 		self.initProcessus()
+		
+		return self.state.population
+	
+	
+	def resume(self, state):
+		"""Resume a stopped processus"""
+		
+		self.dispatcher.dispatch(PROCESSUS.RESUME, state)
+		
+		self.state = state
+		if state.event_name in (
+			PROCESSUS.START, CREATION.DONE, GENERATION.START, GRADING.DONE, SELECTION.DONE, BREEDING.DONE
+		):
+			self.dispatch(self.state.event_name)
+		elif state.event_name == CREATION.START:
+			self.create(state)
+		elif state.event_name == GRADING.START:
+			self.grade(state)
+		elif state.event_name == GRADING.PROGRESS:
+			self.grade(state) # temp
+		elif state.event_name == SELECTION.START:
+			self.select(state)
+		elif state.event_name in (BREEDING.START, BREEDING.PROGRESS):
+			self.breed(state)
+		elif state.event_name == GENERATION.DONE:
+			self.endGeneration(state)
+		elif state.event_name == PROCESSUS.DONE:
+			self.endProcessus()
+		else:
+			raise ValueError(state.event_name + 'is not handled.')
 		
 		return self.state.population
