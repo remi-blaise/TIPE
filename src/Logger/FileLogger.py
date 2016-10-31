@@ -21,14 +21,14 @@ class FileLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 	
 	@inherit_docstring
 	def write(self, msg):
-		with PathManager.getPath(self.processus_id, None, None).with_name('log').open('a') as f:
+		with PathManager.getPath(self.processus_id).with_name('log').open('a') as f:
 			f.write(msg + '\n')
 	
 	
 	@inherit_docstring
 	def overwrite(self, msg):
-		with PathManager.getPath(self.processus_id, None, None).with_name('log').open('r') as f:
+		with PathManager.getPath(self.processus_id).with_name('log').open('r') as f:
 			lines = f.readlines()
-		with PathManager.getPath(self.processus_id, None, None).with_name('log').open('w') as f:
+		with PathManager.getPath(self.processus_id).with_name('log').open('w') as f:
 			f.writelines([item for item in lines[:-1]])
 			f.write(msg + '\n')

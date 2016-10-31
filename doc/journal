@@ -364,3 +364,13 @@ Septembre - 20 Octobre 2016 :
 	mis en place est : lever un KeyboardInterrupt (CRL+C), les cas critiques
 	étant pris en charge (ie. pendant l'écriture d'un generation.json).
 -------------------------------------------------------------------------------
+
+30 Octobre 2016 :
+	Objectif 3.0 atteint.
+	
+	Objectif 3.1 :
+		Ajouter une variante de la commande new: faire tourner le Generator
+		jusqu'à obtenir une ia qui finit le niveau. Implémentation : rendre
+		paramètre generations optionnel ou lui attribuer une valeur spéciale.
+	
+	#LObjectifLePlusRapideDuMondeParceQuOnAvaitJusteOubliéDeLeCoderAvantLol

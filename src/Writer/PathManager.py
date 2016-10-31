@@ -31,7 +31,7 @@ class PathManager:
 	
 	@classmethod
 	def getPath(cls,
-		processus_id, generations = None, pop_length = None,
+		processus_id, generations = None,
 		generation_id = None, ia_id_or_file = None, read_only = False
 	):
 		path = Path(cls.ROOT)
@@ -51,7 +51,7 @@ class PathManager:
 				path /= 'initial_pop' if generation_id == 0 else 'population'
 				ia_id = ia_id_or_file
 				if ia_id is not None:
-					path /= 'ia-{0:0{1}d}.json'.format(ia_id, len(str(pop_length)))
+					path /= 'ia-{}.json'.format(ia_id)
 				else:
 					raise ValueError('ia_id not given')
 			# processus-00000/generation-00/breeding

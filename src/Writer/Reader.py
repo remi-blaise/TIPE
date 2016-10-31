@@ -3,6 +3,7 @@
 
 from json import loads
 from re import fullmatch
+from operator import itemgetter
 
 from .JSONEncoder import JSONEncoder
 from .PathManager import PathManager
@@ -19,6 +20,7 @@ class Reader:
 	Public API:
 		processusExists(processus_id)
 		getProcessusState(processus_id)
+		getBestIa(processus_id)
 	"""
 	
 	
@@ -57,14 +59,35 @@ class Reader:
 	
 	
 	@classmethod
+	def getLastGeneration(cls, processus_id, generations):
+		'''Get id of the processus' last generation, else -1'''
+		# Get first inexistant generation
+		generation_id = 0
+		while cls.getPath(processus_id, generations, generation_id).parent.exists():
+			generation_id += 1
+		
+		return generation_id - 1
+	
+	
+	@classmethod
 	def getPopulation(cls, processus_id, generation_id, generations):
 		population = set()
 		for ia_file in (
-			cls.getPath(processus_id, generations, None, generation_id).parent
+			cls.getPath(processus_id, generations, generation_id).parent
 			/ ('population' if generation_id > 0 else 'initial_pop')
 		).iterdir():
 			population.add(IAFactory.hydrate(cls.readJSON(ia_file)))
 		return population
+	
+	
+	@classmethod
+	def getBestIa(cls, processus_id):
+		generations = cls.getProcessusParams(processus_id)['generations']
+		grading = cls.readJSON(cls.getPath(processus_id, generations, generations, 'final_grading'))
+		grading.sort(key=itemgetter(0), reverse=True)
+		ia_id = grading[0][1]
+		ia_file = cls.getPath(processus_id, generations, generations - 1, ia_id)
+		return IAFactory.hydrate(cls.readJSON(ia_file))
 	
 	
 	@classmethod
@@ -101,21 +124,15 @@ class Reader:
 		state.__dict__.update(cls.getProcessusParams(processus_id))
 		
 		getPath = lambda generation_id, file_name = None: cls.getPath(
-			processus_id, state.generations, None, generation_id, file_name
+			processus_id, state.generations, generation_id, file_name
 		)
 		
-		# Get first inexistant generation
-		generation_id = 0
-		while getPath(generation_id).parent.exists():
-			generation_id += 1
-		
+		generation_id = cls.getLastGeneration(processus_id, state.generations)
 		# If none generation folder exist
-		if generation_id == 0:
+		if generation_id == -1:
 			state.event_name = PROCESSUS.START
 			return state
-		
-		state.generation_id = generation_id - 1
-		del generation_id
+		state.generation_id = generation_id
 		
 		# Get event_name
 		state.event_name = cls.readJSON(getPath(state.generation_id))['event_name']

@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 
 from lib.eventdispatcher import EventDispatcher
 from mario.bridge.frame_reader import FrameReader
+from mario.bridge.config import Config
 from .EvolutiveGenerator.Generator import Generator
 from .factories.IAFactory import IAFactory
 from .graduators.IAGraduator import IAGraduator
@@ -31,7 +32,13 @@ def resume(args):
 
 def play(args):
 	"""Play the best individual of a processus' last generation"""
-	pass
+	if not Reader.processusExists(args.processus_id):
+		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
+	# Get IA
+	ia = Reader.getBestIa(args.processus_id)
+	# Play IA
+	event_dispatcher = EventDispatcher()
+	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher))
 
 
 # Build parser
@@ -48,8 +55,12 @@ resume_parser.add_argument('processus_id', type=int)
 resume_parser.set_defaults(command=resume)
 
 play_parser = subparsers.add_parser('play')
+play_parser.add_argument('processus_id', type=int)
 play_parser.set_defaults(command=play)
 
 # Parse arguments
 args = parser.parse_args()
-args.command(args)
+if hasattr(args, 'command'):
+	args.command(args)
+else:
+	print('No command given, use --help')

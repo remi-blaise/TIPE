@@ -64,7 +64,7 @@ class Writer:
 	
 	
 	def getPath(self, *args, **kwargs):
-		return PathManager.getPath(self.processus_id, self.generations, self.pop_length, *args, **kwargs)
+		return PathManager.getPath(self.processus_id, self.generations, *args, **kwargs)
 	
 	def write(self, text, path):
 		path.write_text(text)

@@ -23,7 +23,7 @@ def main(config):
         })
     
     # Config du premier State
-    if config.show_game_frame:
+    if config.show_game_frame and config.allow_control:
         control.setup_states(state_dict, c.MAIN_MENU)
     else:
         control.setup_states(state_dict, c.LEVEL1)
