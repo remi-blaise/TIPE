@@ -2,6 +2,7 @@
 # -*-coding:Utf-8 -*
 
 from argparse import ArgumentParser
+from math import inf
 
 from lib.eventdispatcher import EventDispatcher
 from mario.bridge.frame_reader import FrameReader
@@ -16,19 +17,20 @@ from .Writer.PathManager import PathManager
 from .Writer.Reader import Reader
 
 
-event_dispatcher = EventDispatcher()
-reader = FrameReader(event_dispatcher)
-generator = Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()])
+def instanciateGenerator():
+	event_dispatcher = EventDispatcher()
+	FrameReader(event_dispatcher)
+	return Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()])
 
 def new(args):
 	"""New processus"""
-	population = generator.process(PathManager.newProcessusId(), args.generations, args.pop_length)
+	population = instanciateGenerator().process(PathManager.newProcessusId(), args.generations, args.pop_length)
 
 def resume(args):
 	"""Resume a processus"""
 	if not Reader.processusExists(args.processus_id):
 		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
-	population = generator.resume(Reader.getProcessusState(args.processus_id))
+	population = instanciateGenerator().resume(Reader.getProcessusState(args.processus_id))
 
 def play(args):
 	"""Play the best individual of a processus' last generation"""
@@ -46,8 +48,8 @@ parser = ArgumentParser()
 subparsers = parser.add_subparsers()
 
 new_parser = subparsers.add_parser('new')
-new_parser.add_argument('generations', type=int)
 new_parser.add_argument('pop_length', type=int)
+new_parser.add_argument('--generations', default=inf, type=int)
 new_parser.set_defaults(command=new)
 
 resume_parser = subparsers.add_parser('resume')

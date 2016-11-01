@@ -40,6 +40,10 @@ class AbstractLogger(metaclass=ABCMeta):
 		)
 	
 	
+	def onProcessusResume(self, event):
+		if event.event_name == 'grading.progress':
+			self.count_ia = len(event.grading)
+	
 	def onProcessusStart(self, event):
 		self.write('Processus {} starts!'.format(event.processus_id))
 		self.write(
@@ -73,7 +77,7 @@ class AbstractLogger(metaclass=ABCMeta):
 		self.write('    Selection done.')
 	
 	def onGradingStart(self, event):
-		self.overwrite('    Start grading...')
+		self.write('    Start grading...')
 		
 		self.count_ia = 0
 	

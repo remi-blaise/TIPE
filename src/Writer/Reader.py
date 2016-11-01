@@ -40,8 +40,8 @@ class Reader:
 		with path.open('r') as grading_file:
 			for line in grading_file:
 				try:
-					graduation_tuple = fullmatch('([0-9]+): ([0-9]+)\n', line).group(1, 2)
-					grading.append(graduation_tuple)
+					ia_id, score = fullmatch('([0-9]+): ([0-9]+)\n', line).group(1, 2)
+					grading.append((int(score), int(ia_id)))
 				except AttributeError:
 					raise ValueError("The given grading file doesn't match the right format.")
 		return grading
@@ -145,13 +145,12 @@ class Reader:
 		if state.event_name in (GRADING.PROGRESS):
 			state.grading = cls.readGrading(getPath(state.generation_id, 'grading'))
 		elif state.event_name in (GRADING.DONE, SELECTION.START):
-			grading = cls.readJSON(getPath(state.generation_id, 'final_grading'))
-		else:
-			pass
+			state.grading = cls.readJSON(getPath(state.generation_id, 'final_grading'))
+		if state.grading is not None:
+			indexed_pop = dict([(ia.id, ia) for ia in state.population])
+			state.grading = [(score, indexed_pop[ia_id]) for (score, ia_id) in state.grading]
 		
 		if state.event_name in (SELECTION.DONE, BREEDING.START, BREEDING.PROGRESS):
 			state.selection = cls.readJSON(getPath(state.generation_id, 'selection'))
-		else:
-			pass
 		
 		return state

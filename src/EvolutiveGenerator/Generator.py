@@ -5,6 +5,7 @@ from random import choice, sample
 from math import ceil
 from inspect import isfunction, ismethod
 from re import match
+from operator import itemgetter
 
 from lib.eventdispatcher import EventDispatcher
 from .ProcessusState import ProcessusState
@@ -155,16 +156,27 @@ class Generator:
 		self.dispatch(CREATION.DONE)
 	
 	
+	def resumeGrading(self, state):
+		"""Grade non-graded individuals"""
+		
+		graded_individuals = set([individual for score, individual in state.grading])
+		to_grade = state.population.difference(graded_individuals)
+		
+		state.grading.extend(
+			self.graduator.gradeAll(to_grade, state.generation_id, self.dispatchGrading)
+		)
+		state.grading.sort(key=itemgetter(0), reverse=True)
+		
+		self.dispatch(GRADING.DONE)
+	
+	
 	def grade(self, state):
 		"""Grade all individuals"""
 		
 		self.dispatch(GRADING.START)
 		
-		# Get a list of couple (score, individual) sorted by score
-		state.grading = self.graduator.gradeAll(
-			state.population, state.generation_id, self.dispatchGrading
-		)
-		self.dispatch(GRADING.DONE)
+		state.grading = []
+		self.resumeGrading(state)
 	
 	
 	def select(self, state):
@@ -260,7 +272,7 @@ class Generator:
 		elif state.event_name == GRADING.START:
 			self.grade(state)
 		elif state.event_name == GRADING.PROGRESS:
-			self.grade(state) # temp
+			self.resumeGrading(state)
 		elif state.event_name == SELECTION.START:
 			self.select(state)
 		elif state.event_name in (BREEDING.START, BREEDING.PROGRESS):

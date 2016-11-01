@@ -41,7 +41,8 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 		time = 1 + generation_id
 		if time > 401:
 			time = 401
-		self.gradeIAWithConfig(ia, Config(False, self.event_dispatcher, time))
+		
+		return self.gradeIAWithConfig(ia, Config(False, self.event_dispatcher, time))
 	
 	
 	def onFrame(self, frame):

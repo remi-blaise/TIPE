@@ -13,9 +13,10 @@ class FileLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 	
 	def onProcessusResume(self, event):
 		self.processus_id = event.processus_id
-	
+		super().onProcessusResume(event)
+
 	def onProcessusStart(self, event):
-		self.onProcessusResume(event)
+		self.processus_id = event.processus_id
 		super().onProcessusStart(event)
 	
 	

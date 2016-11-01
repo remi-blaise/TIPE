@@ -2,7 +2,6 @@
 # -*-coding:Utf-8 -*
 
 from abc import ABCMeta, abstractmethod
-from operator import itemgetter
 
 
 class Graduator(metaclass=ABCMeta):
@@ -43,12 +42,9 @@ class Graduator(metaclass=ABCMeta):
 		Return a list of couple (score, GeneticElement) sorted by score by desc
 		"""
 		
-		graded_individuals = []
+		grading = []
 		for individual in individuals:
 			graduation = self.grade(individual, generation_id)
-			graded_individuals.append((graduation, individual))
+			grading.append((graduation, individual))
 			dispatch(individual, graduation)
-		
-		graded_individuals.sort(key=itemgetter(0), reverse=True)
-		
-		return graded_individuals
+		return grading
