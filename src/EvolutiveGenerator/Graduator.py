@@ -9,7 +9,7 @@ class Graduator(metaclass=ABCMeta):
 	
 	This is an abstract class to inherit.
 	Assess individual's performances and assign them a score.
-	The Graduator a to see as a bridge between the Generator and the software.
+	The Graduator is to think as a bridge between the Generator and the software.
 	It is designed to use the software to make evolute individuals.
 	IT IS THE NATURE.
 	Individuals are represented by root GeneticElement instances.
@@ -34,12 +34,10 @@ class Graduator(metaclass=ABCMeta):
 	def gradeAll(self, individuals, generation_id, dispatch):
 		"""Assign a score to each individual
 		
-		Individuals are sorted by score as key in natural order.
-		
 		Expects:
 			individuals to be a list of GeneticElement
 		
-		Return a list of couple (score, GeneticElement) sorted by score by desc
+		Return a list of couple (score, GeneticElement)
 		"""
 		
 		grading = []

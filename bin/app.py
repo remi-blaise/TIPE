@@ -2,4 +2,7 @@
 # -*-coding:Utf-8 -*
 
 import set_dir
-from src import app
+try:
+	from src import app
+except KeyboardInterrupt:
+	print('')

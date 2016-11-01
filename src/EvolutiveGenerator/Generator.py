@@ -2,7 +2,7 @@
 # -*-coding:Utf-8 -*
 
 from random import choice, sample
-from math import ceil
+from math import ceil, inf
 from inspect import isfunction, ismethod
 from re import match
 from operator import itemgetter
@@ -45,13 +45,14 @@ class Generator:
 	"""
 	
 	
-	def __init__(self, factory, graduator, listeners = []):
+	def __init__(self, factory, graduator, listeners = [], end_statement = None):
 		"""Init
 		
 		Expects:
 			factory to be a class inheriting of GeneticElementFactory
 			graduator to be a instance inheriting of Graduator
 			listeners to be a list of listeners (see below)
+			end_statement to be a boolean function
 		Listeners can be:
 			- couples (event_name, listener)
 			- tuples (event_name, listener, priority)
@@ -139,7 +140,10 @@ class Generator:
 	
 	def endGeneration(self, state):
 		self.dispatch(GENERATION.DONE)
-		if state.generation_id < state.generations:
+		if (
+			state.generation_id < state.generations
+			or (state.generations == inf and self.end_statement(state))
+		):
 			self.initGeneration(state)
 		else:
 			self.endProcessus()
@@ -236,8 +240,10 @@ class Generator:
 	def process(self, processus_id, generations, pop_length = 500, proportion = .5, chance = 0):
 		"""Process multiple generations
 		
+		If generations == inf then self.end_statement will be the stopping statement.
+		
 		Expects:
-			generations to be an int
+			generations to be an int or inf
 			pop_length to be an int
 			
 			proportion to be a float between 0 and 1

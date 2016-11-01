@@ -1432,8 +1432,8 @@ class Level1(State._State):
             if self.config.play_sound:
                 self.sound_manager.stop_music()
             self.done = True
-            if not self.config.show_game_frame:
-                self.quit = True
+            # if not self.config.show_game_frame:
+            self.quit = True
 
 
     def blit_everything(self, surface):

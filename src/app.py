@@ -20,7 +20,9 @@ from .Writer.Reader import Reader
 def instanciateGenerator():
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
-	return Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()])
+	return Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()],
+		lambda state: True in [8470 <= score for score, individual in state.grading]
+	)
 
 def new(args):
 	"""New processus"""

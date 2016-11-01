@@ -17,7 +17,7 @@ if __name__ == "__main__":
 	reader = FrameReader(event_dispatcher)
 	ia = IA(event_dispatcher)
 	
-	persist = launch(Config(False, event_dispatcher))
+	persist = launch(Config(False, event_dispatcher, allow_control=True))
 	
 	print(persist)
-	print("done")
+	print(persist['camera start x'] + reader.frame.mario.rect.x)

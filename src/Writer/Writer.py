@@ -17,6 +17,7 @@ class Writer:
 				self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
 			except (SystemExit, KeyboardInterrupt):
 				self.writeJSON({'event_name': event.event_name}, self.getPath(event.generation_id))
+				raise
 	onAll.priority = 1
 	
 	def onProcessusResume(self, event):
