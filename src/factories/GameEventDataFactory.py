@@ -18,7 +18,7 @@ class GameEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocstr
 	def genetic_element_class(self):
 		return GameEventData
 	
-	GAME_EVENT_NAMES = ('game.block', 'game.enemy')
+	GAME_EVENT_NAMES = ('game.block', 'game.enemy', 'game.powerup', 'game.coin')
 	
 	MIN_X = -int(SCREEN_WIDTH / 2) # max left
 	MAX_X = SCREEN_WIDTH # max right
@@ -47,7 +47,9 @@ class GameEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocstr
 	
 	@classmethod
 	def createEventName(cls):
-		return choice(cls.GAME_EVENT_NAMES)
+		if randint(0, 9):
+			return cls.GAME_EVENT_NAMES[0]
+		return choice(cls.GAME_EVENT_NAMES[1:])
 	
 	@classmethod
 	def createCoor(cls):

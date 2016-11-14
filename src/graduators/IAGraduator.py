@@ -11,7 +11,7 @@ from src.EvolutiveGenerator.Graduator import Graduator
 
 
 class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
-	"""Graduate IAs"""
+	"""Graduate IA"""
 	
 	@inject_arguments
 	def __init__(self, event_dispatcher):

@@ -19,6 +19,8 @@ class FrameReader:
 		self.build_events('game.block', Block,
 			['brick_group', 'coin_box_group', 'ground_group', 'pipe_group', 'step_group'], frame)
 		self.build_events('game.enemy', Enemy, ['enemy_group'], frame)
+		self.build_events('game.powerup', Powerup, ['powerup_group'], frame)
+		self.build_events('game.coin', Coin, ['coin_group'], frame)
 		
 	
 	def build_events(self, event_name, event_class, groups, frame):

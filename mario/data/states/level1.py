@@ -372,7 +372,10 @@ class Level1(State._State):
                     'pipe_group': self.pipe_group,
                     'step_group': self.step_group,
                     
-                    'enemy_group': self.enemy_group
+                    'enemy_group': self.enemy_group,
+                    
+                    'powerup_group': self.powerup_group,
+                    'coin_group': self.coin_group
                     # ...
                 }, # Group
                 self.mario, # Sprite

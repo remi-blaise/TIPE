@@ -41,6 +41,7 @@ class PathManager:
 		
 		# processus-00000/generation-00/...
 		if generation_id is not None:
+			generations = generations if type(generations) is int else '00000'
 			path /= 'generation-' + '{0:0{1}d}'.format(generation_id, len(str(generations)))
 			
 			# processus-00000/generation-00/selection/...

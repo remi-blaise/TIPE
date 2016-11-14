@@ -40,9 +40,11 @@ def play(args):
 		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
 	# Get IA
 	ia = Reader.getBestIa(args.processus_id)
+	print('The best AI is {}.'.format(ia.id))
 	# Play IA
 	event_dispatcher = EventDispatcher()
-	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher))
+	FrameReader(event_dispatcher)
+	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher, time=10))
 
 
 # Build parser

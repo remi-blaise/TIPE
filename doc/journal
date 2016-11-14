@@ -379,4 +379,21 @@ Septembre - 20 Octobre 2016 :
 1 Novembre 2016 :
 	Ajout de la reprise d'évaluation en cours (on grading.progress).
 	Objectif 3.1 atteint.
+	Objectif 1.3 rempli. Seuls les 4 principaux GameEvents sont émis.
+	J'ai établi les probabilités suivantes pour le tirage aléatoire de
+	l'évènement d'un neurone :
+		- 90% de chance de tirer un bloc
+		- 10% de chance de tirer parmi (ennemi, bonus, pièce)
+	De sorte que la détection des blocs, qui est le composant fondamental du
+	comportement des IA, soit largement prédominant. La détection d'autres
+	évènements viendra perfonctionner le comportement.
+-------------------------------------------------------------------------------
+
+14 Novembre 2016 :
+	Debug de la commande play.
+
+	MESDAMES ET MESSIEURS, J'AI L'HONNEUR DE VOUS ANNONCER QUE LA PREMIERE
+	VERSION DE MON GÉNÉRATEUR D'INTELLIGENCE ARTIFICIELLE POUR MARIO BROS
+	EST PRETE !
+	Sortie de la v1.0.
 -------------------------------------------------------------------------------
