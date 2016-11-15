@@ -10,6 +10,7 @@ from mario.bridge.config import Config
 from .EvolutiveGenerator.Generator import Generator
 from .factories.IAFactory import IAFactory
 from .graduators.IAGraduator import IAGraduator
+from .graduators.GameOptimizer import GameOptimizer
 from .Writer.Writer import Writer
 from .Logger.FileLogger import FileLogger
 from .Logger.ConsoleLogger import ConsoleLogger
@@ -20,6 +21,7 @@ from .Writer.Reader import Reader
 def instanciateGenerator():
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
+	GameOptimizer(event_dispatcher)
 	return Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()],
 		lambda state: True in [8470 <= score for score, individual in state.grading]
 	)
@@ -40,11 +42,11 @@ def play(args):
 		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
 	# Get IA
 	ia = Reader.getBestIa(args.processus_id)
-	print('The best AI is {}.'.format(ia.id))
+	print('The best AI is {}.'.format(ia.id), flush=True)
 	# Play IA
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
-	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher, time=10))
+	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher))
 
 
 # Build parser

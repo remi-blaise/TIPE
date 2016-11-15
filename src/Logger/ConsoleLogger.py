@@ -33,7 +33,7 @@ class ConsoleLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 		msg = '  ' + msg
 		length = get_terminal_size()[0]
 		msg = msg[:length]
-		print(('\n' if not self.first_line else '') + msg, end=('' if not self.last_line else '\n'))
+		print(('\n' if not self.first_line else '') + msg, end=('' if not self.last_line else '\n'), flush=True)
 		self.first_line = False
 	
 	
@@ -42,4 +42,4 @@ class ConsoleLogger(AbstractLogger, metaclass=ABCInheritableDocstringsMeta):
 		msg = '  ' + msg
 		length = get_terminal_size()[0]
 		msg = msg[:length]
-		print('\r' + msg + (length-len(msg)) * ' ', end='')
+		print('\r' + msg + (length-len(msg)) * ' ', end='', flush=True)

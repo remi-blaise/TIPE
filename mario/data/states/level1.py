@@ -21,8 +21,14 @@ from mario.bridge.events.game_events import Frame
 
 
 class Level1(State._State):
+    def onStop(self, event):
+      self.done = self.quit = True
+      self.config.event_dispatcher.detach(self.listener_id)
+    
     def startup(self, current_frame, persist):
         """Called when the State object is created"""
+        self.listener_id = self.config.event_dispatcher.listen('stop', self.onStop)
+        
         self.game_info = persist
         self.persist = self.game_info
         self.game_info[c.CURRENT_FRAME] = current_frame
@@ -1437,6 +1443,7 @@ class Level1(State._State):
             self.done = True
             # if not self.config.show_game_frame:
             self.quit = True
+            self.config.event_dispatcher.detach(self.listener_id)
 
 
     def blit_everything(self, surface):
