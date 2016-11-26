@@ -41,8 +41,11 @@ def play(args):
 	if not Reader.processusExists(args.processus_id):
 		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
 	# Get IA
-	ia = Reader.getBestIa(args.processus_id)
-	print('The best AI is {}.'.format(ia.id), flush=True)
+	if args.ia_id is None:
+		ia = Reader.getBestIa(args.processus_id, args.generation_id)
+		print('The best AI is {}.'.format(ia.id), flush=True)
+	else:
+		ia = Reader.getIa(args.processus_id, args.ia_id)
 	# Play IA
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
@@ -64,6 +67,8 @@ resume_parser.set_defaults(command=resume)
 
 play_parser = subparsers.add_parser('play')
 play_parser.add_argument('processus_id', type=int)
+play_parser.add_argument('--generation_id', type=int)
+play_parser.add_argument('--ia_id', type=int)
 play_parser.set_defaults(command=play)
 
 # Parse arguments

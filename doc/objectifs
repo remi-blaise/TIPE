@@ -3,6 +3,8 @@ Récap des objectifs:
 	- [x] 1.1 Enlever le son
 	- [x] 1.2 Problème des fps
 	- [x] 1.3 Émission complète des GameEvent
+	- [ ] 1.4 Optimisation - Réimplémentation de Pygame
+	- [ ] 1.5 Optimisation - Réduction des temps d'évaluation
 	- [x] 2.0 EvolutiveGenerator
 	- [x] 2.1 Entities
 	- [x] 2.2 Factories
@@ -14,3 +16,5 @@ Récap des objectifs:
 	- [ ] 2.8 Évaluation asynchrone
 	- [x] 3.0 Interface simple en console
 	- [x] 3.1 Ultime commande
+	- [ ] 3.2 Graphiques
+	- [x] 3.3 Amélioration de play

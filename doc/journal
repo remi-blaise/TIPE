@@ -397,3 +397,48 @@ Septembre - 20 Octobre 2016 :
 	EST PRETE !
 	Sortie de la v1.0.
 -------------------------------------------------------------------------------
+
+15 Novembre 2016 :
+	Quelques optimisations de performances.
+	
+	Test de performances :
+		Commande : new 10 --generations=5
+		Résultats :
+			commit 20e8f45931fa1c686d908410248e47cb8040e87b (v1.0) 03:40:26 min
+			commit 165f5a3f6f2d7a8f02481da2b2fec6c14865f3b2 (auj.) 00:22:46 min
+		Conclusion :
+			Amélioration sur le début de génération d'un facteur 9.5
+-------------------------------------------------------------------------------
+
+20 Novembre 2016 :
+	Nouveau but : Optimiser au maximum le temps nécessaire à l'évaluation.
+	Hypothèse : temps d'évaluation = O(temps nécessaire à l'affichage)
+	
+	Objectif 1.4 : Optimisation - Réimplémentation de Pygame
+		Réimplémenter Pygame pour ne pas avoir à afficher le jeu.
+-------------------------------------------------------------------------------
+
+26 Novembre 2016 :
+	J'ai fait tourner une première génération pendant la semaine.
+	Je dois préparer pour lundi une présentation de mon avancement pour ma prof
+	de maths.
+	J'ai trois nouveaux petits objectifs :
+	
+	Objectif 1.5 : Optimisation - Réduction des temps d'évaluation
+		Écrire un composant GameOptimizer pour réduire les temps de calcul en
+		détectant les IA qui font du surplace et des boucles spatiales.
+	
+	Objectif 3.2 : Graphiques
+		Écrire une commande permettant de tracer des graphiques des résultats,
+		ou fabriquant un fichier excel avec tous les résultats.
+	
+	Objectif 3.3 : Amélioration de play
+		Améliorer la commande play pour pouvoir visualiser n'importe quelle IA.
+		Les paramètres présentent désormais la syntaxe suivante :
+			play {processus_id} Afficher la meilleure IA de tout le processus
+								(actuellement de la dernière génération)
+			play {processus_id} {generation_id} De la génération
+			play {processus_id} {generation_id} {ia_id} Affiche l'IA.
+	
+	Objectif 3.3 atteint.
+-------------------------------------------------------------------------------

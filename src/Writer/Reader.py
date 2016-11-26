@@ -20,7 +20,8 @@ class Reader:
 	Public API:
 		processusExists(processus_id)
 		getProcessusState(processus_id)
-		getBestIa(processus_id)
+		getIa(processus_id, ia_id)
+		getBestIa(processus_id, generation_id=None)
 	"""
 	
 	
@@ -80,6 +81,22 @@ class Reader:
 	
 	
 	@classmethod
+	def getGenerationOf(cls, processus_id, generations, ia_id):
+		generation_id = 1
+		while True:
+			path = cls.getPath(processus_id, generations, generation_id, 'final_grading')
+			if not path.exists():
+				raise ValueError("IA {} doesn't exist !".format(ia_id))
+			final_grading = cls.readJSON(path)
+			for score, _ia_id in final_grading:
+				if _ia_id == ia_id:
+					return generation_id - 1
+			generation_id += 1
+		
+		raise RuntimeError
+	
+	
+	@classmethod
 	def getPopulation(cls, processus_id, generation_id, generations):
 		population = set()
 		for ia_file in (
@@ -91,9 +108,18 @@ class Reader:
 	
 	
 	@classmethod
-	def getBestIa(cls, processus_id):
+	def getIa(cls, processus_id, ia_id):
 		generations = cls.getProcessusParams(processus_id)['generations']
-		generation_id = generations if type(generations) is int else cls.getLastGradedGeneration(processus_id, generations)
+		generation_id = cls.getGenerationOf(processus_id, generations, ia_id)
+		ia_file = cls.getPath(processus_id, generations, generation_id, ia_id)
+		return IAFactory.hydrate(cls.readJSON(ia_file))
+	
+	
+	@classmethod
+	def getBestIa(cls, processus_id, generation_id = None):
+		generations = cls.getProcessusParams(processus_id)['generations']
+		if generation_id is None:
+			generation_id = generations if type(generations) is int else cls.getLastGradedGeneration(processus_id, generations)
 		grading = cls.readJSON(cls.getPath(processus_id, generations, generation_id + 1, 'final_grading'))
 		grading.sort(key=itemgetter(0), reverse=True)
 		ia_id = grading[0][1]
