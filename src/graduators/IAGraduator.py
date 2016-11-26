@@ -1,6 +1,8 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
+from math import ceil
+
 from lib.inject_arguments import inject_arguments
 from lib.inherit_docstring import inherit_docstring
 
@@ -14,7 +16,7 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 	"""Graduate IA"""
 	
 	@inject_arguments
-	def __init__(self, event_dispatcher):
+	def __init__(self, event_dispatcher, show = False):
 		self.mario_x = 0
 	
 	
@@ -38,11 +40,11 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 	
 	@inherit_docstring
 	def grade(self, ia, generation_id):
-		time = 1 + generation_id
+		time = 1 + ceil(generation_id / 2)
 		if time > 401:
 			time = 401
 		
-		return self.gradeIAWithConfig(ia, Config(False, self.event_dispatcher, time))
+		return self.gradeIAWithConfig(ia, Config(self.show, self.event_dispatcher, time))
 	
 	
 	def onFrame(self, frame):

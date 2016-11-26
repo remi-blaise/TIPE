@@ -442,4 +442,25 @@ Septembre - 20 Octobre 2016 :
 	
 	Objectif 3.3 atteint.
 	Objectif 3.2 atteint: nouvelle commande print
+	J'ai divisé par 2 le temps maximal alloué à chaque IA.
+	Objectif 1.5 atteint avec la détection des boucles !
+	
+	Algorithme de détection des boucles :
+		Soit l'application Approx qui va de l'espace des points P dans un
+		espace restreint P' inclu dans P, surjective, dont chaque image a pour
+		antécédent un carré de 10x10 points du plan discret P.
+		On peut alors découper P en un ensemble de carrés ayant pour image par
+		Approx un singleton.
+		On fait donc l'approximation suivante :
+			Soit x, y deux points par lesquels l'IA passe,
+			x == y ssi Approx(x) == Approx(y)
+			c'est à dire qu'ils sont relativement proches.
+		On retient les images par Approx des 720 derniers points par lesquels
+		est passé l'IA.
+		Au bout de 15 sec de jeu, si l'IA passe 5 points ayant la meme
+		approximation durant les 720 dernières frames, on considère qu'elle
+		fait des boucles.
+	
+	Ajout de l'option --show permettant de voir les intelligences durant leur
+	évaluation a été ajouté aux commandes new et resume.
 -------------------------------------------------------------------------------

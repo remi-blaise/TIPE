@@ -19,11 +19,11 @@ from .Writer.PathManager import PathManager
 from .Writer.Reader import Reader
 
 
-def instanciateGenerator():
+def instanciateGenerator(show):
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
 	GameOptimizer(event_dispatcher)
-	return Generator(IAFactory, IAGraduator(event_dispatcher), [Writer(), FileLogger(), ConsoleLogger()],
+	return Generator(IAFactory, IAGraduator(event_dispatcher, show), [Writer(), FileLogger(), ConsoleLogger()],
 		lambda state: True in [8470 <= score for score, individual in state.grading]
 	)
 
@@ -33,12 +33,12 @@ def checkProcessusExists(processus_id):
 
 def new(args):
 	"""New processus"""
-	population = instanciateGenerator().process(PathManager.newProcessusId(), args.generations, args.pop_length)
+	population = instanciateGenerator(args.show).process(PathManager.newProcessusId(), args.generations, args.pop_length)
 
 def resume(args):
 	"""Resume a processus"""
 	checkProcessusExists(args.processus_id)
-	population = instanciateGenerator().resume(Reader.getProcessusState(args.processus_id))
+	population = instanciateGenerator(args.show).resume(Reader.getProcessusState(args.processus_id))
 
 def play(args):
 	"""Play the best individual of a processus' last generation"""
@@ -76,11 +76,13 @@ subparsers = parser.add_subparsers()
 new_parser = subparsers.add_parser('new')
 new_parser.add_argument('pop_length', type=int)
 new_parser.add_argument('--generations', default=inf, type=int)
-new_parser.set_defaults(command=new)
+new_parser.add_argument('--show', dest='show', action='store_true')
+new_parser.set_defaults(command=new, show=False)
 
 resume_parser = subparsers.add_parser('resume')
 resume_parser.add_argument('processus_id', type=int)
-resume_parser.set_defaults(command=resume)
+resume_parser.add_argument('--show', dest='show', action='store_true')
+resume_parser.set_defaults(command=resume, show=False)
 
 play_parser = subparsers.add_parser('play')
 play_parser.add_argument('processus_id', type=int)
