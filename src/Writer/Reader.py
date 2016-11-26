@@ -22,6 +22,7 @@ class Reader:
 		getProcessusState(processus_id)
 		getIa(processus_id, ia_id)
 		getBestIa(processus_id, generation_id=None)
+		getData(processus_id)
 	"""
 	
 	
@@ -133,6 +134,23 @@ class Reader:
 		if not path.parent.exists():
 			return False
 		return True
+	
+	
+	@classmethod
+	def getData(cls, processus_id):
+		generation_id = 1
+		generations = cls.getProcessusParams(processus_id)['generations']
+		data = []
+		
+		while True:
+			path = cls.getPath(processus_id, generations, generation_id, 'final_grading')
+			if not path.exists():
+				break
+			final_grading = cls.readJSON(path)
+			data.append((generation_id - 1, final_grading))
+			generation_id += 1
+		
+		return data
 	
 	
 	@classmethod

@@ -3,6 +3,7 @@
 
 from argparse import ArgumentParser
 from math import inf
+from time import time
 
 from lib.eventdispatcher import EventDispatcher
 from mario.bridge.frame_reader import FrameReader
@@ -26,20 +27,22 @@ def instanciateGenerator():
 		lambda state: True in [8470 <= score for score, individual in state.grading]
 	)
 
+def checkProcessusExists(processus_id):
+	if not Reader.processusExists(processus_id):
+		raise ValueError("Processus with id={} doesn't exist.".format(processus_id))
+
 def new(args):
 	"""New processus"""
 	population = instanciateGenerator().process(PathManager.newProcessusId(), args.generations, args.pop_length)
 
 def resume(args):
 	"""Resume a processus"""
-	if not Reader.processusExists(args.processus_id):
-		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
+	checkProcessusExists(args.processus_id)
 	population = instanciateGenerator().resume(Reader.getProcessusState(args.processus_id))
 
 def play(args):
 	"""Play the best individual of a processus' last generation"""
-	if not Reader.processusExists(args.processus_id):
-		raise ValueError("Processus with id={} doesn't exist.".format(args.processus_id))
+	checkProcessusExists(args.processus_id)
 	# Get IA
 	if args.ia_id is None:
 		ia = Reader.getBestIa(args.processus_id, args.generation_id)
@@ -50,6 +53,20 @@ def play(args):
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
 	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher))
+
+def print_data(args):
+	checkProcessusExists(args.processus_id)
+	
+	data = Reader.getData(args.processus_id)
+	txt = 'Générations,Scores des intelligences'
+	for generation_id, grading in data:
+		txt += '\n' + str(generation_id)
+		for score, ia_id in grading:
+			txt += ',' + str(score)
+	
+	path = PathManager.getPath(args.processus_id, read_only=True).parent / 'data' / (str(time()) + '.csv')
+	PathManager.makeDir(path.parent)
+	path.write_text(txt)
 
 
 # Build parser
@@ -70,6 +87,10 @@ play_parser.add_argument('processus_id', type=int)
 play_parser.add_argument('--generation_id', type=int)
 play_parser.add_argument('--ia_id', type=int)
 play_parser.set_defaults(command=play)
+
+print_parser = subparsers.add_parser('print')
+print_parser.add_argument('processus_id', type=int)
+print_parser.set_defaults(command=print_data)
 
 # Parse arguments
 args = parser.parse_args()

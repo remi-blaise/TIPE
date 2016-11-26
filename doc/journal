@@ -441,4 +441,5 @@ Septembre - 20 Octobre 2016 :
 			play {processus_id} {generation_id} {ia_id} Affiche l'IA.
 	
 	Objectif 3.3 atteint.
+	Objectif 3.2 atteint: nouvelle commande print
 -------------------------------------------------------------------------------
