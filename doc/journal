@@ -463,4 +463,50 @@ Septembre - 20 Octobre 2016 :
 	
 	Ajout de l'option --show permettant de voir les intelligences durant leur
 	évaluation a été ajouté aux commandes new et resume.
+	
+	J'ai généré un graphique des résultats obtenus pendant la semaine.
+	Deux problèmes se soulèvent :
+	
+	Problème 4 :
+		L'application plante au bout de 6 heures, à cause des appels récursifs
+		remplissant la mémoire, du à la mise en place de l'Objectif 2.7.
+		Une légère réadaptation du Generator est nécessaire.
+	
+	Problème 5 :
+		Les scores stagnent à partir d'un certain temps car les innovations
+		phénotypiques importantes ne semblent pas etre préservées au cours
+		des multiples générations, relevant sans doute d'une complexité
+		génotypique trop importante. Une analyse plus approfondie des résultats
+		est nécessaire, et la solution consistera surement en une modification
+		de l'algorithme génétique.
+	
+	Problème 6 :
+		Les conditions de replay des IA n'étant pas exactement les memes que
+		celles d'évaluation, certains visionnages ne sont pas fidèles aux
+		performances des IA en évaluation.
+	
+	TODO: Ajout des option --chance et --proportion à la commande new.
+	TODO : Ajout d'une option --as-grading à la commande play.
+	
+	Objectif 2.9 : Réadaptation du Generator (Pb 4)
+	
+	Objectif 2.10 : Évolution de l'algorithme (Pb 5)
+		Pour tenter d'apporter une solution au problème 5, je propose d'ajouter
+		un paramètre de survie. Il s'agit de modifier l'étape de formation de
+		la nouvelle génération :
+		la nouvelle génération sera constituée des 10% meilleurs individus de
+		la sélection de la génération parente, puis complétée par reproduction.
+		
+		L'avantage de cette solution est de préserver les innovations
+		évolutives les plus importantes qui influeront ainsi sur toutes les
+		reproductions ultérieures, jusqu'à ce que des innovations plus
+		avantageuses les remplacent. De plus, l'impact sur les innovations
+		mineures est moindre puisqu'on ne leur enlève qu'environ 28% de
+		l'espace génotypique (survie de 10% de la sélection + 20%*90%). Ce qui
+		à la réflexion semble faire beaucoup en fait. Mais heuresement parmi
+		ces 28%, seuls 10% survivent tels quels tandis que les 18% autres se
+		retrouvent après reproduction, donc mutation (donc potentielle
+		évolution). Les 10% qui survivent tels quels représentent donc une
+		"banque de sauvegarde" des meilleures évolutions, à l'abri de la
+		dillution en attendant que de meilleures viennent les surclassées.
 -------------------------------------------------------------------------------

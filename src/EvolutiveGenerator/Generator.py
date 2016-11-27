@@ -205,7 +205,7 @@ class Generator:
 		# Complete selection with random individuals
 		unused_individuals = state.population.difference(selection)
 		while len(selection) < selection_length:
-			choiced = choice(unused_individuals)
+			choiced = choice(list(unused_individuals))
 			selection.add(choiced)
 			unused_individuals.remove(choiced)
 		

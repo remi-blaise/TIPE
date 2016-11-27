@@ -33,7 +33,9 @@ def checkProcessusExists(processus_id):
 
 def new(args):
 	"""New processus"""
-	population = instanciateGenerator(args.show).process(PathManager.newProcessusId(), args.generations, args.pop_length)
+	population = instanciateGenerator(args.show).process(
+		PathManager.newProcessusId(), args.generations, args.pop_length, args.proportion, args.chance
+	)
 
 def resume(args):
 	"""Resume a processus"""
@@ -76,6 +78,8 @@ subparsers = parser.add_subparsers()
 new_parser = subparsers.add_parser('new')
 new_parser.add_argument('pop_length', type=int)
 new_parser.add_argument('--generations', default=inf, type=int)
+new_parser.add_argument('--proportion', default=0.5, type=float)
+new_parser.add_argument('--chance', default=0, type=float)
 new_parser.add_argument('--show', dest='show', action='store_true')
 new_parser.set_defaults(command=new, show=False)
 
