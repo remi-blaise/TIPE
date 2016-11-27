@@ -40,7 +40,6 @@ class GameOptimizer:
 		if frame.current_frame < 720:
 			return
 		indexes = [i for i, v in enumerate(self.last_points) if v == point]
-		print(frame.current_frame, indexes)
 		if len(indexes) >= 5:
 			self.event_dispatcher.dispatch('stop')
 	

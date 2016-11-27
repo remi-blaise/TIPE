@@ -418,7 +418,7 @@ Septembre - 20 Octobre 2016 :
 		Réimplémenter Pygame pour ne pas avoir à afficher le jeu.
 -------------------------------------------------------------------------------
 
-26 Novembre 2016 :
+26-27 Novembre 2016 :
 	J'ai fait tourner une première génération pendant la semaine.
 	Je dois préparer pour lundi une présentation de mon avancement pour ma prof
 	de maths.
@@ -485,8 +485,9 @@ Septembre - 20 Octobre 2016 :
 		celles d'évaluation, certains visionnages ne sont pas fidèles aux
 		performances des IA en évaluation.
 	
-	TODO: Ajout des option --chance et --proportion à la commande new.
-	TODO : Ajout d'une option --as-grading à la commande play.
+	Ajout des option --chance et --proportion à la commande new.
+	Ajout d'une option --as-grading à la commande play.
+	Le problème 6 est réglé au mieux, mais restera un problème.
 	
 	Objectif 2.9 : Réadaptation du Generator (Pb 4)
 	

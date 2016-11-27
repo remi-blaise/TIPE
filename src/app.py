@@ -47,14 +47,23 @@ def play(args):
 	checkProcessusExists(args.processus_id)
 	# Get IA
 	if args.ia_id is None:
-		ia = Reader.getBestIa(args.processus_id, args.generation_id)
+		ia, generation_id = Reader.getBestIa(args.processus_id, args.generation_id)
 		print('The best AI is {}.'.format(ia.id), flush=True)
 	else:
-		ia = Reader.getIa(args.processus_id, args.ia_id)
+		ia, generation_id = Reader.getIa(args.processus_id, args.ia_id)
 	# Play IA
 	event_dispatcher = EventDispatcher()
 	FrameReader(event_dispatcher)
-	score = IAGraduator(event_dispatcher).gradeIAWithConfig(ia, Config(True, event_dispatcher))
+	graduator = IAGraduator(event_dispatcher, show=True)
+	if args.as_grading:
+		print(
+			"Attention : Malgré que le visionnage présenté soit le plus proche possible des conditions d'évaluation, des aléas subsistent. "
+			"Si vous cherchez à visionner une performance difficile à reproduire, n'hésitez pas à rééssayer plusieurs fois."
+		, flush=True)
+		GameOptimizer(event_dispatcher)
+		graduator.grade(ia, generation_id)
+	else:
+		graduator.gradeIAWithConfig(ia, Config(True, event_dispatcher))
 
 def print_data(args):
 	checkProcessusExists(args.processus_id)
@@ -92,7 +101,8 @@ play_parser = subparsers.add_parser('play')
 play_parser.add_argument('processus_id', type=int)
 play_parser.add_argument('--generation_id', type=int)
 play_parser.add_argument('--ia_id', type=int)
-play_parser.set_defaults(command=play)
+play_parser.add_argument('--as_grading', dest='as_grading', action='store_true')
+play_parser.set_defaults(command=play, as_grading=False)
 
 print_parser = subparsers.add_parser('print')
 print_parser.add_argument('processus_id', type=int)

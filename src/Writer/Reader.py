@@ -113,7 +113,7 @@ class Reader:
 		generations = cls.getProcessusParams(processus_id)['generations']
 		generation_id = cls.getGenerationOf(processus_id, generations, ia_id)
 		ia_file = cls.getPath(processus_id, generations, generation_id, ia_id)
-		return IAFactory.hydrate(cls.readJSON(ia_file))
+		return IAFactory.hydrate(cls.readJSON(ia_file)), generation_id
 	
 	
 	@classmethod
@@ -125,7 +125,7 @@ class Reader:
 		grading.sort(key=itemgetter(0), reverse=True)
 		ia_id = grading[0][1]
 		ia_file = cls.getPath(processus_id, generations, generation_id, ia_id)
-		return IAFactory.hydrate(cls.readJSON(ia_file))
+		return IAFactory.hydrate(cls.readJSON(ia_file)), generation_id
 	
 	
 	@classmethod
