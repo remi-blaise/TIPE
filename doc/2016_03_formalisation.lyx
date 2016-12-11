@@ -1,0 +1,1182 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass amsart
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language french
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+\paragraph_spacing onehalf
+
+\noun on
+TIPE
+\noun default
+ : Intelligences artificielles
+\end_layout
+
+\begin_layout Abstract
+Comment utiliser la théorie de Darwin pour générer un complexe de neurone
+ capable de finir Super Mario ?
+\end_layout
+
+\begin_layout Abstract
+La génération évolutive : une révolution dans la conception d'intelligences
+ artificielles.
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Le jeu
+\end_layout
+
+\begin_layout Definition
+Un 
+\emph on
+niveau
+\emph default
+ 
+\begin_inset Formula $N$
+\end_inset
+
+ est une matrice de 
+\begin_inset Formula $M_{m,n}\left\{ 0,1\right\} $
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Soit 
+\begin_inset Formula $N$
+\end_inset
+
+ un niveau, un 
+\emph on
+état 
+\begin_inset Formula $J_{i}$
+\end_inset
+
+ du jeu
+\emph default
+ est une matrice de 
+\begin_inset Formula $M_{m,n}\left\{ M,0,1\right\} $
+\end_inset
+
+ où 
+\begin_inset Formula $M$
+\end_inset
+
+ représente la personnage Mario, 
+\begin_inset Formula $0$
+\end_inset
+
+ du vide et 
+\begin_inset Formula $1$
+\end_inset
+
+ un bloc plein tq 
+\begin_inset Formula 
+\[
+\exists!(x,y)\in[|0,n|]\times[|0,m|]\quad[E_{i}]_{y,x}=M
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Definition
+\begin_inset Formula $(x,y)$
+\end_inset
+
+ sont les coordonnées de 
+\begin_inset Formula $M$
+\end_inset
+
+ à l'étape 
+\begin_inset Formula $i$
+\end_inset
+
+ et 
+\begin_inset Formula 
+\[
+\forall(x',y')\neq(x,y)\;[E_{i}]_{y',x'}=N_{y',x'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Le 
+\emph on
+jeu
+\emph default
+ est une famille 
+\begin_inset Formula $J=(J_{i})_{i\in[|0,p|]}$
+\end_inset
+
+ avec 
+\begin_inset Formula $J_{i}$
+\end_inset
+
+ les étapes du jeu et 
+\begin_inset Formula 
+\[
+\forall i<p\quad\exists!(x,y)\;[J_{i}]_{y,x}=M\quad et\quad y<m
+\]
+
+\end_inset
+
+ tq si on définit 
+\begin_inset Formula $f$
+\end_inset
+
+, 
+\begin_inset Formula $f$
+\end_inset
+
+ est continue.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Le jeu est 
+\emph on
+gagnant
+\emph default
+ ssi 
+\begin_inset Formula 
+\[
+\exists x\quad[J_{p}]_{m,x}=M\quad\equiv\quad\exists!(x,y)\quad[J_{p}]_{y,x}=M\quad et\quad y=m
+\]
+
+\end_inset
+
+Dans le cas contraire, le jeu est 
+\emph on
+perdant
+\emph default
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Soit 
+\begin_inset Formula $J$
+\end_inset
+
+ un jeu, on appelle 
+\emph on
+fonction de transition
+\emph default
+ de J :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+f & : & [|0,p|] & \to & [|0,n|]\times[|O,m|]\\
+ &  & i & \mapsto & f(i)=(x_{i},y_{i})
+\end{array}}
+\]
+
+\end_inset
+
+telle que 
+\begin_inset Formula $\forall i\in[|0,p|]\; f{}_{p}(i)=f(i)$
+\end_inset
+
+ et 
+\begin_inset Formula $f{}_{p}$
+\end_inset
+
+ est continue.
+\end_layout
+
+\begin_layout Remark*
+\begin_inset Formula $N\; et\; f(i)\equiv J_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Standard
+Dans la suite, on assimile 
+\begin_inset Formula $f(i)$
+\end_inset
+
+ à 
+\begin_inset Formula $J_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Definition
+On appelle 
+\emph on
+pseudo-f
+\emph default
+ :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+f_{p} & : & [0,p] & \to & [0,n]\times[O,m]\\
+ &  & t & \mapsto & f_{p}(t)=(x,y)
+\end{array}}
+\]
+
+\end_inset
+
+ telle que 
+\begin_inset Formula $\forall i\in[|O,p|]\; f_{p}(i)=f(i)$
+\end_inset
+
+ et 
+\begin_inset Formula $f_{p}$
+\end_inset
+
+ est continue.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Standard
+Dans la suite, on assimilera une 
+\begin_inset Formula $f_{p}$
+\end_inset
+
+ à 
+\begin_inset Formula $f$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Definition
+On note l'
+\emph on
+ensemble des actions
+\emph default
+ 
+\begin_inset Formula $\left\{ A_{0},A_{1},\ldots\right\} $
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+On définit une 
+\emph on
+fonction entrée-sortie
+\emph default
+ :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+F & : & familles\; des\; actions\times familles\; de\; J_{i} & \to & Im\; f\\
+ &  & ((A_{0},A_{1},\ldots),(J_{0},J_{1},\ldots,J_{i-1})) & \mapsto & f(i)
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Standard
+La fonction entrée-sortie, tout comme le niveau, est fixée comme condition
+ initale.
+\end_layout
+
+\begin_layout Section
+AI
+\end_layout
+
+\begin_layout Definition
+On appelle 
+\emph on
+joueur
+\emph default
+ ou 
+\emph on
+AI
+\emph default
+ le processus de décision :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+AI & : & familles\; de\; J_{i} & \to & familles\; des\; actions\\
+ &  & (J_{0},J_{1},\ldots,J_{i-1}) & \mapsto & (A_{0},A_{1},\ldots)
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Remark
+Un joueur construit un unique jeu 
+\begin_inset Formula $J$
+\end_inset
+
+ tq 
+\begin_inset Formula $J_{i}=F(AI(J_{0},\ldots,J_{i-1}),(J_{0},\ldots,J_{i-1}))$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Theorem
+Si 
+\begin_inset Formula $J$
+\end_inset
+
+ est fini, alors 
+\begin_inset Formula $J$
+\end_inset
+
+ est gagnant ou 
+\begin_inset Formula $\exists p\in\mathbb{N}\quad J_{p}=J_{p+1},\quad p=\#J$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Definition
+Une AI est 
+\emph on
+valide ssi 
+\begin_inset Formula $J$
+\end_inset
+
+ est fini.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Alors 
+\begin_inset Formula $p=\#J$
+\end_inset
+
+ est le 
+\emph on
+temps
+\emph default
+ de AI.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Un 
+\emph on
+score
+\emph default
+ 
+\begin_inset Formula $s:\ensuremath{\begin{array}{ccc}
+joueurs\; valides & \to & \mathbb{R}\\
+AI & \mapsto & s(AI)
+\end{array}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Theorem
+Un ensemble d'AI peut être ordonné selon ses scores.
+\end_layout
+
+\begin_layout Proof
+Car 
+\begin_inset Formula $s(AI)\in\mathbb{R}$
+\end_inset
+
+ où 
+\begin_inset Formula $\leq$
+\end_inset
+
+ est une relation d'ordre total.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Theorem
+Le temps est un score.
+\end_layout
+
+\begin_layout Section
+Les neurones
+\end_layout
+
+\begin_layout Definition
+On note l'
+\emph on
+ensemble des évènements
+\emph default
+ 
+\begin_inset Formula $\{E_{0},E_{1},\ldots\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+(hors exposé)
+\end_layout
+
+\begin_layout Definition
+L'
+\emph on
+analyseur
+\emph default
+ 
+\begin_inset Formula $AI_{0}$
+\end_inset
+
+ est 
+\begin_inset Formula $AI_{0}:\ensuremath{\begin{array}{ccc}
+familles\; de\; J_{i} & \to & familles\; des\;évènements\\
+J_{i-1} & \mapsto & AI_{0}(J_{i-1})=(E_{0},\ldots)
+\end{array}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Un 
+\emph on
+neurone
+\emph default
+ est 
+\begin_inset Formula $AI_{1,k}:\ensuremath{\begin{array}{ccc}
+évènements & \to & familles\; des\;évènements\\
+E_{k} & \mapsto & AI_{1,k}(E)=A
+\end{array}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Definition
+Autrement dit 
+\begin_inset Formula $\forall k'\neq k\quad AI_{1,k}(E_{k'})=0$
+\end_inset
+
+ et 
+\begin_inset Formula $AI_{1,k}(E_{k})=A$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+Un 
+\emph on
+complexe neural
+\emph default
+ est
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+AI_{1} & : & familles\; d'events & \to & famille\; d'actions\\
+ &  & (E_{k})_{k} & \mapsto & AI_{1}((E_{k})_{k})=(AI_{1,k}(E_{k}))_{k}
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Remark
+Notre famille d'events étant finie, un complexe neural porte un nombre fini
+ d'informations.
+\end_layout
+
+\begin_layout Theorem
+Soit 
+\begin_inset Formula $AI$
+\end_inset
+
+, 
+\begin_inset Formula $\exists AI_{0},AI_{1}\quad AI=AI_{1}\circ AI_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $AI_{0}$
+\end_inset
+
+ est fixé et communs à tous les 
+\begin_inset Formula $AI$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Theorem
+Soit 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $AI=AI_{1}\circ AI_{0}$
+\end_inset
+
+ est une AI.
+\end_layout
+
+\begin_layout Definition
+Un 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+ est 
+\shape italic
+\emph on
+valide
+\emph default
+ ssi 
+\shape default
+
+\begin_inset Formula $AI=AI_{1}\circ AI_{0}$
+\end_inset
+
+ est valide.
+\end_layout
+
+\begin_layout Theorem
+Si 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+ est valide alors 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+ admet un score.
+\end_layout
+
+\begin_layout Standard
+Dans la suite, on ne travaillera que sur les complexes neuraux et on assimilera
+ 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+ à 
+\begin_inset Formula $AI=AI_{1}\circ AI_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+La génération évolutive
+\end_layout
+
+\begin_layout Definition
+Un 
+\emph on
+code génétique
+\emph default
+ est une représentation finie (ie.
+ il existe un nombre fini de codes génétiques différents) d'un nombre fini
+ d'informations.
+\end_layout
+
+\begin_layout Definition
+Par exemple, on peut représenter 
+\begin_inset Formula $AI_{1}$
+\end_inset
+
+ par une matrice : 
+\begin_inset Formula 
+\[
+\begin{array}{cccc}
+E_{0} & E_{1} & E_{2} & \ldots\\
+(A_{0},\ldots) & (A_{0},\ldots) & (A_{0},\ldots)
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Theorem
+On peut générer un code génétique de manière aléatoire en un temps fini.
+\end_layout
+
+\begin_layout Proof
+En effet, on peut choisir chaque information parmi un choix fini et on répète
+ l'opération un nombre fini de fois.
+\end_layout
+
+\begin_layout Definition
+On définit le processus de la 
+\emph on
+génération évolutive
+\emph default
+ :
+\begin_inset Formula 
+\[
+GE=GE_{0}\circ GE_{1}\circ GE_{0}\circ\ldots\circ GE_{1}\circ GE_{0}(\textrm{Ø})
+\]
+
+\end_inset
+
+ tq :
+\end_layout
+
+\begin_layout Definition
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Definition
+On appelle 
+\emph on
+groupe
+\emph default
+ un ensemble fini d'AI valides dont le cardinal est fixée.
+\end_layout
+
+\begin_layout Plain Layout
+Le cardinal des groupes 
+\begin_inset Formula $r$
+\end_inset
+
+ est un paramètre de la génération.
+\end_layout
+
+\begin_layout Definition
+On appelle 
+\emph on
+sélection
+\emph default
+ un ensemble fini d'AI valides dont le cardinal 
+\emph on
+s
+\emph default
+ est fixée en proportion du cardinal des groupes, avec 
+\begin_inset Formula $\lambda\in[0,1]$
+\end_inset
+
+ coefficient de proportionalité paramètre de la génération.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+\begin_inset Formula $GE_{0}$
+\end_inset
+
+l'
+\emph on
+étape de génération
+\emph default
+ :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+GE_{0} & : & sélections\cup\{\textrm{Ø}\} & \to & groupes\\
+ &  & S & \mapsto & GE_{0}(S)=G
+\end{array}}
+\]
+
+\end_inset
+
+ avec 
+\begin_inset Formula $GE(\textrm{Ø)}=G\; aléatoire=ensemble\; de\; codes\; aléatoires$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Definition
+Processus de génération :
+\end_layout
+
+\begin_layout Definition
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+Soit 
+\begin_inset Formula $S\in sélections$
+\end_inset
+
+, S est un ensemble de 
+\begin_inset Formula $s$
+\end_inset
+
+ codes génétiques composés chacuns de 
+\begin_inset Formula $t$
+\end_inset
+
+ informations.
+\end_layout
+
+\begin_layout Plain Layout
+Parmi les 
+\begin_inset Formula $s$
+\end_inset
+
+ codes génétiques, on en tire deux, puis on choisit à tour de rôle une informati
+on (neurone) parmi les deux codes génétiques jusqu'à obtenir 
+\begin_inset Formula $t$
+\end_inset
+
+ informations, qui constituent ainsi un nouveau code génétique.
+\end_layout
+
+\begin_layout Plain Layout
+On répète ainsi l'opération jusqu'à obtenir un groupe complet 
+\begin_inset Formula $G$
+\end_inset
+
+ de 
+\begin_inset Formula $r$
+\end_inset
+
+ nouveaux codes génétiques valides.
+\end_layout
+
+\begin_layout Plain Layout
+On renvoie 
+\begin_inset Formula $GE_{0}(S\text{)=G}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+\begin_inset Formula $GE_{1}$
+\end_inset
+
+l'
+\emph on
+étape de sélection
+\emph default
+ :
+\begin_inset Formula 
+\[
+\ensuremath{\begin{array}{ccccc}
+GE_{1} & : & groupes & \to & sélections\\
+ &  & G & \mapsto & GE_{1}(G)=S
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Definition
+Processus de sélection :
+\end_layout
+
+\begin_layout Definition
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+Soit 
+\begin_inset Formula $G$
+\end_inset
+
+ un groupe, soit 
+\begin_inset Formula $AI\in G$
+\end_inset
+
+ 
+\begin_inset Formula $AI$
+\end_inset
+
+ est valide donc admet un score (le score et sa fonction sont paramètres
+ de la génération).
+\end_layout
+
+\begin_layout Plain Layout
+On range les codes de 
+\begin_inset Formula $G$
+\end_inset
+
+ par ordre de score croissant.
+\end_layout
+
+\begin_layout Plain Layout
+Soit 
+\begin_inset Formula $s$
+\end_inset
+
+ le cardinal des sélections et 
+\begin_inset Formula $c$
+\end_inset
+
+ le facteur chance, paramètres de la génération, 
+\begin_inset Formula $c\in[0,1]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+Parmi les 
+\begin_inset Formula $r$
+\end_inset
+
+ derniers AI, on en choisit au hasard 
+\begin_inset Formula $(1-c)r$
+\end_inset
+
+ uns pour obtenir 
+\begin_inset Formula $S_{0}\subset S$
+\end_inset
+
+, 
+\begin_inset Formula $\#S_{0}\leq r$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+Parmi les 
+\begin_inset Formula $t-(1-c)r$
+\end_inset
+
+ AI restants, on en choisit au hasard jusqu'à obtenir S avec 
+\begin_inset Formula $\#S=r$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+On pose 
+\begin_inset Formula $GE_{1}(G)=S$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ainsi, on définit 
+\begin_inset Formula $\forall n\in\mathbb{N\quad}GE(n)=GE_{0}\circ GE_{1}\circ GE_{0}\circ\ldots\circ GE_{1}\circ GE_{0}(\textrm{Ø})\in groupes$
+\end_inset
+
+ et 
+\begin_inset Formula $GE$
+\end_inset
+
+ nous permet de générer un groupe d'AI après 
+\begin_inset Formula $n$
+\end_inset
+
+ étapes d'évolution.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Definition
+On appelle 
+\emph on
+
+\begin_inset Formula $n$
+\end_inset
+
+-ième produit de 
+\begin_inset Formula $GE$
+\end_inset
+
+
+\emph default
+ l'élément de 
+\begin_inset Formula $GE(n)$
+\end_inset
+
+ ayant le plus grand score.
+\end_layout
+
+\begin_layout Conjecture
+La probabilité 
+\begin_inset Formula $P_{n}$
+\end_inset
+
+ que le 
+\begin_inset Formula $n$
+\end_inset
+
+-ième produit de 
+\begin_inset Formula $GE$
+\end_inset
+
+ soit gagnant converge vers 
+\begin_inset Formula $1$
+\end_inset
+
+ quand 
+\begin_inset Formula $n\rightarrow+\infty$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Conjecture
+La suite 
+\begin_inset Formula $s_{n}$
+\end_inset
+
+ du score du 
+\begin_inset Formula $n$
+\end_inset
+
+-ième produit est statistiquement croissante.
+ (à définir)
+\end_layout
+
+\begin_layout --Separator--
+
+\end_layout
+
+\begin_layout Conjecture
+\begin_inset Formula $\exists N\in\mathbb{N}$
+\end_inset
+
+ à partir duquel la suite 
+\begin_inset Formula $s_{n}$
+\end_inset
+
+ stagne statistiquement.
+ (à définir)
+\end_layout
+
+\begin_layout Conjecture
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ 
+\begin_inset Formula $s_{n}$
+\end_inset
+
+ converge
+\end_layout
+
+\begin_layout Example
+Exemple de score intéressant :
+\end_layout
+
+\begin_layout Example
+Soit 
+\begin_inset Formula $AI$
+\end_inset
+
+ un joueur valide,
+\end_layout
+
+\begin_layout Example
+On pose 
+\begin_inset Formula $\delta=\begin{cases}
+1 & si\; AI\; est\; gagnante\\
+0 & sinon
+\end{cases}$
+\end_inset
+
+ et 
+\begin_inset Formula $p\in\mathbb{R}$
+\end_inset
+
+ le temps de 
+\begin_inset Formula $AI$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Example
+alors on pose 
+\begin_inset Formula $s(AI)=1000\delta-p\in\mathbb{R}$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
