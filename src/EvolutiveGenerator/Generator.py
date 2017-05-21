@@ -68,8 +68,10 @@ class Generator:
 		
 		self.factory = factory
 		self.graduator = graduator
+		self.end_statement = end_statement
 		
 		self.state = ProcessusState()
+		self.iterating = False
 		
 		self.dispatcher = EventDispatcher()
 		listeners.append(factory)
@@ -135,18 +137,30 @@ class Generator:
 		self.dispatch(PROCESSUS.DONE)
 	
 	def initGeneration(self, state):
-		state.generation_id += 1
-		self.dispatch(GENERATION.START)
+		"""Handle iteration"""
+		self.iterating = True
+		
+		try:
+			while True:
+				state.generation_id += 1
+				self.dispatch(GENERATION.START)
+		except StopIteration:
+			pass
+		
+		self.iterating = False
 	
 	def endGeneration(self, state):
 		self.dispatch(GENERATION.DONE)
 		if (
-			state.generation_id < state.generations
+			state.generation_id >= state.generations
 			or (state.generations == inf and self.end_statement(state))
 		):
-			self.initGeneration(state)
-		else:
 			self.endProcessus()
+			if self.iterating:
+				raise StopIteration
+		
+		elif not self.iterating:
+			self.initGeneration(state)
 	
 	
 	def create(self, state):

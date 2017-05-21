@@ -386,7 +386,7 @@ Septembre - 20 Octobre 2016 :
 		- 10% de chance de tirer parmi (ennemi, bonus, pièce)
 	De sorte que la détection des blocs, qui est le composant fondamental du
 	comportement des IA, soit largement prédominant. La détection d'autres
-	évènements viendra perfonctionner le comportement.
+	évènements viendra perfectionner le comportement.
 -------------------------------------------------------------------------------
 
 14 Novembre 2016 :
@@ -457,7 +457,7 @@ Septembre - 20 Octobre 2016 :
 			c'est à dire qu'ils sont relativement proches.
 		On retient les images par Approx des 720 derniers points par lesquels
 		est passé l'IA.
-		Au bout de 15 sec de jeu, si l'IA passe 5 points ayant la meme
+		Au bout de 15 sec de jeu, si l'IA passe par 5 points ayant la meme
 		approximation durant les 720 dernières frames, on considère qu'elle
 		fait des boucles.
 	
@@ -510,4 +510,28 @@ Septembre - 20 Octobre 2016 :
 		évolution). Les 10% qui survivent tels quels représentent donc une
 		"banque de sauvegarde" des meilleures évolutions, à l'abri de la
 		dillution en attendant que de meilleures viennent les surclassées.
+-------------------------------------------------------------------------------
+
+21 Mai 2017 :
+
+	Objectif 2.9 atteint.
+
+	Idées d'amélioration suite à la lecture des bouquins :
+	v	- Repasser à une version iterative du Generator
+		- Remplacer le mot niveau par "terrain".
+		- Remplacer les termes "Génération évolutive" par "Algorithme génétique".
+		
+		- Chaîner tous les allèles et remplacer la reproduction par deux
+		crossing-over. (Mise en pratique de la théorie des building blocks)
+		- Pour rendre la fonction d’évaluation la plus continue possible,
+		ajouter un critère sur la hauteur maximale sautée. On peut aussi
+		ajouter des critères sur la hauteur maximale sautée sur les n derniers
+		sauts, ainsi que la vitesse moyenne.
+		- Modifier les probas pour ajouter des sauts plus hauts avec une plus
+		forte probabilité.
+		- Modifier la méthode de sélection pour la roulette biaisée, plus
+		précise que la méthode de sélection des n meilleures, + caractère
+		élitiste déjà mis en place.
+		- Lors des mutations, utiliser une distribution normale autour de la
+		valeur actuelle.
 -------------------------------------------------------------------------------
