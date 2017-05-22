@@ -11,15 +11,16 @@ class IA(GeneticElement, XMLRepr):
 	"""An IA"""
 	
 	@inject_arguments
-	def __init__(self, id, neurons=set()):
+	def __init__(self, id, neurons=list()):
 		"""Init the IA
 		
 		Expects:
 			id to be a integer, unique among IA's of a processus
-			neurons to be a set of Neuron
+			neurons to be a list of Neuron
 		"""
 		
-		pass
+		if not type(neurons) is list:
+			raise ValueError('Neurons should be a list.')
 	
 	
 	def reprJSON(self):

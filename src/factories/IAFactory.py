@@ -1,7 +1,7 @@
 #!/usr/bin/python3.4
 # -*-coding:Utf-8 -*
 
-from random import randint, random, choice, sample
+from random import randint, random
 from math import ceil
 from copy import deepcopy
 
@@ -10,6 +10,9 @@ from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
 from src.EvolutiveGenerator.GeneticElementFactory import GeneticElementFactory
 from src.entities.IA import IA
 from src.factories.NeuronFactory import NeuronFactory
+
+
+randindex = lambda it: randint(0, len(it)-1)
 
 
 class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
@@ -39,9 +42,9 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	@classmethod
 	@inherit_docstring
 	def create(cls):
-		neurons = set()
+		neurons = list()
 		for i in range(3 + randint(0, 3)):
-			neurons.add(NeuronFactory.create())
+			neurons.append(NeuronFactory.create())
 		return IA(cls.newIaId(), neurons)
 	
 	
@@ -49,9 +52,9 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	@inherit_docstring
 	def mutate(element):
 		if random() < .2:
-			element.neurons.add(NeuronFactory.create())
+			element.neurons.insert(randindex(element.neurons), NeuronFactory.create())
 		if random() < .1:
-			element.neurons.remove(choice(list(element.neurons)))
+			element.neurons.pop(randindex(element.neurons))
 		for neuron in element.neurons:
 			if random() < .2:
 				NeuronFactory.mutate(neuron)
@@ -60,20 +63,15 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	@classmethod
 	@inherit_docstring
 	def combine(cls, element1, element2):
-		neurons = set()
-		for parent_neurons in (element1.neurons, element2.neurons):
-			neurons.update(
-				sample(parent_neurons, ceil(len(parent_neurons) / 2))
-			)
+		neurons = element1.neurons[:randindex(element1.neurons)] + element2.neurons[randindex(element2.neurons):]
+		
 		# Duplicate neurons instead of reuse ones
-		neurons = deepcopy(neurons)
+		neurons = [deepcopy(neuron) for neuron in neurons]
 		return IA(cls.newIaId(), neurons)
 	
 	
 	@classmethod
 	def hydrate(cls, data):
 		cls.updateIaId(data['id'])
-		neurons = set()
-		for neuron_data in data['neurons']:
-			neurons.add(NeuronFactory.hydrate(neuron_data))
-		return IA(data['id'], neurons)
+		
+		return IA(data['id'], [ NeuronFactory.hydrate(neuron_data) for neuron_data in data['neurons'] ])

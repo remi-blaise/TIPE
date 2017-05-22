@@ -535,3 +535,8 @@ Septembre - 20 Octobre 2016 :
 		- Lors des mutations, utiliser une distribution normale autour de la
 		valeur actuelle.
 -------------------------------------------------------------------------------
+
+22 Mai 2017 :
+	Objectif 2.10.0 : Chaîner les allèles et remplacer la reproduction par demi crossing-over.
+	
+	Objectif 2.10.0 atteint.
