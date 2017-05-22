@@ -13,6 +13,10 @@ from src.factories.NeuronFactory import NeuronFactory
 
 
 randindex = lambda it: randint(0, len(it)-1)
+def randindex_safe(it):
+	if len(it) < 3:
+		raise ValueError("Iterable should have a least 3 elements.")
+	randint(1, len(it)-2)
 
 
 class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
@@ -53,7 +57,7 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	def mutate(element):
 		if random() < .2:
 			element.neurons.insert(randindex(element.neurons), NeuronFactory.create())
-		if random() < .1:
+		if random() < .1 and len(element.neurons) > 3:
 			element.neurons.pop(randindex(element.neurons))
 		for neuron in element.neurons:
 			if random() < .2:
@@ -63,7 +67,11 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	@classmethod
 	@inherit_docstring
 	def combine(cls, element1, element2):
-		neurons = element1.neurons[:randindex(element1.neurons)] + element2.neurons[randindex(element2.neurons):]
+		neurons = element1.neurons[:randindex_safe(element1.neurons)] + element2.neurons[randindex_safe(element2.neurons):]
+		
+		# Ensure you have a least 3 neurons
+		if len(neurons) < 3:
+			return cls.combine(element1, element2)
 		
 		# Duplicate neurons instead of reuse ones
 		neurons = [deepcopy(neuron) for neuron in neurons]
