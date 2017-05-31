@@ -521,7 +521,7 @@ Septembre - 20 Octobre 2016 :
 		- Remplacer le mot niveau par "terrain".
 		- Remplacer les termes "Génération évolutive" par "Algorithme génétique".
 		
-		- Chaîner tous les allèles et remplacer la reproduction par deux
+	v	- Chaîner tous les allèles et remplacer la reproduction par deux
 		crossing-over. (Mise en pratique de la théorie des building blocks)
 		- Pour rendre la fonction d’évaluation la plus continue possible,
 		ajouter un critère sur la hauteur maximale sautée. On peut aussi
@@ -534,6 +534,10 @@ Septembre - 20 Octobre 2016 :
 		élitiste déjà mis en place.
 		- Lors des mutations, utiliser une distribution normale autour de la
 		valeur actuelle.
+		
+		- Isoler le jeu dans un programme externe pour pouvoir relancer pygame
+		à chaque évaluation : dans l'espoir de réduire l'indéterminisme et
+		d'améliorer les perfs (attention, peut avoir l'effet inverse).
 -------------------------------------------------------------------------------
 
 22 Mai 2017 :
@@ -541,3 +545,5 @@ Septembre - 20 Octobre 2016 :
 	
 	Objectif 2.10.0 atteint.
 	Fixe la limite minimale des neurons d'une IA à 3.
+	
+	OBjectif 3.4 : Écrire un mode d'emploi (README).
