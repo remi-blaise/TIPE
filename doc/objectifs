@@ -18,8 +18,10 @@ Récap des objectifs:
 	- [ ] 2.10 Évolution de l'algorithme (Pb 5)
 	- [x] 2.10.0 : Chaîner les allèles et remplacer la reproduction par un demi crossing-over.
 	- [x] 2.10.1 : Créer un objet Result remplaçant le score.
+	- [x] 2.10.2 : Implémenter le principe de survie.
+	- [x] 2.10.3 : Modifier intelligement les probabilités.
 	- [x] 3.0 Interface simple en console
 	- [x] 3.1 Ultime commande
 	- [x] 3.2 Graphiques
 	- [x] 3.3 Amélioration de play
-	- [ ] 3.4 Écrire un mode d'emploi (README)
+	- [x] 3.4 Écrire un mode d'emploi (README)

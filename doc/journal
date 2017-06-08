@@ -517,8 +517,8 @@ Septembre - 20 Octobre 2016 :
 
 	Idées d'amélioration suite à la lecture des bouquins :
 		[x] Repasser à une version iterative du Generator
-		[ ] Remplacer le mot niveau par "terrain".
-		[ ] Remplacer les termes "Génération évolutive" par "Algorithme
+		[x] Remplacer le mot niveau par "terrain".
+		[x] Remplacer les termes "Génération évolutive" par "Algorithme
 			génétique".
 
 		[x] Chaîner tous les allèles et remplacer la reproduction par deux
@@ -539,6 +539,7 @@ Septembre - 20 Octobre 2016 :
 		[ ] Isoler le jeu dans un programme externe pour pouvoir relancer pygame
 			à chaque évaluation : dans l'espoir de réduire l'indéterminisme et
 			d'améliorer les perfs (attention, peut avoir l'effet inverse).
+			IMPOSSIBLE
 -------------------------------------------------------------------------------
 
 22 Mai 2017 :
@@ -569,9 +570,18 @@ Septembre - 20 Octobre 2016 :
 	Objectif 2.10.1 atteint.
 	Différents bugs résolus.
 
+	Objectif 2.10.2 : Implémentation du principe de survie.
+	Réalisé.
+
+	Objectif 2.10.3 : Modifier intelligement les probabilités.
+
 	Changement des probabilités des actions :
 		Jump et Right ont désormais 35% de chance d'être tirés, les autres 10%.
 	Changement des durées:
 		Lors du choix des durées des sauts, utilise une distribution normale
 		pour privilégier les longues durées.
 		Raccourci la durée des autres.
+
+	Réalisé.
+
+	Objectif 3.4 réalisé : Ajout d'un mode d'emploi.
