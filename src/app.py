@@ -69,15 +69,22 @@ def print_data(args):
 	checkProcessusExists(args.processus_id)
 
 	data = Reader.getData(args.processus_id)
-	txt = 'Générations,Scores des intelligences'
+	txt1 = 'Générations,Scores des intelligences'
 	for generation_id, grading in data:
-		txt += '\n' + str(generation_id)
-		for score, ia_id in grading:
-			txt += ',' + str(score)
+		txt1 += '\n' + str(generation_id)
+		for result, ia_id in grading:
+			txt1 += ',' + str(result['score'])
+	txt2 = 'Générations,Scores des intelligences'
+	for generation_id, grading in data:
+		txt2 += '\n' + str(generation_id)
+		for result, ia_id in grading:
+			txt2 += ',' + str(result['max_x'])
 
-	path = PathManager.getPath(args.processus_id, read_only=True).parent / 'data' / (str(time()) + '.csv')
-	PathManager.makeDir(path.parent)
-	path.write_text(txt)
+	path1 = PathManager.getPath(args.processus_id, read_only=True).parent / 'data' / (str(time()) + '.score.csv')
+	path2 = PathManager.getPath(args.processus_id, read_only=True).parent / 'data' / (str(time()) + '.distance.csv')
+	PathManager.makeDir(path1.parent)
+	path1.write_text(txt1)
+	path2.write_text(txt2)
 
 
 # Build parser
