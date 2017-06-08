@@ -24,7 +24,7 @@ def instanciateGenerator(show):
 	FrameReader(event_dispatcher)
 	GameOptimizer(event_dispatcher)
 	return Generator(IAFactory, IAGraduator(event_dispatcher, show), [Writer(), FileLogger(), ConsoleLogger()],
-		lambda state: True in [8470 <= score for score, individual in state.grading]
+		lambda state: True in [score.percent >= 1. for score, individual in state.grading]
 	)
 
 def checkProcessusExists(processus_id):
@@ -67,14 +67,14 @@ def play(args):
 
 def print_data(args):
 	checkProcessusExists(args.processus_id)
-	
+
 	data = Reader.getData(args.processus_id)
 	txt = 'Générations,Scores des intelligences'
 	for generation_id, grading in data:
 		txt += '\n' + str(generation_id)
 		for score, ia_id in grading:
 			txt += ',' + str(score)
-	
+
 	path = PathManager.getPath(args.processus_id, read_only=True).parent / 'data' / (str(time()) + '.csv')
 	PathManager.makeDir(path.parent)
 	path.write_text(txt)

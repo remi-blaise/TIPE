@@ -16,33 +16,33 @@ randindex = lambda it: randint(0, len(it)-1)
 def randindex_safe(it):
 	if len(it) < 3:
 		raise ValueError("Iterable should have a least 3 elements.")
-	randint(1, len(it)-2)
+	return randint(1, len(it)-2)
 
 
 class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 	"""IA factory"""
-	
+
 	@property
 	@inherit_docstring
 	def genetic_element_class(self):
 		return IA
-	
+
 	last_ia_id = -1
-	
+
 	@classmethod
 	def onProcessusStart(cls, event):
 		cls.last_ia_id = -1
-	
+
 	@classmethod
 	def newIaId(cls):
 		cls.last_ia_id += 1
 		return cls.last_ia_id
-	
+
 	@classmethod
 	def updateIaId(cls, ia_id):
 		cls.last_ia_id = max(cls.last_ia_id, ia_id)
-	
-	
+
+
 	@classmethod
 	@inherit_docstring
 	def create(cls):
@@ -50,8 +50,8 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 		for i in range(3 + randint(0, 3)):
 			neurons.append(NeuronFactory.create())
 		return IA(cls.newIaId(), neurons)
-	
-	
+
+
 	@staticmethod
 	@inherit_docstring
 	def mutate(element):
@@ -62,24 +62,24 @@ class IAFactory(GeneticElementFactory, metaclass=ABCInheritableDocstringsMeta):
 		for neuron in element.neurons:
 			if random() < .2:
 				NeuronFactory.mutate(neuron)
-	
-	
+
+
 	@classmethod
 	@inherit_docstring
 	def combine(cls, element1, element2):
 		neurons = element1.neurons[:randindex_safe(element1.neurons)] + element2.neurons[randindex_safe(element2.neurons):]
-		
+
 		# Ensure you have a least 3 neurons
 		if len(neurons) < 3:
 			return cls.combine(element1, element2)
-		
+
 		# Duplicate neurons instead of reuse ones
 		neurons = [deepcopy(neuron) for neuron in neurons]
 		return IA(cls.newIaId(), neurons)
-	
-	
+
+
 	@classmethod
 	def hydrate(cls, data):
 		cls.updateIaId(data['id'])
-		
+
 		return IA(data['id'], [ NeuronFactory.hydrate(neuron_data) for neuron_data in data['neurons'] ])

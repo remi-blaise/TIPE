@@ -39,19 +39,19 @@ Avant juin 2016 :
 	le son.
 	Objectif 1.1 :
 		Enlever le son. Peut résoudre le problème 1.
-	
+
 	Objectif 1.2 :
 		Fixer get_fps constant à 60 fps. Devrait résoudre le problème 2.
-		
+
 	Objectif 2 :
 		Coder le processus de génération.
-	
+
 	Objectif 2.0 :
 		Coder l'EvolutiveGenerator.
-	
+
 	Objectif 2.1 :
 		Représenter l'IA.
-	
+
 	Objectif 2.2 :
 		Coder les algorithmes de création, mutations et combinaisons.
 -------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ Avant juin 2016 :
 				On change soit la classe soit la durée de manière équiprobable.
 				Changement de la durée :
 					On tire un entier entre [2;30] frames.
-		
+
 	Je décide finalement de séparer les modèles :
 		- représentation en tant que données via 4 entités
 		- manipulation en tant que GeneticElement via 4 factory
@@ -113,7 +113,7 @@ Avant juin 2016 :
 17 Août 2016 :
 	Objectifs 2.0, 2.1 et 2.2 atteints
 	Objectif 1.2 Fait
-	
+
 	Objectif 2.3 :
 		Coder le Graduator, utilisant le bridge pour évaluer les IA.
 		Lancer une première génération.
@@ -124,10 +124,10 @@ Avant juin 2016 :
 	Objectif 2.3 atteint. Il reste quelques bugs à trouver/résoudre.
 	Le problème 1 se révèle comme prévu très problématique. Sa résolution via
 	l'objectif 1.1 devient une priorité.
-	
+
 	Objectif 2.4 : Tests
 		Debug du programme d'évolution, écriture des tests unitaires.
-	
+
 	Objectif 2.5 : Writer
 		Mettre en place une architecture permettant de sauvegarder les
 		résultats des calculs et l'historique des évènements.
@@ -136,7 +136,7 @@ Avant juin 2016 :
 22 Août 2016 :
 	Objectif 1.1 atteint ! Bonne nouvelle : le problème 1 semble résolu. À
 	confirmer cependant.
-	
+
 	Plan pour l'objectif 2.5 :
 		- Écrire un composant Writer permettant de sauvegarder toutes les
 		  données de la génération.
@@ -149,7 +149,7 @@ Avant juin 2016 :
 		  Graduator.
 		- Potentiel Reader pour lire les données et adaptation du Generator
 		  pouvoir stopper et reprendre une génération.
-	
+
 	Spécification de l'architecture système des sauvegardes :
 		results
 			processus-00000
@@ -177,11 +177,11 @@ Avant juin 2016 :
 23 Août 2016 :
 	Rapport à l'objectif 2.4 : le programme d'évolution semble fonctionner,
 	les tests restent à faire (tests unitaires sur l'EvolutiveGenerator).
-	
+
 	Objectif 1.3 :
 		Émettre tous les évènements et les prendre en compte dans la
 		génération (pour l'instant seuls les blocs et les ennemis).
-	
+
 	Problème 3 : Temps de calcul
 		Pour l'instant, le temps d'évaluation permis est calculé ainsi :
 			time = min(1 + generation, 401)
@@ -215,13 +215,13 @@ Avant juin 2016 :
 		Les deux cas me paraissent assez peu probables. L'avantage non
 		négligeable de cette solution serait néanmoins un coût de
 		développement supplémentaire quasi-nul.
-	
+
 	Objectif 2.6 :
 		Faire tourner le jeu dans un thread/processus parallèle afin d'isoler
 		chaque itération avec Pygame.
-	
+
 	Pour le moment je me concentre sur l'objectif 2.5.
-	
+
 	Premier longue génération terminée avec succès (gen=15, pop_length=20).
 -------------------------------------------------------------------------------
 
@@ -249,7 +249,7 @@ Avant juin 2016 :
 25 Août 2016 :
 	Objectif 2.5 atteint ! (Ouf ! C'était un gros morceau !) Et ça fonctionne !
 	Report du Reader (dernier point de l'objectif 2.5) à l'objectif 2.7.
-	
+
 	Objectif 2.7 : dans la continuation du 2.5
 		- Écrire deux Logger, un ConsoleLogger et un SystemLogger pour être
 		  capable de suivre un processus et d'en garder une trace (plus
@@ -315,7 +315,7 @@ Avant juin 2016 :
 			interopérabilité. Permet notamment d'alléger le Reader en écrivant
 			directement le state.
 	C'est parti !
-	
+
 	Objectif 2.8: Évaluation asynchrone
 		Dans la continuation du 2.6, évaluer chaque IA de manière asynchrone.
 -------------------------------------------------------------------------------
@@ -345,13 +345,13 @@ Septembre - 20 Octobre 2016 :
 	décrit le 28 Août, est achevée !
 	Je peux donc à présent d'avancer sur le 2.7. L'objectif est à terme de
 	pouvoir effectuer trois actions :
-	
+
 	Objectif 3.0 : Interface simple en console
 		Construire 3 commandes permettant de :
 		- Lancer un nouveau processus
 		- Reprendre un processus stoppé
 		- Regarder l'individu le plus performant d'un processus en action.
-	
+
 		+ Ajouter une méthode pour stopper l'éxécution d'un processus ? Ou
 		simplement faire CRL+C.
 -------------------------------------------------------------------------------
@@ -367,12 +367,12 @@ Septembre - 20 Octobre 2016 :
 
 30 Octobre 2016 :
 	Objectif 3.0 atteint.
-	
+
 	Objectif 3.1 :
 		Ajouter une variante de la commande new: faire tourner le Generator
 		jusqu'à obtenir une ia qui finit le niveau. Implémentation : rendre
 		paramètre generations optionnel ou lui attribuer une valeur spéciale.
-	
+
 	#LObjectifLePlusRapideDuMondeParceQuOnAvaitJusteOubliéDeLeCoderAvantLol
 -------------------------------------------------------------------------------
 
@@ -400,7 +400,7 @@ Septembre - 20 Octobre 2016 :
 
 15 Novembre 2016 :
 	Quelques optimisations de performances.
-	
+
 	Test de performances :
 		Commande : new 10 --generations=5
 		Résultats :
@@ -413,7 +413,7 @@ Septembre - 20 Octobre 2016 :
 20 Novembre 2016 :
 	Nouveau but : Optimiser au maximum le temps nécessaire à l'évaluation.
 	Hypothèse : temps d'évaluation = O(temps nécessaire à l'affichage)
-	
+
 	Objectif 1.4 : Optimisation - Réimplémentation de Pygame
 		Réimplémenter Pygame pour ne pas avoir à afficher le jeu.
 -------------------------------------------------------------------------------
@@ -423,15 +423,15 @@ Septembre - 20 Octobre 2016 :
 	Je dois préparer pour lundi une présentation de mon avancement pour ma prof
 	de maths.
 	J'ai trois nouveaux petits objectifs :
-	
+
 	Objectif 1.5 : Optimisation - Réduction des temps d'évaluation
 		Écrire un composant GameOptimizer pour réduire les temps de calcul en
 		détectant les IA qui font du surplace et des boucles spatiales.
-	
+
 	Objectif 3.2 : Graphiques
 		Écrire une commande permettant de tracer des graphiques des résultats,
 		ou fabriquant un fichier excel avec tous les résultats.
-	
+
 	Objectif 3.3 : Amélioration de play
 		Améliorer la commande play pour pouvoir visualiser n'importe quelle IA.
 		Les paramètres présentent désormais la syntaxe suivante :
@@ -439,12 +439,12 @@ Septembre - 20 Octobre 2016 :
 								(actuellement de la dernière génération)
 			play {processus_id} {generation_id} De la génération
 			play {processus_id} {generation_id} {ia_id} Affiche l'IA.
-	
+
 	Objectif 3.3 atteint.
 	Objectif 3.2 atteint: nouvelle commande print
 	J'ai divisé par 2 le temps maximal alloué à chaque IA.
 	Objectif 1.5 atteint avec la détection des boucles !
-	
+
 	Algorithme de détection des boucles :
 		Soit l'application Approx qui va de l'espace des points P dans un
 		espace restreint P' inclu dans P, surjective, dont chaque image a pour
@@ -460,18 +460,18 @@ Septembre - 20 Octobre 2016 :
 		Au bout de 15 sec de jeu, si l'IA passe par 5 points ayant la meme
 		approximation durant les 720 dernières frames, on considère qu'elle
 		fait des boucles.
-	
+
 	Ajout de l'option --show permettant de voir les intelligences durant leur
 	évaluation a été ajouté aux commandes new et resume.
-	
+
 	J'ai généré un graphique des résultats obtenus pendant la semaine.
 	Deux problèmes se soulèvent :
-	
+
 	Problème 4 :
 		L'application plante au bout de 6 heures, à cause des appels récursifs
 		remplissant la mémoire, du à la mise en place de l'Objectif 2.7.
 		Une légère réadaptation du Generator est nécessaire.
-	
+
 	Problème 5 :
 		Les scores stagnent à partir d'un certain temps car les innovations
 		phénotypiques importantes ne semblent pas etre préservées au cours
@@ -479,25 +479,25 @@ Septembre - 20 Octobre 2016 :
 		génotypique trop importante. Une analyse plus approfondie des résultats
 		est nécessaire, et la solution consistera surement en une modification
 		de l'algorithme génétique.
-	
+
 	Problème 6 :
 		Les conditions de replay des IA n'étant pas exactement les memes que
 		celles d'évaluation, certains visionnages ne sont pas fidèles aux
 		performances des IA en évaluation.
-	
+
 	Ajout des option --chance et --proportion à la commande new.
 	Ajout d'une option --as-grading à la commande play.
 	Le problème 6 est réglé au mieux, mais restera un problème.
-	
+
 	Objectif 2.9 : Réadaptation du Generator (Pb 4)
-	
+
 	Objectif 2.10 : Évolution de l'algorithme (Pb 5)
 		Pour tenter d'apporter une solution au problème 5, je propose d'ajouter
 		un paramètre de survie. Il s'agit de modifier l'étape de formation de
 		la nouvelle génération :
 		la nouvelle génération sera constituée des 10% meilleurs individus de
 		la sélection de la génération parente, puis complétée par reproduction.
-		
+
 		L'avantage de cette solution est de préserver les innovations
 		évolutives les plus importantes qui influeront ainsi sur toutes les
 		reproductions ultérieures, jusqu'à ce que des innovations plus
@@ -513,17 +513,17 @@ Septembre - 20 Octobre 2016 :
 -------------------------------------------------------------------------------
 
 21 Mai 2017 :
-
 	Objectif 2.9 atteint.
 
 	Idées d'amélioration suite à la lecture des bouquins :
 	v	- Repasser à une version iterative du Generator
 		- Remplacer le mot niveau par "terrain".
-		- Remplacer les termes "Génération évolutive" par "Algorithme génétique".
-		
+		- Remplacer les termes "Génération évolutive" par "Algorithme
+		génétique".
+
 	v	- Chaîner tous les allèles et remplacer la reproduction par deux
 		crossing-over. (Mise en pratique de la théorie des building blocks)
-		- Pour rendre la fonction d’évaluation la plus continue possible,
+	v	- Pour rendre la fonction d’évaluation la plus continue possible,
 		ajouter un critère sur la hauteur maximale sautée. On peut aussi
 		ajouter des critères sur la hauteur maximale sautée sur les n derniers
 		sauts, ainsi que la vitesse moyenne.
@@ -534,16 +534,36 @@ Septembre - 20 Octobre 2016 :
 		élitiste déjà mis en place.
 		- Lors des mutations, utiliser une distribution normale autour de la
 		valeur actuelle.
-		
+
 		- Isoler le jeu dans un programme externe pour pouvoir relancer pygame
 		à chaque évaluation : dans l'espoir de réduire l'indéterminisme et
 		d'améliorer les perfs (attention, peut avoir l'effet inverse).
 -------------------------------------------------------------------------------
 
 22 Mai 2017 :
-	Objectif 2.10.0 : Chaîner les allèles et remplacer la reproduction par demi crossing-over.
-	
+	Objectif 2.10.0 : Chaîner les allèles et remplacer la reproduction par demi
+	crossing-over.
+
 	Objectif 2.10.0 atteint.
 	Fixe la limite minimale des neurons d'une IA à 3.
-	
+
 	OBjectif 3.4 : Écrire un mode d'emploi (README).
+-------------------------------------------------------------------------------
+
+6 Juin 2017 :
+	Objectif 2.10.1 :
+		Créer un objet Result contenant les statistiques utiles pour calculer
+		le score et arrêter le programme. Cette objet Result a pour vocation
+		d'être enregistré dans les logs à la place du score.
+		Contient :
+			- longueur parcourue
+			- hauteur maximale
+		Score : longueur parcourue + hauteur maximale sautée
+		Critère d'arrêt : longueur parcourue >= 8470
+
+	Bug à résoudre : Reproduction, toutes les entités ont les mêmes neurones.
+-------------------------------------------------------------------------------
+
+8 Juin 2017 :
+	Objectif 2.10.1 atteint.
+	Bug résolu.
