@@ -26,7 +26,8 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocs
 	@classmethod
 	@inherit_docstring
 	def create(cls):
-		return ActionEventData(cls.createActionClass(), cls.createDuration())
+		action_class = cls.createActionClass()
+		return ActionEventData(action_class, cls.createDuration(action_class))
 
 	@classmethod
 	@inherit_docstring
@@ -34,7 +35,7 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocs
 		if randint(0, 1):
 			element.action_class = cls.createActionClass()
 		else:
-			element.duration = cls.createDuration()
+			element.duration = cls.createDuration(element.action_class)
 
 
 	@classmethod
