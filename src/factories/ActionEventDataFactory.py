@@ -51,7 +51,7 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocs
 
 	@staticmethod
 	def createDuration(action_class):
-		if action_class === Jump:
+		if action_class == Jump:
 			return gauss_int(2, 38)
 		else:
 			return randint(0, 25)
