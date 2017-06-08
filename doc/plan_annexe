@@ -1,0 +1,87 @@
+Annexe : mon code
+=================
+
+Arborescence des fichiers
+-------------------------
+
+> Plan general
+
+Étape 1 : Adapter le jeu à mon usage
+------------------------------------
+
+> Plan mario
+
+- Modifications du jeu non incluses ici (5000 lignes de codes dans 29 fichiers).
+- FrameReader : composant chargé de lire ce qui arrive en jeu et de le traduire en évènement compréhensibles par les intelligences artificielles.
+
+
+Étape 2 : Modéliser les intelligences avec des GeneticElement
+-------------------------------------------------------------
+
+> Plan entity
+
+- GeneticElement
+- IA
+- Neuron
+- GameEvent
+- ActionEvent
+
+
+Étape 3 : Manipuler les GeneticElements avec les GeneticElementFactory
+----------------------------------------------------------------------
+
+> Plan factory
+
+- GeneticElementFactory
+- IAFactory
+- NeuronFactory
+- GameEventFactory
+- ActionEventFactory
+
+Étape 4 : Évaluer les intelligences avec l'IAGraduator
+------------------------------------------------------
+
+> Plan generator
+
+- Graduator
+- IAGraduator
+- GameOptimizer // Optimisations apportées au jeu, notamment détection des boucles
+
+Étape 5 : Créer l'algorithme génétique
+--------------------------------------
+
+> Plan generator
+
+- Generator
+
+Étape 6 : Enregistrer les données dans des fichiers
+---------------------------------------------------
+
+> Plan logger
+
+- JSONEncoder
+- PathManager
+- Reader
+- Writer
+
+- AbstractLogger
+- ConsoleLogger
+- FileLogger
+
+Étape 6 : Enregistrer les données dans des fichiers
+---------------------------------------------------
+
+
+Bibliothèques utilisées
+-----------------------
+
+> Plan lib
+
+- EventDispatcher (créé par moi sur d'autres projets)
+- inject_arguments (créé par moi pour l'occasion)
+- XMLRepr (créé par moi pour l'occasion)
+- gauss_int et choices (créé par moi pour l'occasion)
+
+- inherit_doctring (pris sur Internet)
+
+NUMEROTER LES PAGES
