@@ -5,7 +5,7 @@ TIPE Mode d'emploi
 2) taper :
 cd ~/Documents/TIPE/tipe6/bin
 3) Pour lancer un nouveau processus, taper :
-python app.py new 30
+python app.py new 30 --show
 
 3 commandes sont disponibles :
 python app.py new <pop_length>
