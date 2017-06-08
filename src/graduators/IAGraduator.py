@@ -19,13 +19,13 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 	@inject_arguments
 	def __init__(self, event_dispatcher, show = False):
 		self.mario_x = 0
-		self.max_y = 0
+		self.max_y = -500
 
 
 	def gradeIAWithConfig(self, ia, config):
 		# Init
 		self.mario_x = 0
-		self.max_y = 0
+		self.max_y = -500
 
 		# Give the event_dispatcher to neurons
 		for neuron in ia.neurons:
@@ -58,4 +58,4 @@ class IAGraduator(Graduator, metaclass=ABCInheritableDocstringsMeta):
 
 	def onFrame(self, frame):
 		self.mario_x = frame.mario.rect.x
-		self.max_y = max(self.max_y, frame.mario.rect.y)
+		self.max_y = max(self.max_y, - frame.mario.rect.y)

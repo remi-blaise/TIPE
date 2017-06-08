@@ -3,6 +3,7 @@
 
 from lib.inherit_docstring import inherit_docstring
 from lib.choices import choices
+from lib.gauss_int import gauss_int
 from random import randint
 
 from src.meta.ABCInheritableDocstringsMeta import ABCInheritableDocstringsMeta
@@ -49,5 +50,8 @@ class ActionEventDataFactory(GeneticElementFactory, metaclass=ABCInheritableDocs
 		return choices(cls.ACTION_CLASSES, weights=[35, 10, 35, 10, 10])[0]
 
 	@staticmethod
-	def createDuration():
-		return randint(2, 30)
+	def createDuration(action_class):
+		if action_class === Jump:
+			return gauss_int(2, 38)
+		else:
+			return randint(0, 25)

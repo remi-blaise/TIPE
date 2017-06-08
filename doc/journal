@@ -558,7 +558,7 @@ Septembre - 20 Octobre 2016 :
 		d'être enregistré dans les logs à la place du score.
 		Contient :
 			- longueur parcourue
-			- hauteur maximale / 10
+			- hauteur maximale
 		Score : longueur parcourue + hauteur maximale sautée
 		Critère d'arrêt : longueur parcourue >= 8470
 
@@ -568,3 +568,10 @@ Septembre - 20 Octobre 2016 :
 8 Juin 2017 :
 	Objectif 2.10.1 atteint.
 	Différents bugs résolus.
+
+	Changement des probabilités des actions :
+		Jump et Right ont désormais 35% de chance d'être tirés, les autres 10%.
+	Changement des durées:
+		Lors du choix des durées des sauts, utilise une distribution normale
+		pour privilégier les longues durées.
+		Raccourci la durée des autres.
