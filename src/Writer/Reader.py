@@ -114,7 +114,7 @@ class Reader:
 		if generation_id is None:
 			generation_id = generations if type(generations) is int else cls.getLastGradedGeneration(processus_id, generations)
 		grading = cls.readJSON(cls.getPath(processus_id, generations, generation_id + 1, 'final_grading'))
-		grading.sort(key=itemgetter(0), reverse=True)
+		grading.sort(key=lambda c: c[0]['score'], reverse=True)
 		ia_id = grading[0][1]
 		ia_file = cls.getPath(processus_id, generations, generation_id, ia_id)
 		return IAFactory.hydrate(cls.readJSON(ia_file)), generation_id

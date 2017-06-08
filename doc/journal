@@ -527,11 +527,11 @@ Septembre - 20 Octobre 2016 :
 			ajouter un critère sur la hauteur maximale sautée. On peut aussi
 			ajouter des critères sur la hauteur maximale sautée sur les n
 			derniers sauts, ainsi que la vitesse moyenne.
-		[ ] Modifier les probas pour ajouter des sauts plus hauts avec une plus
+		[x] Modifier les probas pour ajouter des sauts plus hauts avec une plus
 			forte probabilité.
 		[ ] Modifier la méthode de sélection pour la roulette biaisée, plus
 			précise que la méthode de sélection des n meilleures
-		[ ] Rendre la sélection élitiste en introduisant un *principe de survie*
+		[x] Rendre la sélection élitiste en introduisant un *principe de survie*
 			-> le meilleur est sélectionné tel quel.
 		[ ] Lors des mutations, utiliser une distribution normale autour de la
 			valeur actuelle.
@@ -558,7 +558,7 @@ Septembre - 20 Octobre 2016 :
 		d'être enregistré dans les logs à la place du score.
 		Contient :
 			- longueur parcourue
-			- hauteur maximale
+			- hauteur maximale / 10
 		Score : longueur parcourue + hauteur maximale sautée
 		Critère d'arrêt : longueur parcourue >= 8470
 
@@ -567,4 +567,4 @@ Septembre - 20 Octobre 2016 :
 
 8 Juin 2017 :
 	Objectif 2.10.1 atteint.
-	Bug résolu.
+	Différents bugs résolus.

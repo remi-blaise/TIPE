@@ -235,9 +235,14 @@ class Generator:
 
 		self.dispatch(BREEDING.START)
 
-		# Add artificially the best individual to the new pop : survival principle
 		new_pop = set()
-		new_pop.add(state.grading[0][1])
+
+		# Add artificially the best individual to the new pop : survival principle
+		best = state.grading[0][1]
+		new_pop.add(best)
+		state.offspring = best
+		state.parents = (best, best)
+		self.dispatch(BREEDING.PROGRESS)
 
 		while len(new_pop) < state.pop_length:
 			parents = tuple([choice(list(state.selection)) for i in range(2)])

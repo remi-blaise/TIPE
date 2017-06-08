@@ -24,11 +24,11 @@ class Level1(State._State):
     def onStop(self, event):
       self.done = self.quit = True
       self.config.event_dispatcher.detach(self.listener_id)
-    
+
     def startup(self, current_frame, persist):
         """Called when the State object is created"""
         self.listener_id = self.config.event_dispatcher.listen('stop', self.onStop)
-        
+
         self.game_info = persist
         self.persist = self.game_info
         self.game_info[c.CURRENT_FRAME] = current_frame
@@ -366,7 +366,7 @@ class Level1(State._State):
         self.blit_everything(surface)
         if self.config.play_sound:
             self.sound_manager.update(self.game_info, self.mario)
-        
+
         # Dispatch the Frame event
         if self.config.event_dispatcher:
             self.config.event_dispatcher.dispatch('game.frame', Frame(
@@ -377,9 +377,9 @@ class Level1(State._State):
                     'ground_group': self.ground_group,
                     'pipe_group': self.pipe_group,
                     'step_group': self.step_group,
-                    
+
                     'enemy_group': self.enemy_group,
-                    
+
                     'powerup_group': self.powerup_group,
                     'coin_group': self.coin_group
                     # ...
@@ -463,7 +463,7 @@ class Level1(State._State):
                                                  self.check_point_group)
         if checkpoint:
             checkpoint.kill()
-            
+
             if checkpoint.name == 'secret_mushroom':
                 if self.mario.y_vel < 0:
                     mushroom_box = coin_box.Coin_box(self.get_fps, checkpoint.rect.x,
@@ -918,7 +918,7 @@ class Level1(State._State):
             self.mario.rect.bottom = enemy.rect.top
             self.mario.state = c.JUMP
             self.mario.y_vel = -7
-        
+
 
 
     def adjust_mario_for_y_shell_collisions(self, shell):
@@ -1372,7 +1372,7 @@ class Level1(State._State):
             self.persist[c.LIVES] -= 1
             if not self.config.show_game_frame:
                 self.quit = True
-        
+
         if self.config.show_game_frame:
             if self.persist[c.LIVES] == 0:
                 self.next = c.GAME_OVER
@@ -1443,7 +1443,7 @@ class Level1(State._State):
             self.done = True
             # if not self.config.show_game_frame:
             self.quit = True
-            self.config.event_dispatcher.detach(self.listener_id)
+            # self.config.event_dispatcher.detach(self.listener_id) # Make bug and i don't really remember if it's usefull
 
 
     def blit_everything(self, surface):
