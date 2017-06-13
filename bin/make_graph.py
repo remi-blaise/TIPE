@@ -31,7 +31,7 @@ plt.legend([
 	'Score moyen' if args.param == 'score' else 'Distance moyenne',
 	'Score maximal' if args.param == 'score' else 'Distance maximale'
 ])
-plt.title("Évolution des " + args.param + "s en fonction des générations")
+plt.title("Évolution des " + ('scores' if args.param == 'score' else 'distances parcourues') + " en fonction des générations")
 plt.grid()
 
 # Produce output
