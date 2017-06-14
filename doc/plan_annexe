@@ -11,8 +11,8 @@ Arborescence des fichiers
 
 > Plan mario
 
-- Modifications du jeu non incluses ici (5000 lignes de codes dans 29 fichiers).
-- FrameReader : composant chargé de lire ce qui arrive en jeu et de le traduire en évènement compréhensibles par les intelligences artificielles.
+Modifications du jeu non incluses ici (5000 lignes de codes dans 29 fichiers).
+FrameReader : composant chargé de lire ce qui arrive en jeu et de le traduire en évènement compréhensibles par les intelligences artificielles.
 
 
 Étape 2 : Modéliser les intelligences avec des GeneticElement
@@ -20,11 +20,11 @@ Arborescence des fichiers
 
 > Plan entity
 
-- GeneticElement
-- IA
-- Neuron
-- GameEvent
-- ActionEvent
+GeneticElement
+IA
+Neuron
+GameEvent
+ActionEvent
 
 
 Étape 3 : Manipuler les GeneticElements avec les GeneticElementFactory
@@ -32,44 +32,46 @@ Arborescence des fichiers
 
 > Plan factory
 
-- GeneticElementFactory
-- IAFactory
-- NeuronFactory
-- GameEventFactory
-- ActionEventFactory
+GeneticElementFactory
+IAFactory
+NeuronFactory
+GameEventFactory
+ActionEventFactory
 
 Étape 4 : Évaluer les intelligences avec l'IAGraduator
 ------------------------------------------------------
 
-> Plan generator
+> Plan graduators
 
-- Graduator
-- IAGraduator
-- GameOptimizer // Optimisations apportées au jeu, notamment détection des boucles
+Graduator
+IAGraduator
+GameOptimizer : Optimise le temps d'évaluation, notamment grâce à la détection des boucles.
 
 Étape 5 : Créer l'algorithme génétique
 --------------------------------------
 
 > Plan generator
 
-- Generator
+Generator
 
 Étape 6 : Enregistrer les données dans des fichiers
 ---------------------------------------------------
 
 > Plan logger
 
-- JSONEncoder
-- PathManager
-- Reader
-- Writer
+JSONEncoder
+PathManager
+Reader
+Writer
 
-- AbstractLogger
-- ConsoleLogger
-- FileLogger
+AbstractLogger
+ConsoleLogger
+FileLogger
 
-Étape 6 : Enregistrer les données dans des fichiers
----------------------------------------------------
+Étape 7 : L'application utilisable en ligne de commande
+-------------------------------------------------------
+
+app.py
 
 
 Bibliothèques utilisées
@@ -77,11 +79,10 @@ Bibliothèques utilisées
 
 > Plan lib
 
-- EventDispatcher (créé par moi sur d'autres projets)
-- inject_arguments (créé par moi pour l'occasion)
-- XMLRepr (créé par moi pour l'occasion)
-- gauss_int et choices (créé par moi pour l'occasion)
-
-- inherit_doctring (pris sur Internet)
+EventDispatcher ​ (créé par moi sur d'autres projets)
+XMLRepr ​ (créé par moi pour l'occasion)
+inject_arguments ​ (créé par moi pour l'occasion)
+inherit_doctring ( ​ pris sur Internet)
+gauss_int et choices ​ (créé par moi pour l'occasion)
 
 NUMEROTER LES PAGES
